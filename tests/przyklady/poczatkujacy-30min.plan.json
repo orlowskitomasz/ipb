@@ -3,10 +3,16 @@
  "ocena_celu": {
   "status": "realny",
   "prognoza": null,
-  "uzasadnienie": "Brak rekordu do prognozy – cel zostanie sprawdzony pierwszym testem."
+  "pewnosc": "niska",
+  "zastrzezenia": [
+   "Brak wyniku: cel nie jest oceniony, a plan nie podaje temp."
+  ],
+  "uzasadnienie": "Brak wyniku do prognozy – cel zostanie sprawdzony pierwszym sprawdzianem."
  },
  "bramki": [],
- "uwagi": [],
+ "uwagi": [
+  "Prognoza ma niską pewność: Brak wyniku: cel nie jest oceniony, a plan nie podaje temp.."
+ ],
  "strefy": {
   "hrmax": {
    "v": 183,
@@ -40,10 +46,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -68,10 +78,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -89,10 +103,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -118,10 +136,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -146,10 +168,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -167,10 +193,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -196,10 +226,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -224,10 +258,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -245,10 +283,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -274,10 +316,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -302,10 +348,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -323,10 +373,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -352,10 +406,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -380,10 +438,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -401,10 +463,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -431,10 +497,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sr",
@@ -459,10 +529,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     },
     {
      "dzien": "sob",
@@ -480,10 +554,14 @@
       "mobilnosc"
      ],
      "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przyzwyczaja ciało do biegu bez przeciążenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Wydłuż odcinki marszu."
     }
    ]
   },
@@ -510,10 +588,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sr",
@@ -538,10 +620,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sob",
@@ -559,10 +645,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     }
    ]
   },
@@ -589,10 +679,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sr",
@@ -617,10 +711,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sob",
@@ -638,10 +736,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     }
    ]
   },
@@ -660,7 +762,7 @@
     {
      "dzien": "wt",
      "typ": "spokojny",
-     "min": 24,
+     "min": 23,
      "mocne_min": 0,
      "dodatki": [
       "sila",
@@ -668,10 +770,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sr",
@@ -690,16 +796,20 @@
     {
      "dzien": "pt",
      "typ": "spokojny",
-     "min": 24,
+     "min": 23,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sob",
@@ -711,16 +821,20 @@
     {
      "dzien": "nd",
      "typ": "spokojny",
-     "min": 31,
+     "min": 30,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     }
    ]
   },
@@ -745,10 +859,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny, krótki bieg.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sr",
@@ -773,10 +891,14 @@
       "mobilnosc"
      ],
      "opis": "Spokojny, krótki bieg.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "sob",
@@ -794,10 +916,14 @@
       "mobilnosc"
      ],
      "opis": "Cel: 30 min biegu bez przerwy, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 147
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     }
    ]
   }

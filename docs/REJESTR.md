@@ -21,8 +21,12 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · plan · Krok 3 zbudowany: zamiana dwóch dni w tygodniu, odpuszczenie biegu, cofnięcie zmian; ostrzeżenia (mocne dni pod rząd, długi obok mocnego, bieg ponad limit dnia, skoki przed akcentem) i podpowiedzi (brak długiego, siły, testu, dnia wolnego, za dużo mocnego); ręczne zmiany przetrwają przeliczenie planu · przyjęte
 - 2026-11-10 · autor · dziennik · Krok 4 zbudowany: dziennik (ręcznie i z plików FIT/TCX/GPX), ocena biegu 0–10 (połowa za czas, połowa za intensywność), obciążenie (minuty × intensywność², godzina na progu = 100 pkt), zmęczenie/forma/stosunek 7 do 28 dni z radą, plan a wykonanie · przyjęte
 - 2026-11-10 · autor · prywatność · Z pliku z zegarka zapisujemy tylko datę, czas, dystans, tętno i mocne minuty; współrzędne, przebieg i numer zegarka nie trafiają do sejfu. Sam plik nie jest przechowywany · przyjęte
+- 2026-11-10 · autor · zasady · Audyt i rozbudowa silnika treningowego według załączonego planu pracy (14 etapów): faza 1 – raport; faza 2 – wdrożenie P0 i części P1 (SPEC sekcja 17) · przyjęte
+- 2026-11-10 · autor · decyzje · Jeden walidator w JavaScript; własna implementacja zamiast kopiowania cudzego kodu; stosunek 7 do 28 dni bez progów i bez języka ryzyka; ocena biegu w trzech poziomach zamiast 0–10; silnik przed krokiem 5 · przyjęte
+- 2026-11-10 · autor · prognozy · Druga metoda prognozy: VDOT z równań Danielsa i Gilberta; prognoza jako przedział; tempa stref z ułamków VDOT zamiast ekstrapolacji Riegla · przyjęte
 
 ## Otwarte pytania
+- silnik: źródła oznaczone `potwierdzone: false` w `src/reguly.js` trzeba otworzyć i sprawdzić (autor, rok, wniosek) – kto i kiedy?
 - dziennik: czy przechowywać całe pliki z zegarka (potrzebne do DFA alfa 1 i map), czy zostać przy samym podsumowaniu?
 - podpowiedzi: przycisk „dodaj w wolnym miejscu” przy podpowiedzi nie jest zrobiony – potrzebny, czy wystarczy samo wskazanie?
 - strefy: brakujące tętno maks. szacujemy wzorem Tanaki (208 − 0,7 × wiek), a próg jako 90% maks. – czy zostawić, czy bez pomiaru podawać tylko tempo i odczucie?

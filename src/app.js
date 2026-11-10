@@ -36,7 +36,7 @@
     return {
       rok_urodzenia: liczba('f-rok'), plec: $('f-plec').value, masa_kg: liczba('f-masa'), wzrost_cm: liczba('f-wzrost'),
       poziom: $('f-poziom').value, powrot_po_przerwie: $('f-powrot').checked,
-      obciazenie: { h_tydz: liczba('f-h') ?? 0, km_tydz: liczba('f-km') ?? 0, najdluzszy_min: liczba('f-najdl') ?? 0 },
+      obciazenie: { h_tydz: liczba('f-h'), km_tydz: liczba('f-km'), najdluzszy_min: liczba('f-najdl') },   // puste pole = brak danych, nie zero
       dni: Object.fromEntries(DNI.map((d) => [d, { max_min: liczba('f-dzien-' + d) ?? 0 }])),
       rekordy: rek ? [{ dystans_km: Number($('f-rek-dyst').value), czas: rek, data: $('f-rek-data').value || null }] : [],
       hrmax: liczba('f-hrmax'), lthr: liczba('f-lthr'), hr_spocz: liczba('f-hrspocz'),
@@ -85,6 +85,7 @@
   const el = (tag, klasa, tekst) => { const e = document.createElement(tag); if (klasa) e.className = klasa; if (tekst !== undefined) e.textContent = tekst; return e; };
   const dzisISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const krotko = (iso) => `${+iso.slice(8)}.${iso.slice(5, 7)}`;
+  const PEWNOSC = { niska: 'niska', srednia: 'średnia', wysoka: 'wysoka' };
   let pelny = false, edycja = false;
   const NA = { pn: 'poniedziałkiem', wt: 'wtorkiem', sr: 'środą', czw: 'czwartkiem', pt: 'piątkiem', sob: 'sobotą', nd: 'niedzielą' };
   async function zmien(z, co) { (dane.zmiany = dane.zmiany || []).push(z); await ulozPlan(co); pokazPlan(); }
@@ -115,7 +116,7 @@
   };
   const lthrTeraz = () => Strefy.licz(dane.profil).tetna.lthr.v;
   const opisBiegu = (w) => [hm(w.min), w.km ? `${String(w.km).replace('.', ',')} km` : '', w.hr_sr ? `śr. tętno ${w.hr_sr}` : '', w.odczucie ? `odczucie ${w.odczucie}/10` : ''].filter(Boolean).join(' · ');
-  const ocenaTekst = (w) => { const o = Dziennik.ocena(w, dzienPlanu(w.data)); return (o.pkt === null ? '' : `Ocena ${o.pkt}/10. `) + o.opis; };
+  const ocenaTekst = (w) => Dziennik.ocena(w, dzienPlanu(w.data)).opis;
   async function dodajBiegi(nowe, co) {
     const dz = dane.dziennik = dane.dziennik || [];
     const swieze = nowe.filter((w) => !dz.some((x) => x.data === w.data && x.min === w.min && x.zrodlo === w.zrodlo));
@@ -125,10 +126,10 @@
   }
   function pokazDziennik() {
     const dz = dane.dziennik || [], k = Dziennik.wskazniki(dz, lthrTeraz(), dzisISO());
-    $('dz-rady').replaceChildren(...k.rady.map((r) => el('p', 'komunikat' + (r.poziom === 'zle' ? ' zle' : r.poziom === 'ok' ? ' ok' : ''), r.tekst)));
+    $('dz-rady').replaceChildren(...k.rady.map((r) => el('p', 'komunikat' + (r.poziom === 'uwaga' ? '' : ' info'), r.tekst)));
     const wiersz = (a, b) => [el('dt', '', a), el('dd', '', b)];
     $('dz-wsk').replaceChildren(...wiersz('Ostatnie 7 dni', `${k.obc7} pkt`), ...wiersz('Zmęczenie (średnia z 7 dni)', `${k.atl} pkt na dzień`),
-      ...wiersz('Forma (średnia z 42 dni)', `${k.ctl} pkt na dzień`), ...wiersz('Ostatni tydzień do średniej z czterech', k.acwr === null ? 'za mało danych' : String(k.acwr).replace('.', ',')));
+      ...wiersz('Forma (średnia z 42 dni)', `${k.ctl} pkt na dzień`), ...wiersz('Ostatni tydzień do średniej z czterech', k.stosunek === null ? 'za mało danych' : String(k.stosunek).replace('.', ',')));
     const dzis = dzisISO(), tyg = (dane.plan ? dane.plan.tygodnie : []).filter((t) => t.start <= dzis).slice(-8);
     $('dz-tygodnie').replaceChildren(...(tyg.length ? tyg.map((t) => {
       const koniec = new Date(Date.parse(t.start + 'T00:00:00Z') + 6 * 864e5).toISOString().slice(0, 10);
@@ -174,7 +175,8 @@
     $('progi-dl').replaceChildren(
       ...wiersz('Tętno maksymalne', `${s.tetna.hrmax.v} (${s.tetna.hrmax.szacunek ? 'szacunek z wieku' : 'zmierzone'})`),
       ...wiersz('Tętno progowe', `${s.tetna.lthr.v} (${s.tetna.lthr.szacunek ? 'szacunek' : 'zmierzone'})`),
-      ...wiersz('Ostatni wynik', r ? `${NAZWY[r.dystans_km] || r.dystans_km + ' km'} w ${r.czas}${r.data ? ', ' + r.data : ''}` : 'brak'));
+      ...wiersz('Ostatni wynik', r ? `${NAZWY[r.dystans_km] || r.dystans_km + ' km'} w ${r.czas}${r.data ? ', ' + r.data : ''} (${Prognoza.statusWyniku(r, dzisISO())})` : 'brak'),
+      ...wiersz('Obecne obciążenie', dane.profil.obciazenie.h_tydz === null || dane.profil.obciazenie.h_tydz === undefined ? 'brak danych' : `${dane.profil.obciazenie.h_tydz} h na tydzień (podane w wywiadzie)`));
     $('progi-szacunek').hidden = !(s.tetna.hrmax.szacunek || s.tetna.lthr.szacunek);
     const tabela = (tytul, opis, wiersze) => {
       const k = el('div', 'karta'); k.style.cssText = 'display:flex; flex-direction:column; gap:8px';
@@ -186,7 +188,7 @@
     const karty = s.modele.map((m) => tabela(m.nazwa, m.opis, m.strefy.map(([n, a, b]) => [n, zakres(a, b)])));
     if (s.tempa) {
       const tz = (z) => `${Strefy.mmss(z[0])}–${Strefy.mmss(z[1])} /km`;
-      karty.push(tabela('Tempa', 'oszacowane wzorem Riegla z ostatniego wyniku', [['Spokojne', tz(s.tempa.E)], ['Maraton', tz(s.tempa.M)], ['Próg', tz(s.tempa.T)], ['VO2max (odcinki 3 min)', tz(s.tempa.I)]]));
+      karty.push(tabela('Tempa', `z ostatniego wyniku przez równania VDOT (VDOT ${String(s.tempa.vdot).replace('.', ',')}); to wskaźnik wyniku, nie pomiar wydolności`, [['Spokojne', tz(s.tempa.E)], ['Maraton', tz(s.tempa.M)], ['Próg', tz(s.tempa.T)], ['VO2max (odcinki 3 min)', tz(s.tempa.I)]]));
     }
     $('strefy-modele').replaceChildren(...karty);
     const testy = dane.testy || [];
@@ -222,9 +224,10 @@
     if (!plan) return;
     const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
     $('plan-cel').replaceChildren('Cel: ' + (c.typ === 'dystans' ? `${NAZWY[c.dystans_km] || c.dystans_km + ' km'}${c.czas ? ' w ' + c.czas : ''}` : `${c.minuty} min biegu bez przerwy`) + ' ', el('span', 'status ' + o.status, o.status));
-    $('plan-ocena').textContent = (o.prognoza ? `Prognoza z rekordu: ${o.prognoza}. ` : '') + o.uzasadnienie;
-    const uwagi = Podpowiedzi.licz(dane.profil, plan);
-    const uwaga = (u) => { const p = el('p', 'komunikat' + (u.rodzaj === 'ostrzezenie' ? ' zle' : '')); p.append(el('strong', '', u.tekst), el('span', '', u.powod)); return p; };
+    $('plan-ocena').textContent = (o.prognoza ? `Prognoza z ostatniego wyniku (dwie metody): ${o.prognoza}, pewność ${PEWNOSC[o.pewnosc] || 'niska'}. ` : '') + o.uzasadnienie;
+    const uwagi = Walidator.sprawdz(dane.profil, plan);
+    const uwaga = (u) => { const p = el('p', 'komunikat' + (u.poziom === 'krytyczne' || u.poziom === 'zastrzezenie' ? ' zle' : u.poziom === 'informacja' ? ' info' : ''));
+      p.append(el('strong', '', u.opis), el('span', '', u.uzasadnienie + ' ' + u.korekta), el('span', 'zrodlo', `Reguła ${u.id} · źródło klasy ${u.klasa} · pewność ${PEWNOSC[u.pewnosc]}: ${u.zrodlo}`)); return p; };
     $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)), ...uwagi.filter((u) => u.tydzien === null).map(uwaga));
     $('edycja').setAttribute('aria-pressed', edycja);
     const otwarte = new Set([...document.querySelectorAll('details.tydzien[open]')].map((d) => +d.dataset.nr));
@@ -269,8 +272,9 @@
         if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
+          if (x.po_co) w.append(el('span', 'wiecej', `Po co: ${x.po_co} ${x.dlaczego_teraz || ''}${x.latwiej ? ' Łatwiejszy wariant: ' + x.latwiej : ''}`));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
-        } else w.append(el('span', 'wiecej', PO_CO[x.typ] + (dod ? ' Do tego: ' + dod + '.' : '')));
+        } else w.append(el('span', 'wiecej', (x.po_co || PO_CO[x.typ]) + (dod ? ' Do tego: ' + dod + '.' : '')));
         wykonane(); sterowanie();
         return w;
       }));
@@ -285,11 +289,11 @@
     const cel = c.typ === 'dystans' ? `${NAZWY[c.dystans_km] || c.dystans_km + ' km'}${c.czas ? ' w ' + c.czas : ''}` : `${c.minuty} min biegu bez przerwy`;
     const wolne = DNI.filter((d) => !p.dni[d].max_min).join(', ') || 'brak';
     const wiersze = [['Rok urodzenia', p.rok_urodzenia], ['Poziom', p.poziom + (p.powrot_po_przerwie ? ', powrót po przerwie' : '')],
-      ['Obciążenie', `${p.obciazenie.h_tydz} h / ${p.obciazenie.km_tydz} km na tydzień`], ['Dni wolne', wolne],
+      ['Obciążenie', p.obciazenie.h_tydz === null || p.obciazenie.h_tydz === undefined ? 'brak danych' : `${p.obciazenie.h_tydz} h / ${p.obciazenie.km_tydz ?? '?'} km na tydzień`], ['Dni wolne', wolne],
       ['Tętno maks. / próg', `${p.hrmax ?? 'nie zmierzone'} / ${p.lthr ?? 'nie zmierzone'}`], ['Cel', cel + (c.data ? ', ' + c.data : '')]];
     $('profil-dl').replaceChildren(...wiersze.flatMap(([k, v]) => { const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; return [dt, dd]; }));
     $('ocena-status').textContent = o.status; $('ocena-status').className = 'status ' + o.status;
-    $('ocena-prognoza').textContent = o.prognoza ? `Prognoza z rekordu: ${o.prognoza}.` : '';
+    $('ocena-prognoza').textContent = o.prognoza ? `Prognoza z ostatniego wyniku: ${o.prognoza} (Riegel i VDOT${o.vdot ? ', VDOT ' + String(o.vdot).replace('.', ',') : ''}). Pewność: ${{ niska: 'niska', srednia: 'średnia' }[o.pewnosc]}${o.zastrzezenia && o.zastrzezenia.length ? ' – ' + o.zastrzezenia.join('; ') : ''}.` : '';
     $('ocena-opis').textContent = o.uzasadnienie;
     $('brak-tetna').hidden = !!(p.hrmax && p.lthr) || p.poziom === 'zaczynam';
     $('historia').textContent = dane.historia.map((h) => `${h.kiedy}  ${h.co}`).join('\n');

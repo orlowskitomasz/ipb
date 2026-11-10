@@ -25,3 +25,21 @@ Odłożone z kroków 2–4 (do wzięcia przy okazji albo jako osobny krok): stre
 3. Buduj najmniejszą wersję, która spełnia kolumnę „Gotowe, gdy”.
 4. Dodaj test, uruchom wszystkie, zbuduj `dist/index.html`.
 5. Zmień stan w tej tabeli, zapisz w repozytorium, pokaż użytkownikowi działającą stronę.
+
+## Silnik treningowy (audyt z 10.11.2026)
+
+| Zadanie | Stan |
+|---|---|
+| P0.1 Rejestr reguł i źródeł | **zrobione** – źródła z literatury czekają na potwierdzenie |
+| P0.2 Jeden walidator z poziomami | **zrobione** |
+| P0.3 Status danych | **zrobione** (wynik, tętna; obciążenie z dziennika – czeka) |
+| P0.4 Język i progi (obciążenie, ocena biegu) | **zrobione** |
+| P0.5 VDOT obok Riegla | **zrobione** |
+| P0.6 Profile syntetyczne | **zrobione** (11) |
+| P1.1 Uzasadnienie jednostek | **zrobione** |
+| P1.2 Periodyzacja według dystansu | częściowo: taper; czekają starty pośrednie i blok po starcie |
+| P1.3 Profile metodologiczne | częściowo: opis rozkładu intensywności (R22); wybór profilu czeka |
+| P1.4 Adaptacja A–F | procedura w skillu; kod czeka |
+| P1.5 Obciążenie bez diagnozowania | **zrobione** |
+| P1.6 Ocena planów z zewnątrz | polecenie `/IPB oceń` w skillu; import w aplikacji czeka |
+| P2 | czeka |

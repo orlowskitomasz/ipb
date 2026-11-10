@@ -45,7 +45,8 @@ pre { margin: 0; background: var(--kod); border: 1px solid var(--linia); border-
   font: .78rem/1.45 var(--mono); overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow-y: auto }
 .kod-odz { font: 600 1.05rem/1.6 var(--mono); letter-spacing: .04em; word-break: break-word }
 .komunikat { border-left: 4px solid var(--uwaga); padding: 8px 12px; background: var(--karta) }
-.komunikat.zle { border-color: var(--zle); color: var(--zle) } .komunikat.ok { border-color: var(--ok) }
+.komunikat.zle { border-color: var(--zle); color: var(--zle) } .komunikat.info { border-color: var(--linia) }
+.uwagi-tyg .komunikat .zrodlo { display: block; font-size: .78rem; margin-top: 4px } .komunikat.ok { border-color: var(--ok) }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 0 } dt { color: var(--cichy) } dd { margin: 0; font-variant-numeric: tabular-nums }
 .status { font-weight: 700 } .status.realny { color: var(--ok) } .status.ambitny { color: var(--uwaga) } .status.nierealny { color: var(--zle) }
 button[aria-pressed="true"] { background: var(--akcent); color: var(--akcent-tekst); border-color: var(--akcent) }

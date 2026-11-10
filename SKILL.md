@@ -13,8 +13,9 @@ IPB to otwartoźródłowa aplikacja z planem biegowym szytym na miarę. **Źród
 |---|---|
 | `/IPB [obszar]: uwaga` | dopisz wpis do rejestru (niżej), oceń wpływ na reguły, popraw SPEC/skill/testy, zgłoś sprzeczność z zasadami |
 | `/IPB plan` albo prośba o plan | wywiad → ocena celu → plan → **sprawdzenie R1–R16** → dopiero potem pokaż plan |
-| `/IPB sprawdź` + plan | sprawdź plan regułami R1–R16 i wypisz naruszenia |
-| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
+| `/IPB sprawdź` + plan | sprawdź plan walidatorem (R1–R22) i wypisz ustalenia według poziomu |
+| `/IPB oceń` + plan z dowolnego źródła | przepisz plan do `plan.json`, wypisz, czego nie dało się odczytać, uruchom walidator, pokaż ustalenia według poziomu ze źródłem i pewnością |
+| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_silnik.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
 | `/IPB dalej` | zbuduj pierwszy niezrobiony krok z `docs/PLAN-BUDOWY.md` według zasad z tego pliku, przetestuj, zapisz w repozytorium i pokaż działającą stronę |
 | `/IPB stan` | pokaż tabelę z `docs/PLAN-BUDOWY.md`: co zrobione, co następne |
 | `/IPB pytania`, `/IPB rejestr` | pokaż otwarte pytania / rejestr |
@@ -46,7 +47,7 @@ Rok urodzenia, płeć, masa, wzrost · poziom (`zaczynam` / `regularnie` / `zaaw
 
 ## 4. Jak ułożyć plan
 
-- **Ocena celu:** prognoza co najmniej Riegla (T2 = T1 × (D2/D1)^1,06) z rekordów; podaj przedział i status `realny` / `ambitny` / `nierealny`. Przy nierealnym zaproponuj cel pośredni i układaj plan pod niego.
+- **Ocena celu:** prognoza dwiema metodami z ostatniego wyniku – Riegel (T2 = T1 × (D2/D1)^1,06) i VDOT (równania Danielsa i Gilberta; to wskaźnik wyniku, nie pomiar VO2max); podaj przedział, pewność i status `realny` / `ambitny` / `nierealny`. Przy nierealnym zaproponuj cel pośredni i układaj plan pod niego.
 - **Fazy:** baza → rozwój → specyficzna → taper. Co 3.–4. tydzień lżejszy.
 - **Tydzień:** dni ustawia użytkownik (wolne, akcent, długi, spokojny, siła); wypełniaj tylko resztę. Ryzykowny układ zostaw, ale ostrzeż i zaproponuj zamianę.
 - **Jednostki:** spokojne i długie w minutach, akcenty na czas lub dystans odcinka. Spokojny bieg kończy się ok. 5 uderzeń poniżej progu tlenowego.
@@ -79,14 +80,31 @@ Jest repozytorium i powłoka → `python3 tests/sprawdz_plan.py profil.json plan
 | R9 | początkujący: 8 tygodni bez akcentów; marszobieg w 1. tygodniu przy < 1,5 h/tydz. |
 | R10 | powrót po przerwie: 2 tygodnie bez mocnych dni, 1. tydzień ≤ obecne obciążenie |
 | R11 | brak HRmax/LTHR → test w tygodniach 1–4 (nie dla początkujących i powrotu) |
-| R12 | cel > 7% szybszy od prognozy z ostatniego wyniku → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
+| R12 | cel > 7% szybszy od szybszej z dwóch prognoz (Riegel, VDOT) z ostatniego wyniku → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
 | R13 | ostatni tydzień zawiera start; od półmaratonu ostatni tydzień bez startu ≤ 70% szczytu |
 | R14 | od półmaratonu: bramki + test/start kontrolny wcześniej niż 3 tyg. przed celem |
 | R15 | od półmaratonu: długi bieg (lub start/test ≥ 90 min) co tydzień poza ostatnim |
 | R16 | siła w ≥ 75% tygodni; plyometria nie dzień przed mocnym dniem, nie w tygodniu startu, u początkujących nie w tyg. 1–4 |
 | R17 | każdy bieg (poza testem) ma cel: zakres tętna lub tempa; start z czasem docelowym ma tempo |
+| R18 | siła w każdym tygodniu poza ostatnim |
+| R19 | informacja: tydzień bez dnia wolnego |
+| R20 | informacja: ostatni wynik starszy niż 6 miesięcy |
+| R21 | każdy bieg ma podany cel („po co”) i miejsce w cyklu |
+| R22 | informacja: rozkład czasu w strefach (opis układu, nie ocena) |
 
-Biegacze testowi (`tests/profile/`): początkujący z celem „30 min bez przerwy”, maratończyk 3:20, cel nierealny, powrót po kontuzji, brak HRmax. Po każdej zmianie reguł w skillu lub SPEC: popraw `tests/sprawdz_plan.py`, dodaj profil lub zepsuty plan, uruchom `--self-test`.
+**Poziomy ustaleń:** krytyczne (tylko R1 i R2: format i twarde ograniczenia zawodnika), istotne zastrzeżenie, uwaga, informacja. Plan z generatora nie może mieć ustaleń powyżej informacji. Pełny opis każdej reguły (klasa źródła A–D, źródło, pewność, korekta) jest w `src/reguly.js`; reguły wykonuje `src/walidator.js`, a `tests/sprawdz_plan.py` tylko go uruchamia.
+
+**Jak mówić o ustaleniach:**
+- „plan odbiega od reguły X (źródło, pewność)”, nigdy „ten trening spowoduje uraz”;
+- heurystyk (wzrost 10%, 25% mocnych minut, limit 170 min) nie przedstawiaj jako praw fizjologii;
+- nie podawaj jednej liczby „jakości planu” i nie obiecuj wyniku;
+- gdy dane są oszacowane albo nieaktualne, powiedz to przy rekomendacji;
+- obciążenie (punkty, średnie 7 i 42 dni, stosunek 7 do 28 dni) opisuje wykonaną pracę, nie ryzyko urazu ani adaptację; zmianę planu proponuj dopiero przy dwóch zgodnych sygnałach;
+- objawy urazu lub choroby: nie diagnozuj, ogranicz obciążenie, odeślij do specjalisty, nie proponuj nadrabiania.
+
+**Adaptacja planu (propozycja, nigdy cicha zmiana):** opuszczony trening – nie nadrabiaj, najwyżej zamień z dniem spokojnym, gdy był kluczowy; tydzień przerwy – wróć od ok. 70% ostatniego tygodnia, bez akcentów przez tydzień; lepszy wynik – wpisz go jako sprawdzian, intensywności zmienią się po przeliczeniu, nie po jednym udanym treningu; narastające zmęczenie – przy dwóch sygnałach zamień najbliższy akcent na spokojny bieg; mniej dni – zmień limity w wywiadzie i przelicz plan, kilometrów nie przenoś mechanicznie. Zawsze podaj: powód, dane, zakres, porównanie przed i po, wpływ na cykl, niepewność.
+
+Biegacze testowi (`tests/profile/`, 11 profili): początkujący na czas i na 5 km, 10 km średnio zaawansowany, półmaraton przy 45 km, maratończyk 3:20 i zaawansowany, cel nierealny, powrót po kontuzji, nieregularny harmonogram, brak HRmax, brak historii. Po każdej zmianie reguł w skillu lub SPEC: popraw `tests/sprawdz_plan.py`, dodaj profil lub zepsuty plan, uruchom `--self-test`.
 
 Testy aplikacji (sieć tylko do jawnej listy, sejf, FIT, PDF, offline, dwa języki) są opisane w `docs/SPEC.md` sekcja 16.2 i powstają razem z kodem.
 

@@ -11,14 +11,13 @@ const Strefy = (() => {
     return { hrmax, lthr };
   }
 
-  // Tempa z ostatniego wyniku wzorem Riegla: próg = tempo wysiłku 60 min, VO2max = tempo wysiłku 12 min.
+  // Tempa z ostatniego wyniku przez VDOT: ułamki VDOT odpowiadają strefom Danielsa (E 62–74%, T 83–88%, I 95–100%).
+  // To przybliżenie z opublikowanych równań, nie tabele z książki.
   function tempa(profil) {
     const r = Prognoza.ostatni(profil.rekordy || []);
     if (!r) return null;
-    const t1 = Prognoza.sek(r.czas), d1 = r.dystans_km;
-    const dystans = (t) => d1 * (t / t1) ** (1 / 1.06);
-    const T = 3600 / dystans(3600), I = 720 / dystans(720), M = t1 * (42.195 / d1) ** 1.06 / 42.195;
-    return { E: [T * 1.22, T * 1.35], M: [M * 0.99, M * 1.02], T: [T * 0.99, T * 1.02], I: [I * 0.98, I * 1.03], zrodlo: r };
+    const V = Prognoza.vdot(r.dystans_km, Prognoza.sek(r.czas)), t = (u) => Prognoza.tempoPrzy(V, u), M = Prognoza.czasVdot(V, 42.195) / 42.195;
+    return { E: [t(0.74), t(0.62)], M: [M * 0.99, M * 1.02], T: [t(0.88), t(0.83)], I: [t(1.0), t(0.95)], vdot: Math.round(V * 10) / 10, zrodlo: r };
   }
 
   // Cel na dzień planu: zakres tętna i/lub tempa. rodzaj: lekki | regeneracja | subprog | prog | vo2 | doprogu

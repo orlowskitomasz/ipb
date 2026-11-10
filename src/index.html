@@ -161,7 +161,7 @@
         </div>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
-        <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
+        <p class="cichy">Plan powstaje z jawnych reguł R1–R20. Każda uwaga podaje regułę, jej pochodzenie i pewność: część to wyniki badań, część praktyka trenerska, część umowne ustalenia tego projektu (np. limit 170 min długiego biegu albo wzrost tygodnia do 10%). Twarde są tylko Twoje dni wolne i limity minut.</p>
       </div>
     </div>
 
@@ -170,7 +170,7 @@
         <h3>Obciążenie</h3>
         <div id="dz-rady" style="display:flex; flex-direction:column; gap:8px"></div>
         <dl id="dz-wsk"></dl>
-        <p class="cichy">Obciążenie biegu to minuty pomnożone przez kwadrat intensywności (z tętna, a gdy go nie ma – z odczucia). Godzina dokładnie na progu to 100 punktów.</p>
+        <p class="cichy">Obciążenie biegu to godziny × intensywność² × 100 (intensywność z tętna względem progu, a gdy go nie ma – z odczucia). Godzina dokładnie na progu to 100 punktów. Średnie liczone są ze stałymi 7 i 42 dni; to wartości umowne, nie Twoje indywidualne. Liczby opisują wykonaną pracę, nie stan organizmu.</p>
       </div>
       <form id="form-bieg" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
         <h3>Dodaj bieg</h3>
@@ -238,7 +238,7 @@
         <p id="ocena-prognoza"></p>
         <p id="ocena-opis"></p>
         <p id="brak-tetna" class="komunikat" hidden>Nie znasz tętna maksymalnego lub progowego. Plan zacznie od testu 30 minut, żeby strefy były zmierzone, a nie zgadnięte.</p>
-        <p class="cichy">Prognoza: wzór Riegla z Twojego rekordu.</p>
+        <p class="cichy">Prognoza to przedział z dwóch metod: wzoru Riegla i równań VDOT. Obie bywają zbyt optymistyczne dla maratonu.</p>
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Historia zmian (też w sejfie)</h3>

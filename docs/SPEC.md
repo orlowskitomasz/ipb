@@ -289,3 +289,22 @@ Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, pl
 - eksport FIT: poprawna struktura i CRC; PDF: wiele stron bez uciętych bloków;
 - tryb offline: aplikacja startuje i pokazuje plan bez sieci;
 - dwa języki: brak brakujących kluczy w `i18n/pl.json` i `i18n/en.json`.
+
+---
+
+## 17. Silnik treningowy: rejestr reguł, walidator, prognozy
+
+Wynik audytu z 10.11.2026 (raport fazy 1). Stan po wdrożeniu P0 i części P1:
+
+- **Rejestr reguł i źródeł:** `src/reguly.js`. Każda reguła R1–R22 ma nazwę, poziom, klasę źródła (A dowody naukowe, B metodologia trenerska, C otwarty kod, D heurystyka projektu), źródło, pewność, uzasadnienie i korektę. Pole `potwierdzone: false` oznacza źródło podane z pamięci, jeszcze nie otwarte. Rejestr nie zawiera numerów DOI.
+- **Jeden walidator:** `src/walidator.js`. Używają go aplikacja, skill i testy. Tabela w sekcji 16.1 opisuje reguły R1–R17; R18–R22 i poziomy są w rejestrze. `tests/sprawdz_plan.py` jest nakładką.
+- **Poziomy ustaleń:** krytyczne (tylko format i twarde ograniczenia zawodnika), istotne zastrzeżenie, uwaga, informacja. Brak jednej liczby „jakości planu”.
+- **Prognoza:** dwie metody z ostatniego wyniku – Riegel i VDOT (równania Danielsa i Gilberta) – jako przedział, z pewnością i zastrzeżeniami (wynik nieaktualny, brak daty, maraton z krótkiego dystansu). Tempa stref z ułamków VDOT.
+- **Status danych:** potwierdzone, oszacowane, nieaktualne, brak. Brakujących danych nie zastępujemy zmyślonymi.
+- **Uzasadnienia:** każdy bieg w planie ma `po_co` (cel fizjologiczny), `dlaczego_teraz` (miejsce w cyklu) i `latwiej` (wariant prostszy).
+- **Taper według dystansu:** maraton 3 tygodnie (75% i 55% szczytu), półmaraton 2 (85% i 60%), krócej 1 (70%); intensywność i liczba treningów zostają.
+- **Obciążenie:** opis wykonanej pracy (punkty, średnie wykładnicze 7 i 42 dni, stosunek 7 do 28 dni) bez progów i bez języka ryzyka. Propozycja zmiany dopiero przy dwóch zgodnych sygnałach.
+- **Ocena biegu:** trzy poziomy (zgodnie z planem, odbiega, wyraźnie odbiega) zamiast punktów.
+- **Testy:** `tests/test_silnik.py` (rejestr, VDOT, prognoza, status danych), 11 profili syntetycznych.
+
+Nie zrobione (P1 i P2): profile metodologiczne do wyboru, adaptacja A–F w kodzie (jest jako procedura w skillu), starty pośrednie, blok po starcie, ocena planów z zewnątrz w aplikacji, porównywanie planów, prędkość krytyczna, indywidualny model Banistera, potwierdzenie źródeł oznaczonych `potwierdzone: false`.

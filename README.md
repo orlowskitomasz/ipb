@@ -28,6 +28,7 @@ Wystarczy Python 3, bez instalowania czegokolwiek:
 python3 tests/sprawdz_plan.py --self-test        # reguły planu
 python3 tests/test_plan.py                       # generator z aplikacji (wymaga node)
 python3 tests/test_dziennik.py                   # pliki z zegarka, ocena biegu, obciążenie (wymaga node)
+python3 tests/test_silnik.py                     # rejestr reguł, VDOT, prognoza, status danych (wymaga node)
 python3 build.py && python3 tests/test_sejf.py   # aplikacja w przeglądarce (wymaga playwright)
 python3 tests/sprawdz_plan.py tests/profile/maraton-320.json tests/przyklady/maraton-320.plan.json
 ```

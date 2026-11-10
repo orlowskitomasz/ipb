@@ -106,57 +106,68 @@ const Dziennik = (() => {
     return reszta;
   }
 
-  // --- ocena biegu 0–10: połowa za czas zgodny z planem, połowa za właściwą intensywność ---
+  // --- ocena biegu: trzy poziomy zamiast punktów (punktacja byłaby pozorną precyzją) ---
+  // Osobno czas względem planu i intensywność względem celu; wynik to gorszy z dwóch. Progi są umowne (klasa D).
   function ocena(w, dzien) {
-    if (!dzien || dzien.typ === 'wolne' || !dzien.min) return { pkt: null, opis: 'Bieg poza planem.' };
+    if (!dzien || dzien.typ === 'wolne' || !dzien.min) return { poziom: null, opis: 'Bieg poza planem.' };
+    const stopien = ['zgodnie', 'odbiega', 'wyraznie'], uwagi = [];
     const odch = Math.abs(w.min - dzien.min) / dzien.min;
-    const zaCzas = 5 * Math.max(0, 1 - odch / 0.5);
+    let czas = odch <= 0.15 ? 0 : odch <= 0.4 ? 1 : 2;
+    if (czas) uwagi.push(`czas ${w.min} min przy planie ${dzien.min} min`);
     const mocny = ['akcent', 'test', 'start'].includes(dzien.typ);
-    let zaMoc = null, uwaga = '';
+    let moc = null;
     if (!mocny && w.hr_sr && dzien.cel_tetno && dzien.cel_tetno.do) {
       const ponad = w.hr_sr - dzien.cel_tetno.do;
-      zaMoc = ponad <= 0 ? 5 : Math.max(0, 5 - ponad / 2);
-      if (ponad > 0) uwaga = `Średnie tętno ${w.hr_sr} było o ${ponad} powyżej celu (${dzien.cel_tetno.do}) – następny spokojny bieg zacznij wolniej.`;
+      moc = ponad <= 0 ? 0 : ponad <= 6 ? 1 : 2;
+      if (moc) uwagi.push(`średnie tętno ${w.hr_sr} było o ${ponad} powyżej celu (${dzien.cel_tetno.do}) – następny spokojny bieg zacznij wolniej`);
     } else if (mocny && w.mocne_min !== undefined && dzien.mocne_min && dzien.typ !== 'start') {
       const q = w.mocne_min / dzien.mocne_min;
-      zaMoc = q >= 0.8 && q <= 1.4 ? 5 : q < 0.8 ? 5 * q / 0.8 : Math.max(2, 5 - (q - 1.4) * 5);
-      if (q < 0.8) uwaga = `Mocnych minut wyszło ${w.mocne_min} z planowanych ${dzien.mocne_min}.`;
-      else if (q > 1.4) uwaga = `Mocnych minut wyszło ${w.mocne_min} przy planie ${dzien.mocne_min} – to więcej, niż trzeba.`;
+      moc = q >= 0.8 && q <= 1.4 ? 0 : q >= 0.5 && q <= 1.8 ? 1 : 2;
+      if (q < 0.8) uwagi.push(`mocnych minut wyszło ${w.mocne_min} z planowanych ${dzien.mocne_min}`);
+      else if (q > 1.4) uwagi.push(`mocnych minut wyszło ${w.mocne_min} przy planie ${dzien.mocne_min} – więcej, niż zakładał trening`);
     } else if (w.odczucie) {
-      zaMoc = mocny ? (w.odczucie >= 6 ? 5 : 3) : (w.odczucie <= 5 ? 5 : Math.max(1, 5 - (w.odczucie - 5) * 1.5));
-      if (!mocny && w.odczucie > 5) uwaga = `Spokojny bieg z odczuciem ${w.odczucie}/10 – to za ciężko jak na ten dzień.`;
+      moc = mocny ? (w.odczucie >= 6 ? 0 : 1) : (w.odczucie <= 5 ? 0 : w.odczucie <= 7 ? 1 : 2);
+      if (!mocny && w.odczucie > 5) uwagi.push(`spokojny bieg z odczuciem ${w.odczucie}/10 – ciężej, niż zakłada ten dzień`);
     }
-    const pkt = Math.round(zaMoc === null ? zaCzas * 2 : zaCzas + zaMoc);
-    const czas = odch <= 0.1 ? 'Czas zgodny z planem.' : `Czas ${w.min} min przy planie ${dzien.min} min.`;
-    return { pkt, opis: `${czas} ${uwaga || (zaMoc === null ? 'Bez tętna i odczucia oceniam tylko czas.' : 'Intensywność zgodna z planem.')}`.trim() };
+    const poziom = stopien[Math.max(czas, moc || 0)];
+    const naglowek = { zgodnie: 'Zgodnie z planem', odbiega: 'Odbiega od planu', wyraznie: 'Wyraźnie odbiega od planu' }[poziom];
+    return { poziom, opis: naglowek + (uwagi.length ? ': ' + uwagi.join('; ') + '.' : '.') + (moc === null ? ' Bez tętna i odczucia oceniam tylko czas.' : '') };
   }
 
-  // --- obciążenie biegu: minuty × (intensywność)² (jak hrTSS). Intensywność z tętna, a gdy go nie ma – z odczucia. ---
+  // --- obciążenie biegu: godziny × intensywność² × 100 (godzina na progu = 100 pkt). Intensywność z tętna względem progu,
+  // a gdy tętna nie ma – z odczucia (0,5 + 0,05 × odczucie; przybliżenie umowne) albo 0,75. Opisuje wykonaną pracę, nie stan organizmu. ---
   function obciazenie(w, lthr) {
     const IF = w.hr_sr ? w.hr_sr / lthr : w.odczucie ? 0.5 + 0.05 * w.odczucie : 0.75;
     return Math.round(w.min / 60 * IF * IF * 100);
   }
 
-  // Wskaźniki na dziś: zmęczenie (7 dni), forma (42 dni), stosunek ostatnich 7 dni do średniej z 28 (ACWR) i rada.
+  // Trendy obciążenia: średnie wykładnicze ze stałymi czasowymi 7 i 42 dni (stałe umowne, nie indywidualne)
+  // i stosunek ostatnich 7 dni do średniej tygodniowej z 28. To opis wykonanej pracy: bez progów i bez wniosków o ryzyku urazu.
+  // Sugestia zmiany planu pojawia się dopiero przy dwóch zgodnych sygnałach (obciążenie i odczucie).
+  const STALA_KROTKA = 7, STALA_DLUGA = 42;
   function wskazniki(dziennik, lthr, dzis) {
     const dzien = (iso) => Math.round(Date.parse(iso + 'T00:00:00Z') / 864e5), d0 = dzien(dzis);
     const obc = {}; let pierwszy = d0;
     for (const w of dziennik) { const d = dzien(w.data); if (d > d0) continue; obc[d] = (obc[d] || 0) + obciazenie(w, lthr); pierwszy = Math.min(pierwszy, d); }
     let atl = 0, ctl = 0;
-    for (let d = pierwszy; d <= d0; d++) { const x = obc[d] || 0; atl += (x - atl) / 7; ctl += (x - ctl) / 42; }
+    const a7 = 1 - Math.exp(-1 / STALA_KROTKA), a42 = 1 - Math.exp(-1 / STALA_DLUGA);
+    for (let d = pierwszy; d <= d0; d++) { const x = obc[d] || 0; atl += (x - atl) * a7; ctl += (x - ctl) * a42; }
     const suma = (n) => { let s = 0; for (let d = d0 - n + 1; d <= d0; d++) s += obc[d] || 0; return s; };
     const s7 = suma(7), s28 = suma(28), dni = d0 - pierwszy + 1;
-    const acwr = s28 > 0 && dni >= 21 ? s7 / (s28 / 4) : null;
-    const tydz = dziennik.filter((w) => dzien(w.data) > d0 - 7 && dzien(w.data) <= d0);
+    const stosunek = s28 > 0 && dni >= 21 ? s7 / (s28 / 4) : null;
+    const ciezkie = dziennik.filter((w) => dzien(w.data) > d0 - 7 && dzien(w.data) <= d0 && w.odczucie >= 8).length;
     const rady = [];
     if (!dziennik.length) rady.push({ poziom: 'info', tekst: 'Dziennik jest pusty. Dodaj pierwszy bieg, a pojawi się tu obciążenie.' });
-    else if (dni < 21) rady.push({ poziom: 'info', tekst: `Za mało danych na ocenę przeciążenia: jest ${dni} dni, potrzeba 3 tygodni.` });
-    else if (acwr > 1.5) rady.push({ poziom: 'zle', tekst: 'Ostatni tydzień był o ponad połowę cięższy niż średnia z czterech tygodni. Najbliższy mocny trening zamień na spokojny bieg i dodaj dzień wolny.' });
-    else if (acwr > 1.3) rady.push({ poziom: 'uwaga', tekst: 'Obciążenie rośnie szybko. Trzymaj się planu, nie dokładaj nic ponad niego.' });
-    else if (acwr < 0.6 && s28 > 0) rady.push({ poziom: 'uwaga', tekst: 'Ostatni tydzień był dużo lżejszy niż poprzednie. Po przerwie wracaj stopniowo, nie nadrabiaj zaległych biegów.' });
-    else rady.push({ poziom: 'ok', tekst: 'Obciążenie rośnie w bezpiecznym tempie.' });
-    if (tydz.filter((w) => w.odczucie >= 8).length >= 2) rady.push({ poziom: 'uwaga', tekst: 'Dwa biegi w tym tygodniu oceniłeś na 8/10 lub wyżej. Jeśli to były spokojne biegi, zrób dzień wolny.' });
-    return { atl: Math.round(atl), ctl: Math.round(ctl), tsb: Math.round(ctl - atl), acwr: acwr === null ? null : Math.round(acwr * 100) / 100, obc7: s7, dni, rady };
+    else if (dni < 21) rady.push({ poziom: 'info', tekst: `Za mało danych na porównanie tygodni: jest ${dni} dni, potrzeba 3 tygodni.` });
+    else {
+      const sr = Math.round(s28 / 4);
+      rady.push({ poziom: 'info', tekst: `Ostatnie 7 dni: ${s7} pkt. Średnio na tydzień z ostatnich czterech: ${sr} pkt.`
+        + (stosunek > 1.5 ? ' Ostatni tydzień był o ponad połowę cięższy niż Twoja średnia.' : stosunek < 0.6 ? ' Ostatni tydzień był dużo lżejszy niż Twoja średnia – po przerwie wracaj stopniowo, bez nadrabiania.' : '')
+        + ' To opis wykonanej pracy, nie ocena ryzyka urazu.' });
+      if (stosunek > 1.3 && ciezkie >= 2) rady.push({ poziom: 'uwaga', tekst: 'Dwa sygnały naraz: obciążenie wyraźnie powyżej Twojej średniej i dwa biegi ocenione na 8/10 lub wyżej. Rozważ zamianę najbliższego mocnego treningu na spokojny bieg.' });
+    }
+    if (ciezkie >= 2 && !(stosunek > 1.3)) rady.push({ poziom: 'info', tekst: 'Dwa biegi w tym tygodniu oceniłeś na 8/10 lub wyżej. Jeden sygnał nie wystarcza do zmiany planu – obserwuj kolejne dni.' });
+    return { atl: Math.round(atl), ctl: Math.round(ctl), stosunek: stosunek === null ? null : Math.round(stosunek * 100) / 100, obc7: s7, dni, rady };
   }
   return { zPliku, zamknij, ocena, obciazenie, wskazniki, czytajFIT, czytajTCX, czytajGPX };
 })();

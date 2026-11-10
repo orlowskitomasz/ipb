@@ -1,0 +1,54 @@
+{
+ "id": "nieregularny",
+ "opis": "Nieregularny harmonogram: trzy dni o bardzo różnych limitach, start w środę.",
+ "rok_urodzenia": 1981,
+ "plec": "k",
+ "masa_kg": 66,
+ "wzrost_cm": 171,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 2.5,
+  "km_tydz": 23,
+  "najdluzszy_min": 60
+ },
+ "dni": {
+  "pn": {
+   "max_min": 30
+  },
+  "wt": {
+   "max_min": 0
+  },
+  "sr": {
+   "max_min": 0
+  },
+  "czw": {
+   "max_min": 0
+  },
+  "pt": {
+   "max_min": 90
+  },
+  "sob": {
+   "max_min": 45
+  },
+  "nd": {
+   "max_min": 0
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 10,
+   "czas": "0:56:20",
+   "data": "2026-08-30"
+  }
+ ],
+ "hrmax": null,
+ "lthr": null,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 10,
+  "czas": "0:54:00",
+  "data": "2027-02-24"
+ }
+}

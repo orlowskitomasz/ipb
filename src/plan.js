@@ -80,8 +80,20 @@ const Plan = (() => {
   const MARSZOBIEG = ['1 min biegu / 2 min marszu', '2 min biegu / 2 min marszu', '3 min biegu / 2 min marszu',
     '5 min biegu / 2 min marszu', '8 min biegu / 2 min marszu', '10 min biegu / 1 min marszu'];
 
+  // Uzasadnienia jednostek: klasa B (praktyka trenerska) – opis celu, nie obietnica efektu.
+  const PO_CO_RODZAJ = { lekki: 'Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.', regeneracja: 'Rozluźnia nogi przed ważnym dniem.',
+    subprog: 'Podnosi tempo, które da się utrzymać długo, przy umiarkowanym zmęczeniu.', prog: 'Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.',
+    vo2: 'Rozwija maksymalny pobór tlenu.', cel: 'Uczy tempa startowego i jego kosztu.', doprogu: 'Siła biegowa i technika bez długiego zakwaszenia.' };
+  const PO_CO_TYP = { dlugi: 'Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.', marszobieg: 'Przyzwyczaja ciało do biegu bez przeciążenia.',
+    test: 'Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.', start: 'Twój cel.' };
+  const DLACZEGO = { baza: 'Baza: rośnie objętość, akcenty są umiarkowane.', rozwoj: 'Rozwój: najmocniejsze bodźce planu, gdy baza już jest.',
+    specyficzna: 'Faza pod start: treningi przypominają wysiłek startowy.', taper: 'Odpoczynek przed startem: mniej minut, ta sama intensywność.' };
+  const LATWIEJ = { spokojny: 'Skróć o jedną trzecią albo zamień część na marsz.', dlugi: 'Skróć do dwóch trzecich i nie przyspieszaj.',
+    akcent: 'Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.', test: 'Przełóż o 2–3 dni, jeśli jesteś zmęczony.',
+    marszobieg: 'Wydłuż odcinki marszu.', regeneracyjny: 'Zamień na dzień wolny.' };
+
   function uloz(profil, dzis) {
-    const ocena = Prognoza.ocena(profil);
+    const ocena = Prognoza.ocena(profil, dzis);
     const cel = ocena.cel_posredni || profil.cel;
     const uwagi = [];
     const zaczyna = profil.poziom === 'zaczynam', powrot = !!profil.powrot_po_przerwie;
@@ -101,7 +113,8 @@ const Plan = (() => {
 
     const r = role(profil, dzienCelu), lim = r.lim;
     const limDl = r.dlugi === null ? 0 : Math.min(DLUGI_MAX, lim[r.dlugi]);
-    const baza = Math.max(30, Math.round((profil.obciazenie.h_tydz || 0) * 60));
+    const znanaBaza = profil.obciazenie.h_tydz !== null && profil.obciazenie.h_tydz !== undefined;
+    const baza = znanaBaza ? Math.max(30, Math.round(profil.obciazenie.h_tydz * 60)) : 90;   // brak danych: jawne założenie startu, nie zgadywanie historii
     const uzyte = [...r.lekkie, ...r.mocne];
     let sufit = uzyte.reduce((a, d) => a + lim[d], 0) + limDl;
     if (zaczyna) sufit = Math.min(sufit, Math.max(baza * 2, 3 * (cel.minuty || 30)));
@@ -111,9 +124,12 @@ const Plan = (() => {
     const strefy = Strefy.licz(profil, +String(dzis).slice(0, 4));
     const celTempa = sekCelu ? { cel_tempo: { od: Math.round(sekCelu * 0.98), do: Math.round(sekCelu * 1.02) } } : null;
     // cel dnia: tętno i/lub tempo (R17); „cel” = tempo startowe, a gdy cel nie ma czasu – próg
-    const celDnia = (d, rodzaj) => Object.assign(d, rodzaj === 'cel' ? (celTempa || Strefy.cel('prog', strefy)) : Strefy.cel(rodzaj, strefy));
+    const celDnia = (d, rodzaj) => Object.assign(d, { rodzaj }, rodzaj === 'cel' ? (celTempa || Strefy.cel('prog', strefy)) : Strefy.cel(rodzaj, strefy));
+    const maraton = dystans && cel.dystans_km >= 42;
     if (!uzyte.length && r.dlugi === null) uwagi.push('W wywiadzie nie ma żadnego dnia na bieganie.');
-    if (!zaczyna && baza < 60) uwagi.push('Przy obciążeniu poniżej godziny na tydzień lepiej wybrać poziom „zaczynam” – plan ruszy wtedy od marszobiegu.');
+    if (!znanaBaza) uwagi.push('Nie podano obecnego obciążenia. Założenie: start od 90 minut biegu na tydzień. Uzupełnij wywiad, żeby plan był dopasowany.');
+    if (ocena.zastrzezenia && ocena.zastrzezenia.length) uwagi.push(`Prognoza ma niską pewność: ${ocena.zastrzezenia.join('; ')}.`);
+    if (znanaBaza && !zaczyna && baza < 60) uwagi.push('Przy obciążeniu poniżej godziny na tydzień lepiej wybrać poziom „zaczynam” – plan ruszy wtedy od marszobiegu.');
 
     // --- tygodnie z testem (R11, R14) ---
     const testy = {};
@@ -133,7 +149,7 @@ const Plan = (() => {
     const mieszany = zaczyna && (profil.obciazenie.h_tydz || 0) < 1.5, przelom = Math.ceil(0.7 * n);
     for (let i = 0; i < n; i++) {
       const nr = i + 1, ostatni = i === n - 1;
-      const faza = i >= n - (dlugiCel ? 2 : 1) ? 'taper' : i < 0.4 * n ? 'baza' : i < 0.7 * n ? 'rozwoj' : 'specyficzna';
+      const faza = i >= n - (maraton ? 3 : dlugiCel ? 2 : 1) ? 'taper' : i < 0.4 * n ? 'baza' : i < 0.7 * n ? 'rozwoj' : 'specyficzna';
       const dni = DNI.map((d) => ({ dzien: d, typ: 'wolne', min: 0, mocne_min: 0, dodatki: [] }));
       const szczyt = sumy.length ? Math.max(...sumy) : baza;
       const ust = (d, typ, min, mocne, opis) => { Object.assign(dni[d], { typ, min, mocne_min: mocne || 0 }); if (opis) dni[d].opis = opis; else delete dni[d].opis; };
@@ -151,7 +167,7 @@ const Plan = (() => {
           else ust(d, 'spokojny', m, 0, 'Spokojny, krótki bieg.');
         }
         if (dystans) {
-          const czas = cel.czas || ocena.prognoza;
+          const czas = cel.czas || ocena.prognoza_do;
           ust(dzienCelu, 'start', czas ? Math.round(Prognoza.sek(czas) / 60) : Math.round(cel.dystans_km * 6.5), 0,
             `Start docelowy: ${cel.dystans_km} km${cel.czas ? ` w ${cel.czas}` : ''}${tempoCelu ? ` (${tempoCelu}/km)` : ''}.`);
           dni[dzienCelu].mocne_min = dni[dzienCelu].min;
@@ -169,10 +185,11 @@ const Plan = (() => {
       } else {
         // --- ile minut w tym tygodniu (R5, R6, R10, R13) ---
         let T;
-        const ref = Math.max(...sumy.slice(-3), ...(i < 3 ? [baza] : []));
+        const ref = Math.max(...sumy.slice(-3), ...(i < 3 && (znanaBaza || !sumy.length) ? [baza] : []));   // nieznane obciążenie: odniesieniem są tylko tygodnie planu
         const lzej = i > 0 ? 0.85 * sumy[i - 1] : Infinity;                // tydzień lżejszy od poprzedniego (R6)
-        if (dlugiCel && n >= 6 && i === n - 3) T = Math.min(0.8 * szczyt, lzej);
-        else if (i === n - 2 && n >= 4) T = Math.min((dlugiCel ? 0.62 : 0.8) * szczyt, lzej);
+        // taper według dystansu (R13): maraton 3 tygodnie do 75% i 55% szczytu, półmaraton 85% i 60%, krócej 70%; intensywność i liczba treningów zostają
+        if (dlugiCel && n >= 6 && i === n - 3) T = Math.min((maraton ? 0.75 : 0.85) * szczyt, lzej);
+        else if (i === n - 2 && n >= 4) T = Math.min((maraton ? 0.55 : dlugiCel ? 0.6 : 0.7) * szczyt, lzej);
         else if (i % 4 === 3) T = lzej;
         else if (i === 0) T = powrot ? 0.95 * baza : baza;
         else T = Math.max(ref * 1.08, ref + 10);
@@ -235,6 +252,15 @@ const Plan = (() => {
         else if (d.typ === 'regeneracyjny') celDnia(d, 'regeneracja');
         else if (d.typ === 'akcent' && !d.cel_tetno && !d.cel_tempo) celDnia(d, 'cel');
         else if (d.typ === 'start' && celTempa) Object.assign(d, celTempa);
+      }
+
+      // --- uzasadnienie każdej jednostki (R21): cel fizjologiczny, miejsce w cyklu, łatwiejszy wariant ---
+      for (const d of dni) {
+        if (!d.min) continue;
+        d.po_co = PO_CO_TYP[d.typ] || PO_CO_RODZAJ[d.rodzaj] || PO_CO_RODZAJ.lekki;
+        d.dlaczego_teraz = d.typ === 'test' ? 'Sprawdzian w tym miejscu zostawia czas na korektę celu.' : d.typ === 'start' ? 'Dzień celu.' : DLACZEGO[faza];
+        if (LATWIEJ[d.typ]) d.latwiej = LATWIEJ[d.typ];
+        if (d.mocne_min && d.typ !== 'start') d.mocne_strefa = d.rodzaj === 'vo2' || (d.typ === 'test' && /kontrolny/.test(d.opis || '')) ? 3 : 2;
       }
 
       // --- uzupełnienia (R16) ---

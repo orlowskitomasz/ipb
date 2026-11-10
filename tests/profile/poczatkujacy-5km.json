@@ -1,0 +1,48 @@
+{
+ "id": "poczatkujacy-5km",
+ "opis": "Początkujący, cel: pierwsze 5 km.",
+ "rok_urodzenia": 1995,
+ "plec": "m",
+ "masa_kg": 84,
+ "wzrost_cm": 181,
+ "poziom": "zaczynam",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 1.0,
+  "km_tydz": 7,
+  "najdluzszy_min": 20
+ },
+ "dni": {
+  "pn": {
+   "max_min": 40
+  },
+  "wt": {
+   "max_min": 0
+  },
+  "sr": {
+   "max_min": 40
+  },
+  "czw": {
+   "max_min": 0
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 60
+  },
+  "nd": {
+   "max_min": 0
+  }
+ },
+ "rekordy": [],
+ "hrmax": null,
+ "lthr": null,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 5,
+  "czas": null,
+  "data": "2027-02-07"
+ }
+}

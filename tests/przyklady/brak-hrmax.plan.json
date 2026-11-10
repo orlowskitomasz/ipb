@@ -2,8 +2,17 @@
  "profil": "brak-hrmax",
  "ocena_celu": {
   "status": "ambitny",
-  "prognoza": "2:01:54",
-  "uzasadnienie": "Cel jest o 2% szybszy od prognozy – wymaga postępu, sprawdzą go testy pośrednie."
+  "prognoza": "2:01:54–2:02:01",
+  "prognoza_od": 7314,
+  "prognoza_do": 7321,
+  "vdot": 35.7,
+  "metody": [
+   "Riegel",
+   "VDOT (Daniels–Gilbert)"
+  ],
+  "pewnosc": "srednia",
+  "zastrzezenia": [],
+  "uzasadnienie": "Cel jest o 2% szybszy od prognozy – wymaga postępu, sprawdzą go sprawdziany. Riegel 2:01:54, VDOT 35.7 → 2:02:01."
  },
  "bramki": [
   {
@@ -57,15 +66,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "subprog",
      "cel_tetno": {
       "od": 142,
       "do": 152
      },
      "cel_tempo": {
-      "od": 347,
-      "do": 360
+      "od": 357,
+      "do": 371
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Podnosi tempo, które da się utrzymać długo, przy umiarkowanym zmęczeniu.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -77,14 +91,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -96,10 +114,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, podbiegi: 6 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -118,14 +141,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -136,14 +163,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -168,7 +199,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
-     "opis": "Test 30 min: rozgrzewka 10–15 min, potem 30 min równo, najmocniej jak dasz radę utrzymać. Średnie tętno z ostatnich 20 min to Twoje tętno progowe."
+     "opis": "Test 30 min: rozgrzewka 10–15 min, potem 30 min równo, najmocniej jak dasz radę utrzymać. Średnie tętno z ostatnich 20 min to Twoje tętno progowe.",
+     "po_co": "Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.",
+     "dlaczego_teraz": "Sprawdzian w tym miejscu zostawia czas na korektę celu.",
+     "latwiej": "Przełóż o 2–3 dni, jeśli jesteś zmęczony.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -188,10 +223,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -210,14 +250,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -228,14 +272,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -262,10 +310,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -277,14 +330,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -296,15 +353,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "subprog",
      "cel_tetno": {
       "od": 142,
       "do": 152
      },
      "cel_tempo": {
-      "od": 347,
-      "do": 360
+      "od": 357,
+      "do": 371
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Podnosi tempo, które da się utrzymać długo, przy umiarkowanym zmęczeniu.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -323,14 +385,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -341,14 +407,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -375,15 +445,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "subprog",
      "cel_tetno": {
       "od": 142,
       "do": 152
      },
      "cel_tempo": {
-      "od": 347,
-      "do": 360
+      "od": 357,
+      "do": 371
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Podnosi tempo, które da się utrzymać długo, przy umiarkowanym zmęczeniu.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -395,14 +470,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -414,10 +493,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, podbiegi: 6 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -436,14 +520,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -454,14 +542,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -486,7 +578,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
-     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę."
+     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.",
+     "po_co": "Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.",
+     "dlaczego_teraz": "Sprawdzian w tym miejscu zostawia czas na korektę celu.",
+     "latwiej": "Przełóż o 2–3 dni, jeśli jesteś zmęczony.",
+     "mocne_strefa": 3
     },
     {
      "dzien": "sr",
@@ -498,14 +594,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -518,10 +618,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -540,14 +645,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -558,14 +667,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -592,10 +705,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "rodzaj": "doprogu",
      "cel_tetno": {
       "do": 158
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Siła biegowa i technika bez długiego zakwaszenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -607,14 +725,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -626,15 +748,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "subprog",
      "cel_tetno": {
       "od": 142,
       "do": 152
      },
      "cel_tempo": {
-      "od": 347,
-      "do": 360
+      "od": 357,
+      "do": 371
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Podnosi tempo, które da się utrzymać długo, przy umiarkowanym zmęczeniu.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -653,14 +780,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -671,14 +802,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Baza: rośnie objętość, akcenty są umiarkowane.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -705,15 +840,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -725,14 +865,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -744,14 +888,19 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, VO2max: 4 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "vo2",
      "cel_tetno": {
       "od": 158
      },
      "cel_tempo": {
-      "od": 298,
-      "do": 313
+      "od": 302,
+      "do": 314
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Rozwija maksymalny pobór tlenu.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 3
     },
     {
      "dzien": "pt",
@@ -770,14 +919,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -788,14 +941,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -822,14 +979,19 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, VO2max: 4 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "vo2",
      "cel_tetno": {
       "od": 158
      },
      "cel_tempo": {
-      "od": 298,
-      "do": 313
+      "od": 302,
+      "do": 314
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Rozwija maksymalny pobór tlenu.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 3
     },
     {
      "dzien": "sr",
@@ -841,14 +1003,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -860,15 +1026,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 12 min, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -887,14 +1058,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -905,14 +1080,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -937,7 +1116,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
-     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę."
+     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.",
+     "po_co": "Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.",
+     "dlaczego_teraz": "Sprawdzian w tym miejscu zostawia czas na korektę celu.",
+     "latwiej": "Przełóż o 2–3 dni, jeśli jesteś zmęczony.",
+     "mocne_strefa": 3
     },
     {
      "dzien": "sr",
@@ -949,14 +1132,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -969,15 +1156,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -996,14 +1188,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -1014,14 +1210,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -1048,15 +1248,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -1068,14 +1273,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -1087,14 +1296,19 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, VO2max: 5 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "vo2",
      "cel_tetno": {
       "od": 158
      },
      "cel_tempo": {
-      "od": 298,
-      "do": 313
+      "od": 302,
+      "do": 314
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Rozwija maksymalny pobór tlenu.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 3
     },
     {
      "dzien": "pt",
@@ -1113,14 +1327,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -1131,14 +1349,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Rozwój: najmocniejsze bodźce planu, gdy baza już jest.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -1165,10 +1387,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 3 × (1 km w tempie celu 5:38/km + 1 km luźniej), schłodzenie do końca czasu.",
+     "rodzaj": "cel",
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Uczy tempa startowego i jego kosztu.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -1180,14 +1407,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -1199,15 +1430,20 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -1226,14 +1462,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
@@ -1244,14 +1484,18 @@
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie. Ćwicz jedzenie i picie tak jak na starcie.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -1270,57 +1514,71 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 34,
-     "mocne_min": 13,
+     "min": 36,
+     "mocne_min": 14,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "rodzaj": "prog",
      "cel_tetno": {
       "od": 150,
       "do": 158
      },
      "cel_tempo": {
-      "od": 330,
-      "do": 340
+      "od": 334,
+      "do": 350
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Przesuwa próg: szybsze tempo bez narastającego zakwaszenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 38,
+     "min": 41,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
      "typ": "akcent",
-     "min": 34,
-     "mocne_min": 13,
+     "min": 36,
+     "mocne_min": 14,
      "dodatki": [
       "rozgrzewka",
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, tempo startowe: 2 × 2 km w tempie celu (5:38/km), przerwa 2 min, schłodzenie do końca czasu.",
+     "rodzaj": "cel",
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Uczy tempa startowego i jego kosztu.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -1332,39 +1590,47 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 38,
+     "min": 41,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 81,
+     "min": 86,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie. Ćwicz jedzenie i picie tak jak na starcie.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Faza pod start: treningi przypominają wysiłek startowy.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -1391,29 +1657,38 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, tempo startowe: 2 × 2 km w tempie celu (5:38/km), przerwa 2 min, schłodzenie do końca czasu.",
+     "rodzaj": "cel",
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Uczy tempa startowego i jego kosztu.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 26,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -1425,10 +1700,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 2 × (1 km w tempie celu 5:38/km + 1 km luźniej), schłodzenie do końca czasu.",
+     "rodzaj": "cel",
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Uczy tempa startowego i jego kosztu.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "pt",
@@ -1440,39 +1720,47 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 26,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
      ],
      "opis": "Spokojny bieg w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 63,
+     "min": 61,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
      ],
      "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Uczy organizm biec długo: mięśnie, ścięgna i gospodarka paliwem. Najważniejszy bieg tygodnia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć do dwóch trzecich i nie przyspieszaj."
     }
    ]
   },
@@ -1498,10 +1786,15 @@
       "mobilnosc"
      ],
      "opis": "Rozgrzewka, potem 3 × 3 min w tempie celu (5:38/km), przerwa 2 min. Bez zmęczenia.",
+     "rodzaj": "cel",
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Uczy tempa startowego i jego kosztu.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Zrób połowę odcinków albo zamień na spokojny bieg tej samej długości.",
+     "mocne_strefa": 2
     },
     {
      "dzien": "sr",
@@ -1512,14 +1805,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny, krótki bieg.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "czw",
@@ -1530,14 +1827,18 @@
       "mobilnosc"
      ],
      "opis": "Spokojny, krótki bieg.",
+     "rodzaj": "lekki",
      "cel_tetno": {
       "do": 141
      },
      "cel_tempo": {
-      "od": 406,
-      "do": 450
+      "od": 384,
+      "do": 440
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Buduje wytrzymałość tlenową przy małym koszcie zmęczenia.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Skróć o jedną trzecią albo zamień część na marsz."
     },
     {
      "dzien": "pt",
@@ -1555,10 +1856,14 @@
       "mobilnosc"
      ],
      "opis": "Bardzo lekki rozruch, 3–4 krótkie przebieżki.",
+     "rodzaj": "regeneracja",
      "cel_tetno": {
       "do": 134
      },
-     "szacunek": true
+     "szacunek": true,
+     "po_co": "Rozluźnia nogi przed ważnym dniem.",
+     "dlaczego_teraz": "Odpoczynek przed startem: mniej minut, ta sama intensywność.",
+     "latwiej": "Zamień na dzień wolny."
     },
     {
      "dzien": "nd",
@@ -1570,7 +1875,9 @@
      "cel_tempo": {
       "od": 332,
       "do": 345
-     }
+     },
+     "po_co": "Twój cel.",
+     "dlaczego_teraz": "Dzień celu."
     }
    ]
   }

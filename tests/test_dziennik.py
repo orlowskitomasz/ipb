@@ -66,7 +66,10 @@ if __name__ == "__main__":
     rowno = [{"data": d, "min": 50, "hr_sr": 145} for d in dni(35)][::2]
     skok = rowno[:] + [{"data": d, "min": 90, "hr_sr": 165} for d in dni(7)]
     przerwa = [w for w in rowno if w["data"] < dni(8)[-1]]
-    wsk = [([], "2026-11-10"), (rowno[:3], "2026-11-10"), (rowno, "2026-11-10"), (skok, "2026-11-10"), (przerwa, "2026-11-10")]
+    skok_i_odczucie = rowno[:] + [{"data": d, "min": 90, "hr_sr": 165, "odczucie": 9} for d in dni(7)]
+    same_odczucia = [dict(w, odczucie=8) if w["data"] >= dni(7)[-1] else w for w in rowno]
+    wsk = [([], "2026-11-10"), (rowno[:3], "2026-11-10"), (rowno, "2026-11-10"), (skok, "2026-11-10"), (przerwa, "2026-11-10"),
+           (skok_i_odczucie, "2026-11-10"), (same_odczucia, "2026-11-10")]
     wej = json.dumps({"lthr": 170, "pliki": {n: base64.b64encode(b).decode() for n, b in pliki.items()}, "oceny": oceny, "wsk": wsk})
     r = subprocess.run(["node", "-e", JS, str(TU)], input=wej, capture_output=True, text=True, env={"TZ": "UTC", "PATH": __import__("os").environ["PATH"]})
     if r.returncode: print(r.stderr); sys.exit(1)
@@ -82,19 +85,23 @@ if __name__ == "__main__":
     sprawdz("z pliku nie zostają współrzędne ani przebieg", all("lat" not in json.dumps(x) and "_hr" not in x for x in (f, g, w["bieg.tcx"])))
     sprawdz("zły plik FIT daje zrozumiały błąd", "nie jest plik FIT" in w["zly.fit"].get("blad", ""), w["zly.fit"])
     sprawdz("GPX bez czasu (sama trasa) daje zrozumiały błąd", "to trasa" in w["trasa.gpx"].get("blad", ""), w["trasa.gpx"])
-    o = [x["pkt"] for x in w["oceny"]]
-    sprawdz("ocena: spokojny zgodny z planem = 10", o[0] == 10, o)
-    sprawdz("ocena: spokojny z tętnem 10 powyżej celu = 5 i rada", o[1] == 5 and "zacznij wolniej" in w["oceny"][1]["opis"], w["oceny"][1])
-    sprawdz("ocena: połowa czasu = 5", o[2] == 5, o)
-    sprawdz("ocena: akcent z planowanymi mocnymi minutami = 10, z jedną czwartą = 7", o[3] == 10 and o[4] == 7, o)
-    sprawdz("ocena: bez tętna liczy się tylko czas (45 z 60 min = 5)", o[5] == 5 and "tylko czas" in w["oceny"][5]["opis"], w["oceny"][5])
-    sprawdz("ocena: bieg w dniu wolnym nie dostaje punktów", o[6] is None, o)
-    sprawdz("ocena: spokojny z odczuciem 8/10 = 6 i rada", o[7] == 6 and "za ciężko" in w["oceny"][7]["opis"], w["oceny"][7])
+    o = [x["poziom"] for x in w["oceny"]]
+    sprawdz("ocena: spokojny zgodny z planem", o[0] == "zgodnie" and w["oceny"][0]["opis"] == "Zgodnie z planem.", w["oceny"][0])
+    sprawdz("ocena: spokojny z tętnem 10 powyżej celu = wyraźnie odbiega, z radą", o[1] == "wyraznie" and "zacznij wolniej" in w["oceny"][1]["opis"], w["oceny"][1])
+    sprawdz("ocena: połowa czasu = wyraźnie odbiega", o[2] == "wyraznie", o)
+    sprawdz("ocena: akcent z planowanymi mocnymi minutami = zgodnie, z jedną czwartą = wyraźnie odbiega", o[3] == "zgodnie" and o[4] == "wyraznie", o)
+    sprawdz("ocena: bez tętna liczy się tylko czas (45 z 60 min = odbiega)", o[5] == "odbiega" and "tylko czas" in w["oceny"][5]["opis"], w["oceny"][5])
+    sprawdz("ocena: bieg w dniu wolnym nie jest oceniany", o[6] is None, o)
+    sprawdz("ocena: spokojny z odczuciem 8/10 = wyraźnie odbiega", o[7] == "wyraznie" and "ciężej" in w["oceny"][7]["opis"], w["oceny"][7])
+    sprawdz("ocena nie zawiera punktów", not any("pkt" in x or "/10." in x["opis"].replace("8/10 –", "") for x in w["oceny"]))
     k = w["wsk"]
-    sprawdz("obciążenie: pusty dziennik i za mało danych mówią to wprost", "pusty" in k[0]["rady"][0]["tekst"] and "Za mało danych" in k[1]["rady"][0]["tekst"], k[:2])
-    sprawdz("obciążenie: równy trening → bezpiecznie", k[2]["rady"][0]["poziom"] == "ok" and 0.8 < k[2]["acwr"] < 1.3, k[2])
-    sprawdz("obciążenie: skok w ostatnim tygodniu → jasne „co zrobić”", k[3]["acwr"] > 1.5 and "zamień na spokojny bieg" in k[3]["rady"][0]["tekst"], k[3])
-    sprawdz("obciążenie: tydzień przerwy → wracaj stopniowo", "wracaj stopniowo" in k[4]["rady"][0]["tekst"], k[4])
+    teksty = [" ".join(r["tekst"] for r in x["rady"]) for x in k]
+    sprawdz("obciążenie: pusty dziennik i za mało danych mówią to wprost", "pusty" in teksty[0] and "Za mało danych" in teksty[1], teksty[:2])
+    sprawdz("obciążenie: równy trening → sam opis, bez progów i słowa „bezpiecznie”", 0.8 < k[2]["stosunek"] < 1.3 and "bezpiecz" not in teksty[2] and "nie ocena ryzyka urazu" in teksty[2], k[2])
+    sprawdz("obciążenie: skok w ostatnim tygodniu → opis, bez polecenia (jeden sygnał)", k[3]["stosunek"] > 1.5 and "o ponad połowę cięższy" in teksty[3] and all(r["poziom"] == "info" for r in k[3]["rady"]), k[3])
+    sprawdz("obciążenie: tydzień przerwy → wracaj stopniowo, bez nadrabiania", "bez nadrabiania" in teksty[4], k[4])
+    sprawdz("obciążenie: dwa zgodne sygnały (skok i dwa biegi 8/10) → propozycja zmiany", any(r["poziom"] == "uwaga" and "Dwa sygnały" in r["tekst"] for r in k[5]["rady"]), k[5])
+    sprawdz("obciążenie: same ciężkie odczucia bez skoku → obserwuj, bez zmiany planu", "Jeden sygnał nie wystarcza" in teksty[6], k[6])
     for n in w:
         if n.startswith("PRAWDZIWY:"): print("     ", n, w[n])
     print("WSZYSTKO OK" if all(wyniki) else "SĄ BŁĘDY"); sys.exit(0 if all(wyniki) else 1)
