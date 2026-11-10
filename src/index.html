@@ -1,0 +1,196 @@
+<title>IPB sejf i wywiad</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/*CSS*/
+</style>
+
+<header class="pasek">
+  <h1>IPB · plan biegowy</h1>
+  <span id="stan" class="stan brak">Brak sejfu</span>
+  <button id="zablokuj" type="button" hidden>Zablokuj</button>
+</header>
+
+<main>
+  <p id="ostrz-pamiec" class="komunikat" hidden>Ta przeglądarka nie pozwala stronie nic zapisać. Sejf działa tylko do zamknięcia karty – zrób kopię w zakładce „Co jest zapisane”.</p>
+
+  <section id="w-start">
+    <h2>Twoje dane biegowe zostają u Ciebie, zamknięte Twoim hasłem</h2>
+    <p>Odpowiesz na kilka pytań o swoim bieganiu, ustawisz hasło i zobaczysz dokładnie, co ta strona zapisuje. Bez imienia, e-maila i konta.</p>
+    <div class="karta">
+      <dl>
+        <dt>Gdzie są dane</dt><dd>tylko w tej przeglądarce, zaszyfrowane</dd>
+        <dt>Kto je odczyta</dt><dd>tylko osoba znająca hasło albo kod odzyskiwania</dd>
+        <dt>Co wychodzi do internetu</dt><dd>nic – na tym etapie strona nie łączy się z żadnym serwerem</dd>
+      </dl>
+    </div>
+    <div class="rzad"><button id="zacznij" class="glowny" type="button">Zacznij wywiad</button></div>
+    <details>
+      <summary>Mam kopię sejfu i chcę ją przywrócić</summary>
+      <div class="karta" style="margin-top:12px; display:flex; flex-direction:column; gap:12px">
+        <label for="przywroc-tekst">Wklej tekst kopii</label>
+        <textarea id="przywroc-tekst" spellcheck="false"></textarea>
+        <p id="blad-przywroc" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="przywroc" type="button">Przywróć sejf</button></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="w-wywiad" hidden>
+    <h2 id="wywiad-tytul">Wywiad</h2>
+    <p class="cichy">Pola bez odpowiedzi możesz zostawić puste – plan zaproponuje wtedy test zamiast zgadywać.</p>
+    <div class="rzad"><button id="przyklad" type="button">Wypełnij przykładem</button></div>
+    <form id="form-wywiad" novalidate>
+      <section>
+        <h3>O Tobie</h3>
+        <div class="siatka">
+          <label for="f-rok">Rok urodzenia<input id="f-rok" type="number" inputmode="numeric" placeholder="np. 1985"></label>
+          <label for="f-plec">Płeć<select id="f-plec"><option value="k">kobieta</option><option value="m">mężczyzna</option><option value="">nie podaję</option></select></label>
+          <label for="f-masa">Masa (kg)<input id="f-masa" type="number" inputmode="decimal"></label>
+          <label for="f-wzrost">Wzrost (cm)<input id="f-wzrost" type="number" inputmode="numeric"></label>
+        </div>
+        <h3>Bieganie teraz</h3>
+        <div class="siatka">
+          <label for="f-poziom">Poziom<select id="f-poziom"><option value="zaczynam">zaczynam</option><option value="regularnie" selected>biegam regularnie</option><option value="zaawansowany">zaawansowany</option></select></label>
+          <label for="f-h">Godzin biegu na tydzień<input id="f-h" type="number" inputmode="decimal" step="0.5"></label>
+          <label for="f-km">Kilometrów na tydzień<input id="f-km" type="number" inputmode="numeric"></label>
+          <label for="f-najdl">Najdłuższy bieg (min)<input id="f-najdl" type="number" inputmode="numeric"></label>
+        </div>
+        <label for="f-powrot" style="flex-direction:row; align-items:center; gap:10px"><input id="f-powrot" type="checkbox" style="width:22px; min-height:22px">Wracam po przerwie lub kontuzji</label>
+        <h3>Ile minut możesz biegać w każdy dzień (0 = dzień wolny)</h3>
+        <div class="dni">
+          <label for="f-dzien-pn">pn<input id="f-dzien-pn" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-wt">wt<input id="f-dzien-wt" type="number" inputmode="numeric" value="60"></label>
+          <label for="f-dzien-sr">śr<input id="f-dzien-sr" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-czw">czw<input id="f-dzien-czw" type="number" inputmode="numeric" value="60"></label>
+          <label for="f-dzien-pt">pt<input id="f-dzien-pt" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-sob">sob<input id="f-dzien-sob" type="number" inputmode="numeric" value="45"></label>
+          <label for="f-dzien-nd">nd<input id="f-dzien-nd" type="number" inputmode="numeric" value="120"></label>
+        </div>
+        <h3>Najlepszy wynik z ostatniego roku</h3>
+        <div class="siatka">
+          <label for="f-rek-dyst">Dystans<select id="f-rek-dyst"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="f-rek-czas">Czas (g:mm:ss)<input id="f-rek-czas" type="text" inputmode="numeric" placeholder="0:47:30"></label>
+          <label for="f-rek-data">Data<input id="f-rek-data" type="date"></label>
+        </div>
+        <h3>Tętno (tylko zmierzone, nie ze wzoru)</h3>
+        <div class="siatka">
+          <label for="f-hrmax">Tętno maksymalne<input id="f-hrmax" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+          <label for="f-lthr">Tętno progowe (LTHR)<input id="f-lthr" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+        </div>
+        <h3>Cel</h3>
+        <div class="siatka">
+          <label for="f-cel-typ">Rodzaj celu<select id="f-cel-typ"><option value="dystans">dystans na czas</option><option value="czas_biegu">czas biegu bez przerwy</option></select></label>
+          <label for="f-cel-data">Data<input id="f-cel-data" type="date"></label>
+        </div>
+        <div id="cel-dystans" class="siatka">
+          <label for="f-cel-dyst">Dystans<select id="f-cel-dyst"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="f-cel-czas">Czas docelowy (g:mm:ss)<input id="f-cel-czas" type="text" inputmode="numeric" placeholder="np. 0:45:00"></label>
+        </div>
+        <div id="cel-czas-biegu" class="siatka" hidden>
+          <label for="f-cel-min">Ile minut bez przerwy<input id="f-cel-min" type="number" inputmode="numeric" value="30"></label>
+        </div>
+        <p id="blad-wywiad" class="komunikat zle" hidden></p>
+        <div class="rzad"><button class="glowny" type="submit">Dalej</button></div>
+      </section>
+    </form>
+  </section>
+
+  <section id="w-haslo" hidden>
+    <h2 id="haslo-tytul">Ustaw hasło do sejfu</h2>
+    <p>Tym hasłem zaszyfruję Twoje odpowiedzi. Hasła nie da się przypomnieć ani zresetować, bo nikt poza Tobą go nie zna.</p>
+    <form id="form-haslo" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+      <label for="haslo-nowe">Hasło (co najmniej 12 znaków)<input id="haslo-nowe" type="password" autocomplete="new-password"></label>
+      <label for="haslo-powt">Powtórz hasło<input id="haslo-powt" type="password" autocomplete="new-password"></label>
+      <p id="blad-haslo" class="komunikat zle" hidden></p>
+      <div class="rzad"><button id="haslo-zapisz" class="glowny" type="submit">Zaszyfruj i zapisz</button></div>
+    </form>
+  </section>
+
+  <section id="w-kod" hidden>
+    <h2>Zapisz kod odzyskiwania</h2>
+    <p>To jedyny sposób na otwarcie sejfu, gdy zapomnisz hasła. Pokazuję go tylko teraz. Przepisz go na kartkę albo do menedżera haseł.</p>
+    <div class="karta"><p id="kod-odz" class="kod-odz"></p></div>
+    <label for="kod-potw" style="flex-direction:row; align-items:center; gap:10px; color:var(--tekst); font-size:1rem"><input id="kod-potw" type="checkbox" style="width:22px; min-height:22px">Zapisałem kod w bezpiecznym miejscu</label>
+    <div class="rzad"><button id="kod-dalej" class="glowny" type="button" disabled>Dalej</button></div>
+  </section>
+
+  <section id="w-zamkniety" hidden>
+    <h2>Sejf jest zamknięty</h2>
+    <p>W tej przeglądarce są zapisane zaszyfrowane dane biegowe. Podaj hasło, żeby je otworzyć.</p>
+    <form id="form-otworz" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+      <label id="pole-haslo" for="haslo-otworz">Hasło<input id="haslo-otworz" type="password" autocomplete="current-password"></label>
+      <label id="pole-kod" for="kod-wpisz" hidden>Kod odzyskiwania<input id="kod-wpisz" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+      <p id="blad-otworz" class="komunikat zle" hidden></p>
+      <div class="rzad"><button id="otworz" class="glowny" type="submit">Otwórz sejf</button>
+        <button id="przelacz-kod" type="button">Nie pamiętam hasła – użyj kodu odzyskiwania</button></div>
+    </form>
+    <div class="rzad"><button id="usun" class="grozny" type="button">Usuń wszystko</button></div>
+  </section>
+
+  <section id="w-otwarty" hidden>
+    <nav class="zakladki" aria-label="Widoki">
+      <button type="button" data-z="profil" aria-selected="true">Profil i cel</button>
+      <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
+    </nav>
+
+    <div data-panel="profil" style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:12px">
+        <h3>Twoje dane z wywiadu</h3>
+        <dl id="profil-dl"></dl>
+        <div class="rzad"><button id="edytuj" type="button">Zmień dane</button></div>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Ocena celu: <span id="ocena-status" class="status"></span></h3>
+        <p id="ocena-prognoza"></p>
+        <p id="ocena-opis"></p>
+        <p id="brak-tetna" class="komunikat" hidden>Nie znasz tętna maksymalnego lub progowego. Plan zacznie od testu 30 minut, żeby strefy były zmierzone, a nie zgadnięte.</p>
+        <p class="cichy">Prognoza: wzór Riegla z Twojego rekordu. Układanie planu tydzień po tygodniu to następny krok budowy.</p>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Historia zmian (też w sejfie)</h3>
+        <pre id="historia"></pre>
+      </div>
+    </div>
+
+    <div data-panel="zapis" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Tak wyglądają Twoje dane w pamięci przeglądarki</h3>
+        <p class="cichy">To wszystko, co strona zapisała. Bez hasła jest to nieczytelny ciąg znaków.</p>
+        <pre id="surowe"></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Te same dane po otwarciu hasłem</h3>
+        <p class="cichy">Istnieją w tej postaci tylko w pamięci otwartej karty i znikają po zablokowaniu.</p>
+        <pre id="jawne"></pre>
+      </div>
+      <div class="karta">
+        <dl>
+          <dt>Szyfrowanie</dt><dd id="alg"></dd>
+          <dt>Połączenia z internetem od otwarcia strony</dt><dd id="siec-ile"></dd>
+          <dt>Automatyczna blokada</dt><dd>po 15 minutach bez dotyku</dd>
+        </dl>
+        <pre id="siec-lista" hidden style="margin-top:8px"></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Kopia zapasowa</h3>
+        <p class="cichy">Zaszyfrowana kopia sejfu jako tekst. Możesz ją trzymać gdziekolwiek – bez hasła jest bezużyteczna.</p>
+        <textarea id="kopia-tekst" readonly spellcheck="false"></textarea>
+        <p id="kopia-info" class="komunikat ok" hidden></p>
+        <div class="rzad"><button id="kopiuj" type="button">Kopiuj kopię</button><button id="usun2" class="grozny" type="button">Usuń wszystko</button></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="usun-potw" class="karta" hidden style="display:flex; flex-direction:column; gap:12px; border-color:var(--zle)">
+    <h3>Usunąć sejf z tej przeglądarki?</h3>
+    <p>Dane znikną bezpowrotnie. Jeśli nie masz kopii, nie da się ich odzyskać.</p>
+    <div class="rzad"><button id="usun-tak" class="grozny" type="button">Tak, usuń wszystko</button><button id="usun-nie" type="button">Nie, zostaw</button></div>
+  </div>
+</main>
+
+<script>
+/*LIB*/
+</script>
+<script>
+/*JS*/
+</script>
