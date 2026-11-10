@@ -1,0 +1,54 @@
+{
+ "id": "powrot-po-kontuzji",
+ "opis": "Zaawansowana, wraca po przerwie; cel: 10 km w 40:00.",
+ "rok_urodzenia": 1992,
+ "plec": "k",
+ "masa_kg": 57,
+ "wzrost_cm": 166,
+ "poziom": "zaawansowany",
+ "powrot_po_przerwie": true,
+ "obciazenie": {
+  "h_tydz": 2.0,
+  "km_tydz": 20,
+  "najdluzszy_min": 40
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 60
+  },
+  "sr": {
+   "max_min": 0
+  },
+  "czw": {
+   "max_min": 50
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 50
+  },
+  "nd": {
+   "max_min": 90
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 10,
+   "czas": "0:39:00",
+   "data": "2026-04-12"
+  }
+ ],
+ "hrmax": 192,
+ "lthr": 174,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 10,
+  "czas": "0:40:00",
+  "data": "2027-02-07"
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "id": "nierealny-cel",
+ "opis": "10 km w 55:00, a chce maraton 3:15 za 16 tygodni.",
+ "rok_urodzenia": 1988,
+ "plec": "m",
+ "masa_kg": 82,
+ "wzrost_cm": 178,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 3.0,
+  "km_tydz": 28,
+  "najdluzszy_min": 70
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 60
+  },
+  "sr": {
+   "max_min": 0
+  },
+  "czw": {
+   "max_min": 70
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 70
+  },
+  "nd": {
+   "max_min": 170
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 10,
+   "czas": "0:55:00",
+   "data": "2026-10-11"
+  }
+ ],
+ "hrmax": 184,
+ "lthr": 165,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 42.195,
+  "czas": "3:15:00",
+  "data": "2027-03-07"
+ }
+}

@@ -1,0 +1,1557 @@
+{
+ "profil": "maraton-320",
+ "ocena_celu": {
+  "status": "ambitny",
+  "prognoza": "3:20:06",
+  "uzasadnienie": "Riegel z 10 km 43:30 daje ok. 3:20 – cel na granicy prognozy."
+ },
+ "bramki": [
+  {
+   "tydzien": 3,
+   "opis": "test 30 min",
+   "prog": "tempo progu ≤ 4:25/km"
+  },
+  {
+   "tydzien": 8,
+   "opis": "10 km",
+   "prog": "≤ 43:00 – cel zostaje; > 44:30 – cel 3:25"
+  },
+  {
+   "tydzien": 16,
+   "opis": "półmaraton kontrolny",
+   "prog": "≤ 1:35:30 – cel zostaje; > 1:38 – cel 3:25–3:30"
+  }
+ ],
+ "tygodnie": [
+  {
+   "nr": 1,
+   "start": "2026-11-16",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 42,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 32,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 52,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 112,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 2,
+   "start": "2026-11-23",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 50,
+     "mocne_min": 20,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 50,
+     "mocne_min": 20,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 34,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 55,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 121,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 3,
+   "start": "2026-11-30",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 53,
+     "mocne_min": 21,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 48,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "test",
+     "min": 53,
+     "mocne_min": 21,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ],
+     "opis": "test 30 min (LTHR)"
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 36,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 61,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 129,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 4,
+   "start": "2026-12-07",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 42,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 32,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 52,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 112,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 5,
+   "start": "2026-12-14",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 56,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 51,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 56,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 38,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 63,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 136,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 6,
+   "start": "2026-12-21",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 60,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 55,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 60,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 41,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 68,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 146,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 7,
+   "start": "2026-12-28",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 64,
+     "mocne_min": 26,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 57,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 64,
+     "mocne_min": 26,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 43,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 72,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 155,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 8,
+   "start": "2027-01-04",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 55,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 50,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "test",
+     "min": 55,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ],
+     "opis": "test 10 km"
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 38,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 63,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 134,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 9,
+   "start": "2027-01-11",
+   "faza": "baza",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 66,
+     "mocne_min": 26,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 59,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 66,
+     "mocne_min": 26,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 44,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 160,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 10,
+   "start": "2027-01-18",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 165,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 11,
+   "start": "2027-01-25",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 165,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 12,
+   "start": "2027-02-01",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 59,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 53,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 59,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 40,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 66,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 143,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 13,
+   "start": "2027-02-08",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 165,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 14,
+   "start": "2027-02-15",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 58,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 44,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 72,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 175,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ],
+     "symulacja": true
+    }
+   ]
+  },
+  {
+   "nr": 15,
+   "start": "2027-02-22",
+   "faza": "rozwoj",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 165,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 16,
+   "start": "2027-03-01",
+   "faza": "specyficzna",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 60,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 60,
+     "mocne_min": 24,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "start",
+     "min": 100,
+     "mocne_min": 100,
+     "dodatki": [
+      "mobilnosc"
+     ],
+     "opis": "półmaraton kontrolny"
+    }
+   ]
+  },
+  {
+   "nr": 17,
+   "start": "2027-03-08",
+   "faza": "specyficzna",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 58,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 44,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 72,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 175,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ],
+     "symulacja": true
+    }
+   ]
+  },
+  {
+   "nr": 18,
+   "start": "2027-03-15",
+   "faza": "specyficzna",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 60,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 68,
+     "mocne_min": 27,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 45,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 75,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 165,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 19,
+   "start": "2027-03-22",
+   "faza": "specyficzna",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 56,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 51,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 56,
+     "mocne_min": 22,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 38,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 63,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 136,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 20,
+   "start": "2027-03-29",
+   "faza": "taper",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 42,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 46,
+     "mocne_min": 18,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "regeneracyjny",
+     "min": 32,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sob",
+     "typ": "spokojny",
+     "min": 52,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "dlugi",
+     "min": 112,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  },
+  {
+   "nr": 21,
+   "start": "2027-04-05",
+   "faza": "taper",
+   "dni": [
+    {
+     "dzien": "pn",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "wt",
+     "typ": "akcent",
+     "min": 45,
+     "mocne_min": 12,
+     "dodatki": [
+      "rozgrzewka",
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "sr",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "czw",
+     "typ": "spokojny",
+     "min": 40,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "pt",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "sob",
+     "typ": "regeneracyjny",
+     "min": 20,
+     "mocne_min": 0,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    },
+    {
+     "dzien": "nd",
+     "typ": "start",
+     "min": 200,
+     "mocne_min": 200,
+     "dodatki": [
+      "mobilnosc"
+     ]
+    }
+   ]
+  }
+ ]
+}

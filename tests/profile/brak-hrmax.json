@@ -1,0 +1,54 @@
+{
+ "id": "brak-hrmax",
+ "opis": "Biega regularnie, nie zna HRmax ani LTHR; cel: półmaraton 1:59.",
+ "rok_urodzenia": 1979,
+ "plec": "k",
+ "masa_kg": 63,
+ "wzrost_cm": 170,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 2.5,
+  "km_tydz": 22,
+  "najdluzszy_min": 60
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 60
+  },
+  "sr": {
+   "max_min": 45
+  },
+  "czw": {
+   "max_min": 60
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 45
+  },
+  "nd": {
+   "max_min": 150
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 5,
+   "czas": "0:26:30",
+   "data": "2026-10-03"
+  }
+ ],
+ "hrmax": null,
+ "lthr": null,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 21.0975,
+  "czas": "1:59:00",
+  "data": "2027-02-21"
+ }
+}

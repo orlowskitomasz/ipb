@@ -1,0 +1,54 @@
+{
+ "id": "maraton-320",
+ "opis": "Biega regularnie; cel: maraton 3:20, poniedziałek zawsze wolny.",
+ "rok_urodzenia": 1984,
+ "plec": "m",
+ "masa_kg": 76,
+ "wzrost_cm": 180,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 5.5,
+  "km_tydz": 55,
+  "najdluzszy_min": 120
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 70
+  },
+  "sr": {
+   "max_min": 60
+  },
+  "czw": {
+   "max_min": 70
+  },
+  "pt": {
+   "max_min": 45
+  },
+  "sob": {
+   "max_min": 75
+  },
+  "nd": {
+   "max_min": 180
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 10,
+   "czas": "0:43:30",
+   "data": "2026-09-20"
+  }
+ ],
+ "hrmax": 186,
+ "lthr": 168,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 42.195,
+  "czas": "3:20:00",
+  "data": "2027-04-11"
+ }
+}

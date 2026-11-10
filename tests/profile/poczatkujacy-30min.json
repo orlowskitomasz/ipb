@@ -1,0 +1,47 @@
+{
+ "id": "poczatkujacy-30min",
+ "opis": "Zaczyna biegać; cel: 30 minut biegu bez przerwy.",
+ "rok_urodzenia": 1990,
+ "plec": "k",
+ "masa_kg": 68,
+ "wzrost_cm": 168,
+ "poziom": "zaczynam",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 1.0,
+  "km_tydz": 6,
+  "najdluzszy_min": 20
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 45
+  },
+  "sr": {
+   "max_min": 0
+  },
+  "czw": {
+   "max_min": 0
+  },
+  "pt": {
+   "max_min": 45
+  },
+  "sob": {
+   "max_min": 0
+  },
+  "nd": {
+   "max_min": 60
+  }
+ },
+ "rekordy": [],
+ "hrmax": null,
+ "lthr": null,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "czas_biegu",
+  "minuty": 30,
+  "data": "2027-01-24"
+ }
+}
