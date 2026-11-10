@@ -132,6 +132,7 @@
   <section id="w-otwarty" hidden>
     <nav class="zakladki" aria-label="Widoki">
       <button type="button" data-z="plan" aria-selected="true">Plan</button>
+      <button type="button" data-z="dziennik" aria-selected="false">Dziennik</button>
       <button type="button" data-z="strefy" aria-selected="false">Strefy i testy</button>
       <button type="button" data-z="profil" aria-selected="false">Profil i cel</button>
       <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
@@ -161,6 +162,38 @@
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
         <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
+      </div>
+    </div>
+
+    <div data-panel="dziennik" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Obciążenie</h3>
+        <div id="dz-rady" style="display:flex; flex-direction:column; gap:8px"></div>
+        <dl id="dz-wsk"></dl>
+        <p class="cichy">Obciążenie biegu to minuty pomnożone przez kwadrat intensywności (z tętna, a gdy go nie ma – z odczucia). Godzina dokładnie na progu to 100 punktów.</p>
+      </div>
+      <form id="form-bieg" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+        <h3>Dodaj bieg</h3>
+        <label for="dz-plik">Plik z zegarka (FIT, TCX lub GPX)<input id="dz-plik" type="file" accept=".fit,.tcx,.gpx" multiple></label>
+        <p class="cichy">Z pliku zapisuję tylko datę, czas, dystans i tętno. Trasa (współrzędne) i numer zegarka nie są zapisywane. Plik nie opuszcza tej przeglądarki.</p>
+        <h3>albo wpisz ręcznie</h3>
+        <div class="siatka">
+          <label for="dz-data">Data<input id="dz-data" type="date"></label>
+          <label for="dz-min">Czas (min)<input id="dz-min" type="number" inputmode="numeric"></label>
+          <label for="dz-km">Dystans (km)<input id="dz-km" type="number" inputmode="decimal" step="0.1"></label>
+          <label for="dz-hr">Średnie tętno<input id="dz-hr" type="number" inputmode="numeric"></label>
+          <label for="dz-odczucie">Odczucie<select id="dz-odczucie"><option value="">nie podaję</option><option value="1">1 – bardzo lekko</option><option value="2">2</option><option value="3">3 – lekko</option><option value="4">4</option><option value="5">5 – umiarkowanie</option><option value="6">6</option><option value="7">7 – ciężko</option><option value="8">8</option><option value="9">9 – bardzo ciężko</option><option value="10">10 – maksymalnie</option></select></label>
+        </div>
+        <p id="dz-info" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="dz-dodaj" class="glowny" type="button">Dodaj bieg</button></div>
+      </form>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Plan a wykonanie</h3>
+        <div id="dz-tygodnie" style="display:flex; flex-direction:column; gap:10px"></div>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Ostatnie biegi</h3>
+        <div id="dz-lista" style="display:flex; flex-direction:column"></div>
       </div>
     </div>
 

@@ -282,7 +282,7 @@ Progi (110%, 88%, 25%, 7%, 70%) są wartościami wyjściowymi – zmiana wymaga 
 Biegacze testowi: `poczatkujacy-30min`, `maraton-320`, `nierealny-cel`, `powrot-po-kontuzji`, `brak-hrmax`. Nowa reguła = nowy profil lub nowa mutacja w self-teście.
 
 ### 16.2 Testy aplikacji
-Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, widok planu, brak połączeń, ramka osadzona). Reszta powstaje razem z kolejnymi krokami.
+Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, plan, strefy, układ dni, dziennik, brak połączeń, ramka osadzona) oraz `python3 tests/test_dziennik.py` (pliki FIT/TCX/GPX, ocena biegu, obciążenie). Reszta powstaje razem z kolejnymi krokami.
 - sieć: żadnego połączenia poza listą z sekcji 11 (Playwright z atrapami, test pada przy obcej domenie);
 - sejf: brak danych otwartym tekstem w IndexedDB/localStorage, złe hasło nie otwiera, kod odzyskiwania działa, blokada po bezczynności;
 - plan z aplikacji dla 5 profili testowych i kilku tysięcy losowych przechodzi `tests/sprawdz_plan.py` – **działa**: `python3 tests/test_plan.py`;

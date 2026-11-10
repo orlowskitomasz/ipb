@@ -14,7 +14,7 @@ IPB to otwartoźródłowa aplikacja z planem biegowym szytym na miarę. **Źród
 | `/IPB [obszar]: uwaga` | dopisz wpis do rejestru (niżej), oceń wpływ na reguły, popraw SPEC/skill/testy, zgłoś sprzeczność z zasadami |
 | `/IPB plan` albo prośba o plan | wywiad → ocena celu → plan → **sprawdzenie R1–R16** → dopiero potem pokaż plan |
 | `/IPB sprawdź` + plan | sprawdź plan regułami R1–R16 i wypisz naruszenia |
-| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
+| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
 | `/IPB dalej` | zbuduj pierwszy niezrobiony krok z `docs/PLAN-BUDOWY.md` według zasad z tego pliku, przetestuj, zapisz w repozytorium i pokaż działającą stronę |
 | `/IPB stan` | pokaż tabelę z `docs/PLAN-BUDOWY.md`: co zrobione, co następne |
 | `/IPB pytania`, `/IPB rejestr` | pokaż otwarte pytania / rejestr |

@@ -105,6 +105,69 @@
     if (v) cz.push(`tempo ${Strefy.mmss(v.od)}–${Strefy.mmss(v.do)}/km`);
     return cz.length ? cz.join(' · ') + (x.szacunek && t ? ' (tętno to szacunek)' : '') : '';
   }
+  // --- dziennik ---
+  const dzienPlanu = (iso) => {
+    for (const t of (dane.plan ? dane.plan.tygodnie : [])) {
+      const i = Math.round((Date.parse(iso + 'T00:00:00Z') - Date.parse(t.start + 'T00:00:00Z')) / 864e5);
+      if (i >= 0 && i < 7) return t.dni[i];
+    }
+    return null;
+  };
+  const lthrTeraz = () => Strefy.licz(dane.profil).tetna.lthr.v;
+  const opisBiegu = (w) => [hm(w.min), w.km ? `${String(w.km).replace('.', ',')} km` : '', w.hr_sr ? `śr. tętno ${w.hr_sr}` : '', w.odczucie ? `odczucie ${w.odczucie}/10` : ''].filter(Boolean).join(' · ');
+  const ocenaTekst = (w) => { const o = Dziennik.ocena(w, dzienPlanu(w.data)); return (o.pkt === null ? '' : `Ocena ${o.pkt}/10. `) + o.opis; };
+  async function dodajBiegi(nowe, co) {
+    const dz = dane.dziennik = dane.dziennik || [];
+    const swieze = nowe.filter((w) => !dz.some((x) => x.data === w.data && x.min === w.min && x.zrodlo === w.zrodlo));
+    dz.push(...swieze); dz.sort((a, b) => (a.data < b.data ? 1 : -1));
+    if (swieze.length) await zapiszDane(co);
+    return swieze.length;
+  }
+  function pokazDziennik() {
+    const dz = dane.dziennik || [], k = Dziennik.wskazniki(dz, lthrTeraz(), dzisISO());
+    $('dz-rady').replaceChildren(...k.rady.map((r) => el('p', 'komunikat' + (r.poziom === 'zle' ? ' zle' : r.poziom === 'ok' ? ' ok' : ''), r.tekst)));
+    const wiersz = (a, b) => [el('dt', '', a), el('dd', '', b)];
+    $('dz-wsk').replaceChildren(...wiersz('Ostatnie 7 dni', `${k.obc7} pkt`), ...wiersz('Zmęczenie (średnia z 7 dni)', `${k.atl} pkt na dzień`),
+      ...wiersz('Forma (średnia z 42 dni)', `${k.ctl} pkt na dzień`), ...wiersz('Ostatni tydzień do średniej z czterech', k.acwr === null ? 'za mało danych' : String(k.acwr).replace('.', ',')));
+    const dzis = dzisISO(), tyg = (dane.plan ? dane.plan.tygodnie : []).filter((t) => t.start <= dzis).slice(-8);
+    $('dz-tygodnie').replaceChildren(...(tyg.length ? tyg.map((t) => {
+      const koniec = new Date(Date.parse(t.start + 'T00:00:00Z') + 6 * 864e5).toISOString().slice(0, 10);
+      const plan = t.dni.reduce((a, x) => a + x.min, 0), zrob = dz.filter((w) => w.data >= t.start && w.data <= koniec).reduce((a, w) => a + w.min, 0);
+      const r = el('div', 'slupek'), tor = el('span', 'tor'), i = el('i'); i.style.width = Math.min(100, plan ? 100 * zrob / plan : 0) + '%'; tor.append(i);
+      r.append(el('span', '', `Tydz. ${t.nr}`), tor, el('span', '', `${hm(zrob)} z ${hm(plan)}`)); return r;
+    }) : [el('p', 'cichy', 'Plan zaczyna się w najbliższy poniedziałek – porównanie pojawi się po pierwszym tygodniu.')]));
+    $('dz-lista').replaceChildren(...(dz.length ? dz.slice(0, 30).map((w) => {
+      const b = el('div', 'bieg'), r = el('div', 'rzad'), sel = el('select'), u = el('button', '', 'Usuń');
+      sel.setAttribute('aria-label', 'Odczucie'); sel.append(new Option('odczucie…', ''), ...Array.from({ length: 10 }, (_, i) => new Option(`${i + 1}/10`, i + 1))); sel.value = w.odczucie || '';
+      sel.onchange = async () => { w.odczucie = +sel.value || undefined; await zapiszDane(`dziennik: odczucie ${w.data}`); pokazDziennik(); };
+      u.type = 'button'; u.dataset.usun = w.data;
+      u.onclick = async () => { dane.dziennik = dz.filter((x) => x !== w); await zapiszDane(`dziennik: usunięty bieg ${w.data}`); pokazDziennik(); };
+      r.append(sel, u);
+      b.append(el('span', 'glowa', `${w.data} · ${opisBiegu(w)}`), el('span', 'cichy', ocenaTekst(w) + (w.zrodlo !== 'reczny' ? ` Z pliku ${w.zrodlo.toUpperCase()}.` : '')), r);
+      return b;
+    }) : [el('p', 'cichy', 'Jeszcze nic nie dodano.')]));
+    if (!$('dz-data').value) $('dz-data').value = dzis;
+  }
+  async function dodajRecznie() {
+    const min = liczba('dz-min'), data = $('dz-data').value;
+    if (!data || !(min > 0 && min < 1500)) return komunikat('dz-info', 'Podaj datę i czas biegu w minutach.');
+    const w = { data, zrodlo: 'reczny', min: Math.round(min) };
+    for (const [pole, id] of [['km', 'dz-km'], ['hr_sr', 'dz-hr'], ['odczucie', 'dz-odczucie']]) { const v = liczba(id); if (v) w[pole] = v; }
+    const ile = await dodajBiegi([w], `dziennik: bieg ${data}, ${w.min} min`);
+    for (const id of ['dz-min', 'dz-km', 'dz-hr', 'dz-odczucie']) $(id).value = '';
+    komunikat('dz-info', ile ? 'Dodano bieg.' : 'Taki bieg już jest w dzienniku.', ile ? 'ok' : 'zle'); pokazDziennik();
+  }
+  async function dodajPliki(pliki) {
+    const nowe = [], bledy = [];
+    for (const f of pliki) {
+      try { nowe.push(Dziennik.zamknij(Dziennik.zPliku(f.name, await f.arrayBuffer()), lthrTeraz())); } catch (e) { bledy.push(`${f.name}: ${e.message}`); }
+    }
+    const ile = nowe.length ? await dodajBiegi(nowe, `dziennik: ${nowe.length} bieg(i) z pliku`) : 0;
+    $('dz-plik').value = '';
+    komunikat('dz-info', [ile ? `Dodano z pliku: ${ile}.` : '', nowe.length - ile ? `Pominięto już zapisane: ${nowe.length - ile}.` : '', ...bledy].filter(Boolean).join(' '), bledy.length ? 'zle' : 'ok');
+    pokazDziennik();
+  }
+
   function pokazStrefy() {
     const s = Strefy.licz(dane.profil), r = Prognoza.ostatni(dane.profil.rekordy || []);
     const wiersz = (k, v) => [el('dt', '', k), el('dd', '', v)];
@@ -183,8 +246,10 @@
         c.onclick = async () => { dane.zmiany = (dane.zmiany || []).filter((z) => z.tydzien !== t.nr); await ulozPlan(`cofnięte zmiany w tygodniu ${t.nr}`); pokazPlan(); };
         gora.append(c);
       }
-      d.append(s, ...(gora.children.length ? [gora] : []), ...t.dni.map((x) => {
+      d.append(s, ...(gora.children.length ? [gora] : []), ...t.dni.map((x, nrDnia) => {
         const w = el('div', 'dzien' + (x.typ === 'wolne' ? ' wolne' : ''));
+        const dataDnia = new Date(Date.parse(t.start + 'T00:00:00Z') + nrDnia * 864e5).toISOString().slice(0, 10);
+        const wykonane = () => { for (const b of (dane.dziennik || []).filter((q) => q.data === dataDnia)) w.append(el('span', 'wykonano', `Wykonano: ${opisBiegu(b)}. ${ocenaTekst(b)}`)); };
         const nazwa = el('span', 'nazwa', NAZWA[x.typ]);
         if (MOC[x.typ]) nazwa.append(el('span', 'moc ' + MOC[x.typ][1], MOC[x.typ][0]));
         w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
@@ -199,14 +264,14 @@
             o.onclick = () => zmien({ tydzien: t.nr, typ: 'odpusc', a: x.dzien }, `tydzień ${t.nr}: odpuszczony bieg (${x.dzien})`); z.append(o); }
           w.append(z);
         };
-        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); sterowanie(); return w; }
+        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); wykonane(); sterowanie(); return w; }
         const cel = celTekst(x);
         if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', PO_CO[x.typ] + (dod ? ' Do tego: ' + dod + '.' : '')));
-        sterowanie();
+        wykonane(); sterowanie();
         return w;
       }));
       return d;
@@ -244,7 +309,7 @@
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
     for (const d of document.querySelectorAll('[data-panel]')) d.hidden = d.dataset.panel !== n;
-    if (n === 'plan') pokazPlan(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
+    if (n === 'plan') pokazPlan(); else if (n === 'dziennik') pokazDziennik(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
   function zablokuj() { dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
@@ -289,7 +354,7 @@
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [], zmiany: [],
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [], zmiany: [], dziennik: [],
             historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
@@ -319,6 +384,8 @@
     for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
     akcja('form-test', 't-zapisz', zapiszTest);
     $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
+    akcja('form-bieg', 'dz-dodaj', dodajRecznie);
+    $('dz-plik').onchange = () => $('dz-plik').files.length && dodajPliki([...$('dz-plik').files]);
     $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };
     for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }

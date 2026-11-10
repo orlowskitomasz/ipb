@@ -19,8 +19,11 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · strefy · Krok 2 zbudowany: strefy (% tętna maks., Karvonen, Friel) i tempa z ostatniego wyniku, cel tętna/tempa przy każdym biegu, wpisywanie wyników testów przelicza strefy, prognozę i plan bez przesuwania tygodni; reguła R17 · przyjęte
 - 2026-11-10 · autor · prognozy · Prognoza liczy się z ostatniego wyniku (najnowsza data), nie z najlepszego – sprawdzian ma zmieniać prognozę w obie strony · przyjęte
 - 2026-11-10 · autor · plan · Krok 3 zbudowany: zamiana dwóch dni w tygodniu, odpuszczenie biegu, cofnięcie zmian; ostrzeżenia (mocne dni pod rząd, długi obok mocnego, bieg ponad limit dnia, skoki przed akcentem) i podpowiedzi (brak długiego, siły, testu, dnia wolnego, za dużo mocnego); ręczne zmiany przetrwają przeliczenie planu · przyjęte
+- 2026-11-10 · autor · dziennik · Krok 4 zbudowany: dziennik (ręcznie i z plików FIT/TCX/GPX), ocena biegu 0–10 (połowa za czas, połowa za intensywność), obciążenie (minuty × intensywność², godzina na progu = 100 pkt), zmęczenie/forma/stosunek 7 do 28 dni z radą, plan a wykonanie · przyjęte
+- 2026-11-10 · autor · prywatność · Z pliku z zegarka zapisujemy tylko datę, czas, dystans, tętno i mocne minuty; współrzędne, przebieg i numer zegarka nie trafiają do sejfu. Sam plik nie jest przechowywany · przyjęte
 
 ## Otwarte pytania
+- dziennik: czy przechowywać całe pliki z zegarka (potrzebne do DFA alfa 1 i map), czy zostać przy samym podsumowaniu?
 - podpowiedzi: przycisk „dodaj w wolnym miejscu” przy podpowiedzi nie jest zrobiony – potrzebny, czy wystarczy samo wskazanie?
 - strefy: brakujące tętno maks. szacujemy wzorem Tanaki (208 − 0,7 × wiek), a próg jako 90% maks. – czy zostawić, czy bez pomiaru podawać tylko tempo i odczucie?
 - strefy: model Danielsa (VDOT) i progi z DFA alfa 1 nie są jeszcze w aplikacji – dodać w kroku 4 razem z importem plików?
