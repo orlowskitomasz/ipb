@@ -79,6 +79,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 5,
+      "praca_s": 360,
+      "przerwa_s": 60
+     },
      "opis": "Rozgrzewka 10–15 min, sub-próg: 5 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "subprog",
      "cel_tetno": {
@@ -125,6 +130,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -237,6 +247,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -278,6 +293,12 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1740,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 29 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -390,6 +411,12 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 30 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -431,6 +458,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 5,
+      "praca_s": 360,
+      "przerwa_s": 60
+     },
      "opis": "Rozgrzewka 10–15 min, sub-próg: 5 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "subprog",
      "cel_tetno": {
@@ -548,6 +580,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 360,
+      "przerwa_s": 60
+     },
      "opis": "Rozgrzewka 10–15 min, sub-próg: 4 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "subprog",
      "cel_tetno": {
@@ -594,6 +631,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -706,6 +748,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -747,6 +794,12 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 30 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -859,6 +912,12 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 30 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -900,6 +959,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 5,
+      "praca_s": 360,
+      "przerwa_s": 60
+     },
      "opis": "Rozgrzewka 10–15 min, sub-próg: 5 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "subprog",
      "cel_tetno": {
@@ -1017,6 +1081,11 @@
       "mobilnosc"
      ],
      "opis": "Bieg kontrolny 10 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.",
+     "interwaly": {
+      "n": 1,
+      "praca_m": 10000,
+      "przerwa_s": 0
+     },
      "po_co": "Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.",
      "dlaczego_teraz": "Sprawdzian w tym miejscu zostawia czas na korektę celu.",
      "latwiej": "Przełóż o 2–3 dni, jeśli jesteś zmęczony.",
@@ -1054,6 +1123,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -1166,6 +1240,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 12,
+      "praca_s": 60,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, podbiegi: 12 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -1207,6 +1286,12 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 30 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -1319,6 +1404,12 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0,
+      "na_koncu": true
+     },
      "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 30 min coraz mocniej, schłodzenie do końca czasu.",
      "rodzaj": "doprogu",
      "cel_tetno": {
@@ -1360,6 +1451,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 5,
+      "praca_s": 360,
+      "przerwa_s": 60
+     },
      "opis": "Rozgrzewka 10–15 min, sub-próg: 5 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "subprog",
      "cel_tetno": {
@@ -1477,6 +1573,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -1523,6 +1624,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 6,
+      "praca_s": 180,
+      "przerwa_s": 150
+     },
      "opis": "Rozgrzewka 10–15 min, VO2max: 6 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "vo2",
      "cel_tetno": {
@@ -1639,6 +1745,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 6,
+      "praca_s": 180,
+      "przerwa_s": 150
+     },
      "opis": "Rozgrzewka 10–15 min, VO2max: 6 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "vo2",
      "cel_tetno": {
@@ -1684,6 +1795,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0
+     },
      "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 30 min, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -1801,6 +1917,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0
+     },
      "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 30 min, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -1847,6 +1968,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -1964,6 +2090,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2010,6 +2141,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 6,
+      "praca_s": 180,
+      "przerwa_s": 150
+     },
      "opis": "Rozgrzewka 10–15 min, VO2max: 6 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
      "rodzaj": "vo2",
      "cel_tetno": {
@@ -2126,6 +2262,11 @@
       "mobilnosc"
      ],
      "opis": "Bieg kontrolny 10 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.",
+     "interwaly": {
+      "n": 1,
+      "praca_m": 10000,
+      "przerwa_s": 0
+     },
      "po_co": "Mierzy obecną formę, żeby strefy i prognoza opierały się na pomiarze.",
      "dlaczego_teraz": "Sprawdzian w tym miejscu zostawia czas na korektę celu.",
      "latwiej": "Przełóż o 2–3 dni, jeśli jesteś zmęczony.",
@@ -2163,6 +2304,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0
+     },
      "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 30 min, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2280,6 +2426,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 1,
+      "praca_s": 1800,
+      "przerwa_s": 0
+     },
      "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 30 min, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2326,6 +2477,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2443,6 +2599,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 3,
+      "praca_m": 2000,
+      "przerwa_s": 120
+     },
      "opis": "Rozgrzewka 10–15 min, tempo startowe: 3 × 2 km w tempie celu (4:09/km), przerwa 2 min, schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -2485,6 +2646,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 6,
+      "praca_m": 1000,
+      "przerwa_m": 1000
+     },
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 6 × (1 km w tempie celu 4:09/km + 1 km luźniej), schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -2598,6 +2764,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 6,
+      "praca_m": 1000,
+      "przerwa_m": 1000
+     },
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 6 × (1 km w tempie celu 4:09/km + 1 km luźniej), schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -2640,6 +2811,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2757,6 +2933,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 4 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {
@@ -2803,6 +2984,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 3,
+      "praca_m": 2000,
+      "przerwa_s": 120
+     },
      "opis": "Rozgrzewka 10–15 min, tempo startowe: 3 × 2 km w tempie celu (4:09/km), przerwa 2 min, schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -2916,6 +3102,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 3,
+      "praca_m": 2000,
+      "przerwa_s": 120
+     },
      "opis": "Rozgrzewka 10–15 min, tempo startowe: 3 × 2 km w tempie celu (4:09/km), przerwa 2 min, schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -2958,6 +3149,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 5,
+      "praca_m": 1000,
+      "przerwa_m": 1000
+     },
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 5 × (1 km w tempie celu 4:09/km + 1 km luźniej), schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -3071,6 +3267,11 @@
       "plyometria",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 4,
+      "praca_m": 1000,
+      "przerwa_m": 1000
+     },
      "opis": "Rozgrzewka 10–15 min, zmienne tempo: 4 × (1 km w tempie celu 4:09/km + 1 km luźniej), schłodzenie do końca czasu.",
      "rodzaj": "cel",
      "cel_tempo": {
@@ -3113,6 +3314,11 @@
       "rozgrzewka",
       "mobilnosc"
      ],
+     "interwaly": {
+      "n": 2,
+      "praca_s": 480,
+      "przerwa_s": 90
+     },
      "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
      "rodzaj": "prog",
      "cel_tetno": {

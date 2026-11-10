@@ -24,8 +24,12 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · zasady · Audyt i rozbudowa silnika treningowego według załączonego planu pracy (14 etapów): faza 1 – raport; faza 2 – wdrożenie P0 i części P1 (SPEC sekcja 17) · przyjęte
 - 2026-11-10 · autor · decyzje · Jeden walidator w JavaScript; własna implementacja zamiast kopiowania cudzego kodu; stosunek 7 do 28 dni bez progów i bez języka ryzyka; ocena biegu w trzech poziomach zamiast 0–10; silnik przed krokiem 5 · przyjęte
 - 2026-11-10 · autor · prognozy · Druga metoda prognozy: VDOT z równań Danielsa i Gilberta; prognoza jako przedział; tempa stref z ułamków VDOT zamiast ekstrapolacji Riegla · przyjęte
+- 2026-11-10 · autor · zasady · Baza metodyki w `docs/METODYKA.md` (biblioteka metod, model zawodnika, ograniczenia twarde i miękkie, obciążenie, adaptacja, porównywanie planów); skill dostał sekcję „Metodyka”; kolejne kroki budowy mają się na niej opierać · przyjęte
+- 2026-11-10 · autor · zegarki · Krok 5, część pierwsza: trening strukturalny jako plik FIT (rozgrzewka, odcinki z powtórzeniami, cel tętna lub tempa, schłodzenie otwarte) i kalendarz ICS z celem dnia i uzasadnieniem; pliki sprawdzone oficjalnym dekoderem Garmin FIT SDK · przyjęte
 
 ## Otwarte pytania
+- zegarki: plik FIT nie był jeszcze wgrany na prawdziwy zegarek – do sprawdzenia przez autora (Garmin).
+
 - silnik: źródła oznaczone `potwierdzone: false` w `src/reguly.js` trzeba otworzyć i sprawdzić (autor, rok, wniosek) – kto i kiedy?
 - dziennik: czy przechowywać całe pliki z zegarka (potrzebne do DFA alfa 1 i map), czy zostać przy samym podsumowaniu?
 - podpowiedzi: przycisk „dodaj w wolnym miejscu” przy podpowiedzi nie jest zrobiony – potrzebny, czy wystarczy samo wskazanie?

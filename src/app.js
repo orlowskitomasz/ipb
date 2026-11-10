@@ -92,6 +92,12 @@
   try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
 
   // Plan trzyma swój pierwszy poniedziałek: przeliczenie po teście nie przesuwa tygodni. „Od nowa” zaczyna od najbliższego.
+  // Plik powstaje w przeglądarce i jest zapisywany przez nią; nic nie jest wysyłane.
+  function pobierz(nazwa, typ, tresc) {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([tresc], { type: typ })); a.download = nazwa;
+    document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    komunikat('eksport-info', `Plik ${nazwa} zapisany przez przeglądarkę. Jeśli się nie pobrał: podgląd w oknie Claude blokuje pobieranie – otwórz aplikację z pliku albo ze swojego serwera. Plik FIT wgraj na zegarek Garmin do folderu GARMIN/NewFiles albo zaimportuj w Garmin Connect.`, 'ok');
+  }
   async function ulozPlan(co, odNowa) {
     const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
     if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
@@ -273,6 +279,9 @@
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           if (x.po_co) w.append(el('span', 'wiecej', `Po co: ${x.po_co} ${x.dlaczego_teraz || ''}${x.latwiej ? ' Łatwiejszy wariant: ' + x.latwiej : ''}`));
+          const z = el('button', '', 'Na zegarek (FIT)'); z.type = 'button'; z.dataset.fit = `${t.nr}-${x.dzien}`;
+          z.onclick = () => pobierz(`${Eksport.nazwaTreningu(x, dataDnia).replace(/ /g, '_')}.fit`, 'application/octet-stream', Eksport.fit(Eksport.nazwaTreningu(x, dataDnia), Eksport.kroki(x), Math.floor(Date.now() / 1000)));
+          const zz = el('span', 'zmiana'); zz.append(z); w.append(zz);
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', (x.po_co || PO_CO[x.typ]) + (dod ? ' Do tego: ' + dod + '.' : '')));
         wykonane(); sterowanie();
@@ -388,6 +397,7 @@
     for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
     akcja('form-test', 't-zapisz', zapiszTest);
     $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
+    $('eksport-ics').onclick = () => pobierz('plan-biegowy.ics', 'text/calendar', Eksport.ics(dane.plan, new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z'));
     akcja('form-bieg', 'dz-dodaj', dodajRecznie);
     $('dz-plik').onchange = () => $('dz-plik').files.length && dodajPliki([...$('dz-plik').files]);
     $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };

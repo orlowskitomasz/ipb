@@ -77,6 +77,13 @@ with sync_playwright() as pw:
     page.locator("#plan-tygodnie .komunikat").first.wait_for(state="detached", timeout=60000)
     sprawdz("cofnięcie zmian przywraca tydzień", page.locator("details.tydzien summary").first.inner_text() == pierwszy_tydzien)
     page.click("#edycja")
+    # --- eksport: kalendarz i trening na zegarek powstają w przeglądarce ---
+    with page.expect_download() as dl: page.click("#eksport-ics")
+    kal = pathlib.Path(dl.value.path()).read_text(encoding="utf-8")
+    sprawdz("kalendarz ICS: plik z wydarzeniami, celem dnia i uzasadnieniem", dl.value.suggested_filename == "plan-biegowy.ics" and kal.startswith("BEGIN:VCALENDAR") and kal.count("BEGIN:VEVENT") > 40 and "Po co: " in kal.replace("\r\n ", ""))
+    with page.expect_download() as dl: page.locator("[data-fit]").first.click()
+    fitb = pathlib.Path(dl.value.path()).read_bytes()
+    sprawdz("trening na zegarek: plik FIT z poprawnym nagłówkiem", dl.value.suggested_filename.endswith(".fit") and fitb[8:12] == b".FIT" and len(fitb) == 14 + int.from_bytes(fitb[4:8], "little") + 2)
     plan1 = page.inner_text("#plan-tygodnie")
     sprawdz("każdy bieg ma cel; bez pomiaru tętno jest oznaczone jako szacunek", "tętno do 145 · tempo" in plan1 and "(tętno to szacunek)" in plan1)
     page.click("nav.zakladki button[data-z=strefy]")

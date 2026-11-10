@@ -15,7 +15,7 @@ IPB to otwartoźródłowa aplikacja z planem biegowym szytym na miarę. **Źród
 | `/IPB plan` albo prośba o plan | wywiad → ocena celu → plan → **sprawdzenie R1–R16** → dopiero potem pokaż plan |
 | `/IPB sprawdź` + plan | sprawdź plan walidatorem (R1–R22) i wypisz ustalenia według poziomu |
 | `/IPB oceń` + plan z dowolnego źródła | przepisz plan do `plan.json`, wypisz, czego nie dało się odczytać, uruchom walidator, pokaż ustalenia według poziomu ze źródłem i pewnością |
-| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_silnik.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
+| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_silnik.py`, `python3 tests/test_eksport.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
 | `/IPB dalej` | zbuduj pierwszy niezrobiony krok z `docs/PLAN-BUDOWY.md` według zasad z tego pliku, przetestuj, zapisz w repozytorium i pokaż działającą stronę |
 | `/IPB stan` | pokaż tabelę z `docs/PLAN-BUDOWY.md`: co zrobione, co następne |
 | `/IPB pytania`, `/IPB rejestr` | pokaż otwarte pytania / rejestr |
@@ -107,6 +107,32 @@ Jest repozytorium i powłoka → `python3 tests/sprawdz_plan.py profil.json plan
 Biegacze testowi (`tests/profile/`, 11 profili): początkujący na czas i na 5 km, 10 km średnio zaawansowany, półmaraton przy 45 km, maratończyk 3:20 i zaawansowany, cel nierealny, powrót po kontuzji, nieregularny harmonogram, brak HRmax, brak historii. Po każdej zmianie reguł w skillu lub SPEC: popraw `tests/sprawdz_plan.py`, dodaj profil lub zepsuty plan, uruchom `--self-test`.
 
 Testy aplikacji (sieć tylko do jawnej listy, sejf, FIT, PDF, offline, dwa języki) są opisane w `docs/SPEC.md` sekcja 16.2 i powstają razem z kodem.
+
+## 5a. Metodyka (pełna baza: `docs/METODYKA.md`)
+
+**Kolejność:** profil zawodnika → historia → oszacowanie formy → ocena celu → makrocykl → mikrocykl → dobór jednostek → walidacja → plan z ustaleniami i założeniami. Niczego nie zmyślaj: brak danej to szacunek oznaczony jako szacunek albo test w planie.
+
+**Dane zawodnika:** każda wartość jest potwierdzona, oszacowana, nieaktualna (wynik starszy niż 6 miesięcy) albo jej brak. Im słabsze dane, tym niższa pewność rekomendacji – mów to przy planie.
+
+**Metody i ich zakres:**
+- VDOT (Daniels) – prognoza i tempa z aktualnego wyniku; wskaźnik wyniku, nie pomiar VO2max; tabel i planów z książki nie kopiuj.
+- Riegel – druga prognoza; razem z VDOT daje przedział.
+- Pfitzinger – tylko zasady ogólne przygotowań do półmaratonu i maratonu.
+- Seiler – „większość spokojnie”; 80/20 to opis elity, nie wymóg; zawsze nazwij metodę liczenia rozkładu.
+- Prędkość krytyczna – tempo odcinków z 2–3 prób; jeszcze nie w aplikacji.
+- Banister – średnie 7 i 42 dni opisują wykonaną pracę, nie adaptację organizmu.
+- Periodyzacja – baza, rozwój, faza pod start, taper (mniej objętości, ta sama intensywność i liczba treningów), okres przejściowy.
+- Autoregulacja – zmiana planu dopiero przy dwóch zgodnych sygnałach.
+
+Gdy metody dają różne wnioski, pokaż oba i powiedz, z jakich założeń wynika różnica. Nie łącz ich w jeden „uniwersalny” algorytm.
+
+**Ograniczenia:** twarde (dni zablokowane, limity minut, przeciwwskazania, data startu) nigdy nie ustępują. Miękkie ustępują w kolejności: odstęp między mocnymi dniami, długi bieg, liczba akcentów, objętość. Każde ustępstwo nazwij.
+
+**Źródła:** A dowody naukowe, B metodologia trenerska, C otwarty kod, D heurystyka projektu. Nie wymyślaj cytowań ani DOI. Źródło niepotwierdzone nazwij niepotwierdzonym.
+
+**`/IPB porównaj` + dwa plany:** tabela różnic w wymiarach: czas tygodniowy, rozkład intensywności, długie biegi, jednostki specyficzne, periodyzacja, regeneracja, dopasowanie do zawodnika, założenia, kompromisy. Bez jednej liczby i bez założenia, że więcej kilometrów to lepiej.
+
+**Kolejne kroki budowy** opieraj na tej bazie: każda liczba lub zalecenie pokazywane zawodnikowi ma regułę w `src/reguly.js` (klasa źródła, pewność) i test; eksport przenosi cel dnia i uzasadnienie, nie same minuty.
 
 ## 6. Praca nad aplikacją
 

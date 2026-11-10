@@ -12,6 +12,7 @@ Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy,
 | `docs/SPEC.md` | pełna specyfikacja (sekcje 1–16) |
 | `docs/REJESTR.md` | rejestr uwag i decyzji |
 | `docs/PLAN-BUDOWY.md` | co jest zrobione i co jest następne |
+| `docs/METODYKA.md` | baza metodyki: metody, ich zakres, źródła i ograniczenia |
 | `docs/FORMAT-PLANU.md` | format `profil.json` i `plan.json` |
 | `tests/sprawdz_plan.py` | sprawdza plan względem reguł R1–R16 |
 | `tests/profile/` | 5 biegaczy testowych |
@@ -29,6 +30,7 @@ python3 tests/sprawdz_plan.py --self-test        # reguły planu
 python3 tests/test_plan.py                       # generator z aplikacji (wymaga node)
 python3 tests/test_dziennik.py                   # pliki z zegarka, ocena biegu, obciążenie (wymaga node)
 python3 tests/test_silnik.py                     # rejestr reguł, VDOT, prognoza, status danych (wymaga node)
+python3 tests/test_eksport.py                    # kalendarz ICS i trening FIT (wymaga node)
 python3 build.py && python3 tests/test_sejf.py   # aplikacja w przeglądarce (wymaga playwright)
 python3 tests/sprawdz_plan.py tests/profile/maraton-320.json tests/przyklady/maraton-320.plan.json
 ```
