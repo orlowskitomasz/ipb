@@ -77,6 +77,12 @@ table.strefy { width: 100%; border-collapse: collapse; font-variant-numeric: tab
 table.strefy td { padding: 6px 0; border-bottom: 1px solid var(--linia) } table.strefy tr:last-child td { border-bottom: 0 }
 table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight: 600 }
 .dzien .cel { grid-column: 2 / -1; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums }
+.uwagi-tyg { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--linia) }
+.uwagi-tyg .komunikat { background: var(--tlo) } .uwagi-tyg .komunikat.zle { color: var(--tekst) }
+.uwagi-tyg .komunikat strong { display: block } .uwagi-tyg .komunikat span { font-size: .9rem; color: var(--cichy) }
+.znak { font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; color: var(--uwaga); border: 1px solid currentColor }
+.dzien .zmiana { grid-column: 2 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 4px }
+.dzien .zmiana select { width: auto; min-width: 150px }
 @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0 } dd { margin-bottom: 8px } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }
 
@@ -235,9 +241,11 @@ table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight
           <span class="cichy">Widok:</span>
           <button id="widok-prosty" type="button" aria-pressed="true">Prosty</button>
           <button id="widok-pelny" type="button" aria-pressed="false">Szczegółowy</button>
+          <button id="edycja" type="button" aria-pressed="false">Zmień układ dni</button>
           <button id="uloz2" type="button">Ułóż plan od nowa</button>
         </div>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
+        <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
         <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
       </div>
     </div>
@@ -748,6 +756,69 @@ const Plan = (() => {
   return { uloz, DNI };
 })();
 
+// Ostrzeżenia i podpowiedzi do planu (docs/SPEC.md sekcja 6). Niczego nie zmieniają – tylko mówią co i dlaczego.
+// Ostrzeżenie = układ ryzykowny (te same zasady co R2, R3, R16). Podpowiedź = czegoś brakuje.
+const Podpowiedzi = (() => {
+  const DNI = ['pn', 'wt', 'sr', 'czw', 'pt', 'sob', 'nd'];
+  const NAZWA = { pn: 'poniedziałek', wt: 'wtorek', sr: 'środa', czw: 'czwartek', pt: 'piątek', sob: 'sobota', nd: 'niedziela' };
+  const mocny = (d) => ['akcent', 'test', 'start'].includes(d.typ);
+
+  // Zmiany ręczne użytkownika nakładane na plan z generatora: zamiana dwóch dni w tygodniu albo odpuszczenie biegu.
+  function zastosuj(plan, zmiany) {
+    for (const z of zmiany || []) {
+      const t = plan.tygodnie.find((x) => x.nr === z.tydzien); if (!t) continue;
+      const a = t.dni.find((d) => d.dzien === z.a);
+      if (z.typ === 'zamiana') {
+        const b = t.dni.find((d) => d.dzien === z.b); if (!a || !b) continue;
+        const ia = t.dni.indexOf(a), ib = t.dni.indexOf(b);
+        t.dni[ia] = { ...b, dzien: a.dzien }; t.dni[ib] = { ...a, dzien: b.dzien };
+      } else if (z.typ === 'odpusc' && a) {
+        t.dni[t.dni.indexOf(a)] = { dzien: a.dzien, typ: 'wolne', min: 0, mocne_min: 0, dodatki: [] };
+      }
+      t.zmieniony = true;
+    }
+    return plan;
+  }
+
+  function licz(profil, plan) {
+    const w = [], cel = (plan.ocena_celu && plan.ocena_celu.cel_posredni) || profil.cel;
+    const dlugiCel = cel.typ === 'dystans' && cel.dystans_km >= 21, zaczyna = profil.poziom === 'zaczynam';
+    const dodaj = (tydzien, rodzaj, tekst, powod) => w.push({ tydzien, rodzaj, tekst, powod });
+    const plaski = plan.tygodnie.flatMap((t) => t.dni.map((d) => ({ nr: t.nr, d })));
+
+    plaski.forEach(({ nr, d }, i) => {
+      const lim = profil.dni[d.dzien].max_min || 0;
+      if (d.typ !== 'start' && d.min > lim) dodaj(nr, 'ostrzezenie', lim ? `${NAZWA[d.dzien]}: ${d.min} min biegu przy limicie ${lim} min` : `${NAZWA[d.dzien]}: bieg w dniu, który w wywiadzie jest wolny`,
+        'Limity dni pochodzą z Twojego wywiadu. Zmień je tam, jeśli się zdezaktualizowały.');
+      const nast = plaski[i + 1]; if (!nast) return;
+      const para = `${NAZWA[d.dzien]} i ${NAZWA[nast.d.dzien]}`;
+      if (mocny(d) && mocny(nast.d)) dodaj(nast.nr, 'ostrzezenie', `Dwa mocne dni pod rząd: ${para}`, 'Po mocnym treningu organizm potrzebuje co najmniej jednego lżejszego dnia, inaczej drugi trening wychodzi słabo i rośnie ryzyko kontuzji.');
+      else if (mocny(d) && nast.d.typ === 'dlugi') dodaj(nast.nr, 'ostrzezenie', `Długi bieg dzień po mocnym treningu: ${para}`, 'Długi bieg na zmęczonych nogach to najczęstszy powód przeciążeń.');
+      else if (d.typ === 'dlugi' && mocny(nast.d)) dodaj(nast.nr, 'ostrzezenie', `Mocny trening dzień po długim biegu: ${para}`, 'Po długim biegu mięśnie potrzebują dnia lżejszego.');
+      if (d.dodatki.includes('plyometria') && mocny(nast.d)) dodaj(nr, 'ostrzezenie', `Skoki (plyometria) dzień przed mocnym treningiem: ${para}`, 'Skoki mocno obciążają ścięgna – nie dzień przed akcentem.');
+    });
+
+    plan.tygodnie.forEach((t, i) => {
+      const ostatni = i === plan.tygodnie.length - 1, suma = t.dni.reduce((a, d) => a + d.min, 0);
+      if (!suma) return;
+      if (dlugiCel && !zaczyna && !ostatni && !t.dni.some((d) => d.typ === 'dlugi' || (mocny(d) && d.typ !== 'akcent' && d.min >= 90)))
+        dodaj(t.nr, 'podpowiedz', 'W tym tygodniu nie ma długiego biegu', 'Przy celu od półmaratonu w górę długi bieg jest najważniejszym treningiem tygodnia.');
+      if (!ostatni && !t.dni.some((d) => d.dodatki.includes('sila')))
+        dodaj(t.nr, 'podpowiedz', 'W tym tygodniu nie ma ćwiczeń siłowych', 'Dwa krótkie treningi siły w tygodniu zmniejszają ryzyko kontuzji.');
+      const mocne = t.dni.reduce((a, d) => a + (d.typ === 'start' ? 0 : d.mocne_min), 0);
+      if (mocne > 0.25 * suma + 0.5) dodaj(t.nr, 'podpowiedz', `Dużo mocnego biegania: ${mocne} z ${suma} min`, 'Powyżej jednej czwartej czasu w mocnym tempie postęp zwykle zwalnia zamiast przyspieszać.');
+      const wolne = t.dni.filter((d) => d.typ === 'wolne').length;
+      if (wolne < (zaczyna ? 2 : 1)) dodaj(t.nr, 'podpowiedz', zaczyna ? 'Mniej niż dwa dni wolne w tygodniu' : 'Tydzień bez dnia wolnego', 'Forma rośnie w czasie odpoczynku. Dzień wolny to część planu.');
+    });
+
+    if (!(profil.hrmax && profil.lthr) && !zaczyna && !profil.powrot_po_przerwie && plan.tygodnie.length >= 5
+      && !plan.tygodnie.slice(0, 4).some((t) => t.dni.some((d) => d.typ === 'test')))
+      dodaj(null, 'podpowiedz', 'Brakuje testu tętna w pierwszych 4 tygodniach', 'Bez testu strefy tętna są tylko szacunkiem z wieku.');
+    return w;
+  }
+  return { licz, zastosuj, DNI };
+})();
+
 // Interfejs kroku 1: wywiad → sejf na hasło → profil, ocena celu, podgląd tego, co jest zapisane.
 (() => {
   const KLUCZ = 'ipb.sejf.v1', BEZCZYNNOSC_MS = 15 * 60 * 1000, DNI = ['pn', 'wt', 'sr', 'czw', 'pt', 'sob', 'nd'];
@@ -835,14 +906,17 @@ const Plan = (() => {
   const el = (tag, klasa, tekst) => { const e = document.createElement(tag); if (klasa) e.className = klasa; if (tekst !== undefined) e.textContent = tekst; return e; };
   const dzisISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const krotko = (iso) => `${+iso.slice(8)}.${iso.slice(5, 7)}`;
-  let pelny = false;
+  let pelny = false, edycja = false;
+  const NA = { pn: 'poniedziałkiem', wt: 'wtorkiem', sr: 'środą', czw: 'czwartkiem', pt: 'piątkiem', sob: 'sobotą', nd: 'niedzielą' };
+  async function zmien(z, co) { (dane.zmiany = dane.zmiany || []).push(z); await ulozPlan(co); pokazPlan(); }
   try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
 
   // Plan trzyma swój pierwszy poniedziałek: przeliczenie po teście nie przesuwa tygodni. „Od nowa” zaczyna od najbliższego.
   async function ulozPlan(co, odNowa) {
     const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
     if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
-    dane.plan = Plan.uloz(dane.profil, dzisISO());
+    if (odNowa) dane.zmiany = [];
+    dane.plan = Podpowiedzi.zastosuj(Plan.uloz(dane.profil, dzisISO()), dane.zmiany);   // ręczne zmiany przetrwają przeliczenie
     dane.profil.start_planu = dane.plan.tygodnie[0].start;
     await zapiszDane(co);
   }
@@ -907,30 +981,53 @@ const Plan = (() => {
     const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
     $('plan-cel').replaceChildren('Cel: ' + (c.typ === 'dystans' ? `${NAZWY[c.dystans_km] || c.dystans_km + ' km'}${c.czas ? ' w ' + c.czas : ''}` : `${c.minuty} min biegu bez przerwy`) + ' ', el('span', 'status ' + o.status, o.status));
     $('plan-ocena').textContent = (o.prognoza ? `Prognoza z rekordu: ${o.prognoza}. ` : '') + o.uzasadnienie;
-    $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)));
+    const uwagi = Podpowiedzi.licz(dane.profil, plan);
+    const uwaga = (u) => { const p = el('p', 'komunikat' + (u.rodzaj === 'ostrzezenie' ? ' zle' : '')); p.append(el('strong', '', u.tekst), el('span', '', u.powod)); return p; };
+    $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)), ...uwagi.filter((u) => u.tydzien === null).map(uwaga));
+    $('edycja').setAttribute('aria-pressed', edycja);
+    const otwarte = new Set([...document.querySelectorAll('details.tydzien[open]')].map((d) => +d.dataset.nr));
     $('plan-bramki-tytul').hidden = $('plan-bramki').hidden = !plan.bramki.length;
     $('plan-bramki').replaceChildren(...plan.bramki.map((b) => el('li', '', `Tydzień ${b.tydzien}: ${b.opis} – ${b.prog}.`)));
     $('widok-prosty').setAttribute('aria-pressed', !pelny); $('widok-pelny').setAttribute('aria-pressed', pelny);
     const dzis = dzisISO();
     const biezacy = plan.tygodnie.findIndex((t, i) => dzis >= t.start && (i === plan.tygodnie.length - 1 || dzis < plan.tygodnie[i + 1].start));
     $('plan-tygodnie').replaceChildren(...plan.tygodnie.map((t, i) => {
-      const d = el('details', 'tydzien'); d.open = i === Math.max(0, biezacy);
+      const d = el('details', 'tydzien'); d.dataset.nr = t.nr; d.open = otwarte.size ? otwarte.has(t.nr) : i === Math.max(0, biezacy);
+      const moje = uwagi.filter((u) => u.tydzien === t.nr);
       const koniec = new Date(new Date(t.start + 'T00:00:00Z').getTime() + 6 * 864e5).toISOString().slice(0, 10);
       const s = el('summary');
       s.append(el('span', '', `Tydzień ${t.nr}`), el('span', 'cichy', `${krotko(t.start)}–${krotko(koniec)} · ${hm(t.dni.reduce((a, x) => a + x.min, 0))} · ${FAZA[t.faza]}`));
-      d.append(s, ...t.dni.map((x) => {
+      if (moje.length) s.append(el('span', 'znak', `uwagi: ${moje.length}`));
+      const gora = el('div', 'uwagi-tyg'); gora.append(...moje.map(uwaga));
+      if (t.zmieniony && edycja) {
+        const c = el('button', '', 'Cofnij zmiany w tym tygodniu'); c.type = 'button'; c.dataset.cofnij = t.nr;
+        c.onclick = async () => { dane.zmiany = (dane.zmiany || []).filter((z) => z.tydzien !== t.nr); await ulozPlan(`cofnięte zmiany w tygodniu ${t.nr}`); pokazPlan(); };
+        gora.append(c);
+      }
+      d.append(s, ...(gora.children.length ? [gora] : []), ...t.dni.map((x) => {
         const w = el('div', 'dzien' + (x.typ === 'wolne' ? ' wolne' : ''));
         const nazwa = el('span', 'nazwa', NAZWA[x.typ]);
         if (MOC[x.typ]) nazwa.append(el('span', 'moc ' + MOC[x.typ][1], MOC[x.typ][0]));
         w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
         const dod = x.dodatki.map((k) => DODATEK[k]).join(', ');
-        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); return w; }
+        const sterowanie = () => {
+          if (!edycja) return;
+          const z = el('span', 'zmiana'), sel = el('select'); sel.dataset.zamien = `${t.nr}-${x.dzien}`; sel.setAttribute('aria-label', `Zamień ${DZIEN[x.dzien]} z innym dniem`);
+          sel.append(new Option('Zamień z…', ''), ...t.dni.filter((y) => y.dzien !== x.dzien).map((y) => new Option(`${NA[y.dzien]} (${NAZWA[y.typ].toLowerCase()})`, y.dzien)));
+          sel.onchange = () => sel.value && zmien({ tydzien: t.nr, typ: 'zamiana', a: x.dzien, b: sel.value }, `tydzień ${t.nr}: zamiana ${x.dzien} ↔ ${sel.value}`);
+          z.append(sel);
+          if (x.min) { const o = el('button', '', 'Odpuść ten bieg'); o.type = 'button'; o.dataset.odpusc = `${t.nr}-${x.dzien}`;
+            o.onclick = () => zmien({ tydzien: t.nr, typ: 'odpusc', a: x.dzien }, `tydzień ${t.nr}: odpuszczony bieg (${x.dzien})`); z.append(o); }
+          w.append(z);
+        };
+        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); sterowanie(); return w; }
         const cel = celTekst(x);
         if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', PO_CO[x.typ] + (dod ? ' Do tego: ' + dod + '.' : '')));
+        sterowanie();
         return w;
       }));
       return d;
@@ -971,7 +1068,7 @@ const Plan = (() => {
     if (n === 'plan') pokazPlan(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
-  function zablokuj() { dek = null; dane = null; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
+  function zablokuj() { dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
     if (!$('pole-kod').hidden) $('przelacz-kod').click();   // zawsze wracaj do pola hasła
     widok(koperta ? 'zamkniety' : 'start'); }
   function czuwaj() { clearTimeout(zegar); if (dek) zegar = setTimeout(zablokuj, BEZCZYNNOSC_MS); }
@@ -1013,7 +1110,7 @@ const Plan = (() => {
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [],
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [], zmiany: [],
             historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
@@ -1042,6 +1139,7 @@ const Plan = (() => {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.onclick = () => zakladka(b.dataset.z);
     for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
     akcja('form-test', 't-zapisz', zapiszTest);
+    $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
     $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };
     for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }

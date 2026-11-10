@@ -85,14 +85,17 @@
   const el = (tag, klasa, tekst) => { const e = document.createElement(tag); if (klasa) e.className = klasa; if (tekst !== undefined) e.textContent = tekst; return e; };
   const dzisISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const krotko = (iso) => `${+iso.slice(8)}.${iso.slice(5, 7)}`;
-  let pelny = false;
+  let pelny = false, edycja = false;
+  const NA = { pn: 'poniedziałkiem', wt: 'wtorkiem', sr: 'środą', czw: 'czwartkiem', pt: 'piątkiem', sob: 'sobotą', nd: 'niedzielą' };
+  async function zmien(z, co) { (dane.zmiany = dane.zmiany || []).push(z); await ulozPlan(co); pokazPlan(); }
   try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
 
   // Plan trzyma swój pierwszy poniedziałek: przeliczenie po teście nie przesuwa tygodni. „Od nowa” zaczyna od najbliższego.
   async function ulozPlan(co, odNowa) {
     const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
     if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
-    dane.plan = Plan.uloz(dane.profil, dzisISO());
+    if (odNowa) dane.zmiany = [];
+    dane.plan = Podpowiedzi.zastosuj(Plan.uloz(dane.profil, dzisISO()), dane.zmiany);   // ręczne zmiany przetrwają przeliczenie
     dane.profil.start_planu = dane.plan.tygodnie[0].start;
     await zapiszDane(co);
   }
@@ -157,30 +160,53 @@
     const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
     $('plan-cel').replaceChildren('Cel: ' + (c.typ === 'dystans' ? `${NAZWY[c.dystans_km] || c.dystans_km + ' km'}${c.czas ? ' w ' + c.czas : ''}` : `${c.minuty} min biegu bez przerwy`) + ' ', el('span', 'status ' + o.status, o.status));
     $('plan-ocena').textContent = (o.prognoza ? `Prognoza z rekordu: ${o.prognoza}. ` : '') + o.uzasadnienie;
-    $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)));
+    const uwagi = Podpowiedzi.licz(dane.profil, plan);
+    const uwaga = (u) => { const p = el('p', 'komunikat' + (u.rodzaj === 'ostrzezenie' ? ' zle' : '')); p.append(el('strong', '', u.tekst), el('span', '', u.powod)); return p; };
+    $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)), ...uwagi.filter((u) => u.tydzien === null).map(uwaga));
+    $('edycja').setAttribute('aria-pressed', edycja);
+    const otwarte = new Set([...document.querySelectorAll('details.tydzien[open]')].map((d) => +d.dataset.nr));
     $('plan-bramki-tytul').hidden = $('plan-bramki').hidden = !plan.bramki.length;
     $('plan-bramki').replaceChildren(...plan.bramki.map((b) => el('li', '', `Tydzień ${b.tydzien}: ${b.opis} – ${b.prog}.`)));
     $('widok-prosty').setAttribute('aria-pressed', !pelny); $('widok-pelny').setAttribute('aria-pressed', pelny);
     const dzis = dzisISO();
     const biezacy = plan.tygodnie.findIndex((t, i) => dzis >= t.start && (i === plan.tygodnie.length - 1 || dzis < plan.tygodnie[i + 1].start));
     $('plan-tygodnie').replaceChildren(...plan.tygodnie.map((t, i) => {
-      const d = el('details', 'tydzien'); d.open = i === Math.max(0, biezacy);
+      const d = el('details', 'tydzien'); d.dataset.nr = t.nr; d.open = otwarte.size ? otwarte.has(t.nr) : i === Math.max(0, biezacy);
+      const moje = uwagi.filter((u) => u.tydzien === t.nr);
       const koniec = new Date(new Date(t.start + 'T00:00:00Z').getTime() + 6 * 864e5).toISOString().slice(0, 10);
       const s = el('summary');
       s.append(el('span', '', `Tydzień ${t.nr}`), el('span', 'cichy', `${krotko(t.start)}–${krotko(koniec)} · ${hm(t.dni.reduce((a, x) => a + x.min, 0))} · ${FAZA[t.faza]}`));
-      d.append(s, ...t.dni.map((x) => {
+      if (moje.length) s.append(el('span', 'znak', `uwagi: ${moje.length}`));
+      const gora = el('div', 'uwagi-tyg'); gora.append(...moje.map(uwaga));
+      if (t.zmieniony && edycja) {
+        const c = el('button', '', 'Cofnij zmiany w tym tygodniu'); c.type = 'button'; c.dataset.cofnij = t.nr;
+        c.onclick = async () => { dane.zmiany = (dane.zmiany || []).filter((z) => z.tydzien !== t.nr); await ulozPlan(`cofnięte zmiany w tygodniu ${t.nr}`); pokazPlan(); };
+        gora.append(c);
+      }
+      d.append(s, ...(gora.children.length ? [gora] : []), ...t.dni.map((x) => {
         const w = el('div', 'dzien' + (x.typ === 'wolne' ? ' wolne' : ''));
         const nazwa = el('span', 'nazwa', NAZWA[x.typ]);
         if (MOC[x.typ]) nazwa.append(el('span', 'moc ' + MOC[x.typ][1], MOC[x.typ][0]));
         w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
         const dod = x.dodatki.map((k) => DODATEK[k]).join(', ');
-        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); return w; }
+        const sterowanie = () => {
+          if (!edycja) return;
+          const z = el('span', 'zmiana'), sel = el('select'); sel.dataset.zamien = `${t.nr}-${x.dzien}`; sel.setAttribute('aria-label', `Zamień ${DZIEN[x.dzien]} z innym dniem`);
+          sel.append(new Option('Zamień z…', ''), ...t.dni.filter((y) => y.dzien !== x.dzien).map((y) => new Option(`${NA[y.dzien]} (${NAZWA[y.typ].toLowerCase()})`, y.dzien)));
+          sel.onchange = () => sel.value && zmien({ tydzien: t.nr, typ: 'zamiana', a: x.dzien, b: sel.value }, `tydzień ${t.nr}: zamiana ${x.dzien} ↔ ${sel.value}`);
+          z.append(sel);
+          if (x.min) { const o = el('button', '', 'Odpuść ten bieg'); o.type = 'button'; o.dataset.odpusc = `${t.nr}-${x.dzien}`;
+            o.onclick = () => zmien({ tydzien: t.nr, typ: 'odpusc', a: x.dzien }, `tydzień ${t.nr}: odpuszczony bieg (${x.dzien})`); z.append(o); }
+          w.append(z);
+        };
+        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); sterowanie(); return w; }
         const cel = celTekst(x);
         if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', PO_CO[x.typ] + (dod ? ' Do tego: ' + dod + '.' : '')));
+        sterowanie();
         return w;
       }));
       return d;
@@ -221,7 +247,7 @@
     if (n === 'plan') pokazPlan(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
-  function zablokuj() { dek = null; dane = null; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
+  function zablokuj() { dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
     if (!$('pole-kod').hidden) $('przelacz-kod').click();   // zawsze wracaj do pola hasła
     widok(koperta ? 'zamkniety' : 'start'); }
   function czuwaj() { clearTimeout(zegar); if (dek) zegar = setTimeout(zablokuj, BEZCZYNNOSC_MS); }
@@ -263,7 +289,7 @@
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [],
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [], zmiany: [],
             historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
@@ -292,6 +318,7 @@
     for (const b of document.querySelectorAll('nav.zakladki button')) b.onclick = () => zakladka(b.dataset.z);
     for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
     akcja('form-test', 't-zapisz', zapiszTest);
+    $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
     $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };
     for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }

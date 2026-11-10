@@ -51,10 +51,14 @@ if __name__ == "__main__":
         p["cel"]["data"] = str(datetime.date(2026, 11, 16) + datetime.timedelta(days=p.pop("_offset")))
     if "--zapisz" in sys.argv:        # odśwież tests/przyklady/ planami z generatora aplikacji
         for prof, plan in zip(stale, uloz(stale)):
+            plan.pop("_podpowiedzi")
             (TU / "przyklady" / f"{prof['id']}.plan.json").write_text(json.dumps({"profil": prof["id"], **plan}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     ok, licznik = True, Counter()
     for prof, plan in zip(stale + losowe, uloz(stale + losowe)):
         bl = sprawdz(prof, plan)
+        # plan prosto z generatora nie może dostawać ostrzeżeń ani podpowiedzi innych niż „brak dnia wolnego”
+        bl += [("P", f"{x['rodzaj']}: {x['tekst']}") for x in plan.pop("_podpowiedzi")
+               if x["rodzaj"] == "ostrzezenie" or "wolne" not in x["tekst"].lower() and "wolny" not in x["tekst"].lower()]
         if prof in stale:
             print(f"{'OK  ' if not bl else 'BŁĄD'} generator: {prof['id']} ({len(plan['tygodnie'])} tyg., szczyt {max(sum(d['min'] for d in t['dni']) for t in plan['tygodnie'])} min)")
         if bl:
@@ -63,5 +67,25 @@ if __name__ == "__main__":
             if sum(licznik.values()) <= 12 or prof in stale:
                 print(f"     {prof['id']}: " + "; ".join(f"{r}: {o}" for r, o in bl[:3]))
     print(f"{'OK  ' if not licznik else 'BŁĄD'} generator: {ile} losowych profili" + (f" – naruszenia: {dict(licznik)}" if licznik else ""))
+
+    # ręczne zmiany muszą dać właściwe ostrzeżenie lub podpowiedź (plan maratoński: wt i czw mocne, nd długi, pn wolny)
+    prof = next(p for p in stale if p["id"] == "maraton-320")
+    plan = lambda: json.loads((TU / "przyklady" / "maraton-320.plan.json").read_text(encoding="utf-8"))
+    przypadki = [
+        ("zamiana wt↔śr → dwa mocne dni pod rząd", [{"tydzien": 5, "typ": "zamiana", "a": "wt", "b": "sr"}], "Dwa mocne dni pod rząd"),
+        ("zamiana czw↔sob → długi dzień po mocnym", [{"tydzien": 5, "typ": "zamiana", "a": "czw", "b": "sob"}], "Długi bieg dzień po mocnym"),
+        ("zamiana nd↔śr → mocny dzień po długim", [{"tydzien": 5, "typ": "zamiana", "a": "nd", "b": "sr"}], "Mocny trening dzień po długim"),
+        ("zamiana wt↔pn → bieg w dniu wolnym z wywiadu", [{"tydzien": 5, "typ": "zamiana", "a": "wt", "b": "pn"}], "w wywiadzie jest wolny"),
+        ("odpuszczony długi bieg → podpowiedź", [{"tydzien": 5, "typ": "odpusc", "a": "nd"}], "nie ma długiego biegu"),
+        ("odpuszczone dni z siłą → podpowiedź", [{"tydzien": 5, "typ": "odpusc", "a": "sr"}, {"tydzien": 5, "typ": "odpusc", "a": "pt"}], "nie ma ćwiczeń siłowych"),
+        ("zmiany w innym tygodniu nie ruszają tygodnia 5", [{"tydzien": 6, "typ": "zamiana", "a": "wt", "b": "sr"}], None),
+    ]
+    wej = "\n".join(json.dumps({"profil": prof, "plan": plan(), "zmiany": z}, ensure_ascii=False) for _, z, _ in przypadki)
+    wyj = subprocess.run(["node", str(TU / "plan_node.js")], input=wej, capture_output=True, text=True, check=True).stdout.splitlines()
+    for (nazwa, _, oczek), linia in zip(przypadki, wyj):
+        w5 = [x["tekst"] for x in json.loads(linia) if x["tydzien"] == 5]
+        dobrze = any(oczek in t for t in w5) if oczek else not w5
+        ok &= dobrze
+        print(f"{'OK  ' if dobrze else 'BŁĄD'} podpowiedzi: {nazwa}" + ("" if dobrze else f" – jest: {w5}"))
     print("WSZYSTKO OK" if ok else "SĄ BŁĘDY")
     sys.exit(0 if ok else 1)

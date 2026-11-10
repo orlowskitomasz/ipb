@@ -9,8 +9,8 @@ Krok jest gotowy dopiero wtedy, gdy: działa w `dist/index.html`, ma test w `tes
 |---|---|---|---|
 | 1 | Sejf na hasło, wywiad, ocena celu, plan tydzień po tygodniu | **zrobione** (0.3) | – |
 | 2 | Strefy i tempa: tętno i tempo dla każdego treningu, kilka modeli stref obok siebie, wynik testu zmienia strefy i prognozę | **zrobione** (0.4) | – |
-| 3 | Własny układ tygodnia: przestawianie i blokowanie dni, podpowiedzi „czegoś brakuje” | następny | przestawiony plan zostaje po odświeżeniu; ryzykowny układ daje ostrzeżenie; brak długiego biegu, siły lub testu daje podpowiedź |
-| 4 | Dziennik: wpisanie biegu ręcznie, import FIT/TCX/GPX, ocena biegu 0–10, wskaźniki przeciążenia, ekran „Postęp” | czeka | plik z zegarka trafia do sejfu; widać plan kontra wykonanie; przeciążenie daje jasne „co zrobić” |
+| 3 | Własny układ tygodnia: przestawianie i blokowanie dni, podpowiedzi „czegoś brakuje” | **zrobione** (0.5) | – |
+| 4 | Dziennik: wpisanie biegu ręcznie, import FIT/TCX/GPX, ocena biegu 0–10, wskaźniki przeciążenia, ekran „Postęp” | następny | plik z zegarka trafia do sejfu; widać plan kontra wykonanie; przeciążenie daje jasne „co zrobić” |
 | 5 | Na zegarek i do druku: FIT treningu, skrypt do Garmin Connect, kalendarz ICS, PDF dziennika i treningu | czeka | trening z planu otwiera się na zegarku Garmin; PDF tygodnia mieści się na stronie |
 | 6 | Do wystawienia w internecie: praca offline (PWA), ekran „Co i dokąd wysyłamy”, wersja angielska, instrukcja hostingu z Let's Encrypt | czeka | strona działa bez sieci po pierwszym otwarciu; wszystkie napisy w dwóch językach |
 | 7 | Mapy, trasy, pogoda, PDF trasy | czeka | 2–3 trasy o długości treningu od położenia telefonu; połączenia tylko z listy w SPEC 11 |

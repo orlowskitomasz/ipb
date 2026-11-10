@@ -2,7 +2,7 @@
 
 Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy, plan, testy, prognozy, wskaźniki przeciążenia, mapy, pogoda, zegarki, PDF. Dane użytkownika tylko w sejfie zaszyfrowanym jego hasłem. Działa offline i na dowolnym serwerze.
 
-**Stan: krok 2 z 9** (`docs/PLAN-BUDOWY.md`). Działa wywiad, sejf na hasło, ocena celu, układanie planu tydzień po tygodniu, strefy i tempa, wpisywanie wyników testów (`dist/index.html` – otwórz w przeglądarce, działa bez internetu). Jeszcze nie ma: dziennika, importu z zegarka, eksportu na zegarek, map, pogody, PDF, synchronizacji, wersji angielskiej.
+**Stan: krok 3 z 9** (`docs/PLAN-BUDOWY.md`). Działa wywiad, sejf na hasło, ocena celu, układanie planu tydzień po tygodniu, strefy i tempa, wpisywanie wyników testów, własny układ dni z ostrzeżeniami i podpowiedziami (`dist/index.html` – otwórz w przeglądarce, działa bez internetu). Jeszcze nie ma: dziennika, importu z zegarka, eksportu na zegarek, map, pogody, PDF, synchronizacji, wersji angielskiej.
 
 ## Co jest w środku
 
