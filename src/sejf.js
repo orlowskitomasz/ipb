@@ -2,7 +2,7 @@
 // Losowy klucz danych (DEK) szyfruje dane; DEK jest opakowany dwa razy: hasłem i kodem odzyskiwania.
 const Sejf = (() => {
   const enc = new TextEncoder(), dec = new TextDecoder();
-  const b64 = (u8) => btoa(String.fromCharCode(...u8));
+  const b64 = (u8) => { let t = ''; for (let i = 0; i < u8.length; i += 8192) t += String.fromCharCode(...u8.subarray(i, i + 8192)); return btoa(t); };  // kawałkami: plan bywa duży
   const ub64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   const los = (n) => crypto.getRandomValues(new Uint8Array(n));
   const ARGON = { alg: 'argon2id', m: 65536, t: 3, p: 1 };

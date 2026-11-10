@@ -130,11 +130,37 @@
 
   <section id="w-otwarty" hidden>
     <nav class="zakladki" aria-label="Widoki">
-      <button type="button" data-z="profil" aria-selected="true">Profil i cel</button>
+      <button type="button" data-z="plan" aria-selected="true">Plan</button>
+      <button type="button" data-z="profil" aria-selected="false">Profil i cel</button>
       <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
     </nav>
 
-    <div data-panel="profil" style="display:flex; flex-direction:column; gap:16px">
+    <div data-panel="plan" style="display:flex; flex-direction:column; gap:16px">
+      <div id="plan-brak" class="karta" style="display:flex; flex-direction:column; gap:12px">
+        <h3>W sejfie nie ma jeszcze planu</h3>
+        <p>Ułożę go z Twoich odpowiedzi z wywiadu: od najbliższego poniedziałku do dnia celu.</p>
+        <div class="rzad"><button id="uloz" class="glowny" type="button">Ułóż plan</button></div>
+      </div>
+      <div id="plan-jest" style="display:flex; flex-direction:column; gap:16px">
+        <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+          <h3 id="plan-cel"></h3>
+          <p id="plan-ocena"></p>
+          <div id="plan-uwagi" style="display:flex; flex-direction:column; gap:8px"></div>
+          <h3 id="plan-bramki-tytul">Sprawdziany po drodze</h3>
+          <ul id="plan-bramki" class="lista"></ul>
+        </div>
+        <div class="rzad">
+          <span class="cichy">Widok:</span>
+          <button id="widok-prosty" type="button" aria-pressed="true">Prosty</button>
+          <button id="widok-pelny" type="button" aria-pressed="false">Szczegółowy</button>
+          <button id="uloz2" type="button">Ułóż plan od nowa</button>
+        </div>
+        <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
+        <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
+      </div>
+    </div>
+
+    <div data-panel="profil" hidden style="display:flex; flex-direction:column; gap:16px">
       <div class="karta" style="display:flex; flex-direction:column; gap:12px">
         <h3>Twoje dane z wywiadu</h3>
         <dl id="profil-dl"></dl>
@@ -145,7 +171,7 @@
         <p id="ocena-prognoza"></p>
         <p id="ocena-opis"></p>
         <p id="brak-tetna" class="komunikat" hidden>Nie znasz tętna maksymalnego lub progowego. Plan zacznie od testu 30 minut, żeby strefy były zmierzone, a nie zgadnięte.</p>
-        <p class="cichy">Prognoza: wzór Riegla z Twojego rekordu. Układanie planu tydzień po tygodniu to następny krok budowy.</p>
+        <p class="cichy">Prognoza: wzór Riegla z Twojego rekordu.</p>
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Historia zmian (też w sejfie)</h3>

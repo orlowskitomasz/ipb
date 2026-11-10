@@ -14,6 +14,8 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · plan + wywiad · Cel jako dystans albo czas biegu; uzupełnienia: rozgrzewka, plyometria, rozciąganie; dowolny układ dni (jednostki i dni wolne); podpowiedzi, czego brakuje w planie; plan przejrzysty dla początkujących i zaawansowanych → sekcja 3 (cel, poziom), sekcja 6 (układ tygodnia, uzupełnienia, podpowiedzi, czytelność), sekcja 14 · przyjęte
 - 2026-11-10 · autor · repo · Źródłem prawdy jest repozytorium: specyfikacja w `docs/SPEC.md`, rejestr w tym pliku, skill skrócony do zasad i sposobu pracy; dalsza budowa w nowym projekcie · przyjęte
 - 2026-11-10 · autor · testy · Testy planu: 5 biegaczy testowych, reguły R1–R16, `tests/sprawdz_plan.py` z self-testem (SPEC sekcja 16) · przyjęte
+- 2026-11-10 · autor · plan · Krok 1 zbudowany: sejf na hasło, wywiad, ocena celu, generator planu (`src/plan.js`) i jego widok prosty/szczegółowy; generator sprawdzany regułami R1–R16 na 5 profilach i losowych · przyjęte
+- 2026-11-10 · autor · testy · R5: minuty startu docelowego w ostatnim tygodniu nie liczą się do wzrostu (tak jak w R2 i R7) · przyjęte
 
 ## Otwarte pytania
 - (brak – nowe pytania dopisywać tutaj)

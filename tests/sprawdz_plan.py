@@ -99,8 +99,9 @@ def sprawdz(profil, plan):
 
     # R5 – wzrost czasu tygodnia
     sumy = [suma(t) for t in tyg]
-    for i, s in enumerate(sumy):
-        ref = max(sumy[max(0, i - 3):i] + ([baza] if i < 3 else []))
+    sumy5 = sumy[:-1] + [suma(tyg[-1], True)]          # start docelowy w ostatnim tygodniu nie liczy się do wzrostu
+    for i, s in enumerate(sumy5):
+        ref = max(sumy5[max(0, i - 3):i] + ([baza] if i < 3 else []))
         if s > max(ref * WZROST, ref + WZROST_MIN) + 0.5:
             b.append(("R5", f"tydz. {tyg[i]['nr']}: {s} min, dozwolone {max(ref*WZROST, ref+WZROST_MIN):.0f}"))
 

@@ -7,7 +7,7 @@ from playwright.sync_api import sync_playwright
 
 STRONA = (pathlib.Path(__file__).parent.parent / "dist/index.html").as_uri()
 HASLO, NOWE = "kon bateria zszywka 42", "inne dlugie haslo 2026"
-JAWNE = ["1988", "regularnie", "0:52:30", "rok_urodzenia", "obciazenie", "hrmax"]
+JAWNE = ["1988", "regularnie", "0:52:30", "rok_urodzenia", "obciazenie", "hrmax", "tygodnie", "akcent"]
 wyniki = []
 
 def sprawdz(nazwa, warunek):
@@ -49,6 +49,15 @@ with sync_playwright() as pw:
     sprawdz("w pamięci przeglądarki nie ma danych otwartym tekstem", s and not any(j in s for j in JAWNE))
     sprawdz("koperta: Argon2id + osobne opakowanie hasłem i kodem",
             json.loads(s)["haslo"]["kdf"]["alg"] == "argon2id" and json.loads(s)["kod"]["kdf"]["alg"] == "argon2id")
+    sprawdz("po założeniu sejfu od razu jest plan: tygodnie po 7 dni", page.locator("details.tydzien").count() >= 8
+            and page.locator("details.tydzien").first.locator(".dzien").count() == 7)
+    sprawdz("widok prosty mówi „po co”, szczegółowy pokazuje rozpiskę",
+            "Buduje wytrzymałość" in page.inner_text("#plan-tygodnie") and "Rozgrzewka 10–15 min" not in page.inner_text("#plan-tygodnie"))
+    page.click("#widok-pelny")
+    sprawdz("widok szczegółowy pokazuje rozpiskę treningu", "Rozgrzewka 10–15 min" in page.inner_text("#plan-tygodnie"))
+    sprawdz("plan z testem tętna, bo w przykładzie brak HRmax", "Tydzień 2: test 30 min" in page.inner_text("#plan-bramki"))
+    sprawdz("telefon 390 px: plan bez przewijania w bok", page.evaluate("document.documentElement.scrollWidth <= innerWidth"))
+    page.click("nav.zakladki button[data-z=profil]")
     sprawdz("ocena celu z przykładu: realny", page.inner_text("#ocena-status") == "realny")
     sprawdz("brak tętna → zapowiedź testu", page.is_visible("#brak-tetna"))
     page.click("nav.zakladki button[data-z=zapis]")
@@ -59,13 +68,13 @@ with sync_playwright() as pw:
     page.click("#zablokuj"); widoczny(page, "zamkniety")
     otworz(page, "zle haslo zle haslo")
     sprawdz("złe hasło nie otwiera sejfu", page.is_visible("#blad-otworz") and page.is_hidden("#w-otwarty"))
-    otworz(page, HASLO); widoczny(page, "otwarty")
+    otworz(page, HASLO); widoczny(page, "otwarty"); page.click("nav.zakladki button[data-z=profil]")
     sprawdz("dobre hasło otwiera sejf", "1988" in page.inner_text("#profil-dl"))
 
     page.click("#edytuj"); page.fill("#f-rok", "1990"); page.click("#wywiad-dalej"); widoczny(page, "otwarty")
     page.reload(); widoczny(page, "zamkniety")
     sprawdz("po odświeżeniu strony sejf jest zamknięty", page.is_hidden("#w-otwarty"))
-    otworz(page, HASLO); widoczny(page, "otwarty")
+    otworz(page, HASLO); widoczny(page, "otwarty"); page.click("nav.zakladki button[data-z=profil]")
     sprawdz("zmiana danych przetrwała odświeżenie", "1990" in page.inner_text("#profil-dl"))
 
     page.click("#zablokuj"); page.click("#przelacz-kod"); page.fill("#kod-wpisz", kod.lower().replace("-", " ")); page.click("#otworz")
@@ -74,7 +83,7 @@ with sync_playwright() as pw:
     page.click("#zablokuj")
     otworz(page, HASLO)
     sprawdz("po odzyskaniu kodem stare hasło nie działa", page.is_visible("#blad-otworz"))
-    otworz(page, NOWE); widoczny(page, "otwarty")
+    otworz(page, NOWE); widoczny(page, "otwarty"); page.click("nav.zakladki button[data-z=profil]")
     sprawdz("nowe hasło działa", "1990" in page.inner_text("#profil-dl"))
 
     page.click("nav.zakladki button[data-z=zapis]"); page.click("#usun2"); page.click("#usun-nie")
@@ -86,6 +95,8 @@ with sync_playwright() as pw:
     sprawdz("zły tekst kopii odrzucony", page.is_visible("#blad-przywroc"))
     page.fill("#przywroc-tekst", kopia); page.click("#przywroc"); widoczny(page, "zamkniety")
     otworz(page, HASLO); widoczny(page, "otwarty")
+    sprawdz("kopia zapasowa przywraca też plan", page.locator("details.tydzien").count() >= 8)
+    page.click("nav.zakladki button[data-z=profil]")
     sprawdz("kopia zapasowa przywraca sejf (stare hasło, stare dane)", "1988" in page.inner_text("#profil-dl"))
 
     page.clock.install(); page.click("#zablokuj"); otworz(page, HASLO); widoczny(page, "otwarty")

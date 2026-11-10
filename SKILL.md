@@ -70,7 +70,7 @@ Jest repozytorium i powłoka → `python3 tests/sprawdz_plan.py profil.json plan
 | R2 | dni zablokowane i limit minut dnia (zawody bez limitu) |
 | R3 | akcent/test/start nie dzień po dniu; długi nie dzień po mocnym; mocny nie dzień po długim |
 | R4 | długi ≤ 170 min; symulacja startu ≤ 180 min, najwyżej 2 |
-| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); start od obecnego obciążenia |
+| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); start od obecnego obciążenia; start docelowy nie liczy się |
 | R6 | w każdych 5 kolejnych tygodniach jeden lżejszy (≤ 88% poprzedniego) |
 | R7 | mocne minuty ≤ 25% tygodnia (zawody nie liczą się) |
 | R8 | początkujący: ≥ 2 dni wolne w tygodniu |

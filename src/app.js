@@ -72,6 +72,58 @@
     cel: { typ: 'dystans', dystans_km: 21.0975, czas: '1:55:00', data: '2027-03-21' } };
   function celTyp() { const d = $('f-cel-typ').value === 'dystans'; $('cel-dystans').hidden = !d; $('cel-czas-biegu').hidden = d; }
 
+  // --- plan ---
+  const NAZWA = { wolne: 'Wolne', spokojny: 'Spokojny bieg', regeneracyjny: 'Bardzo lekki bieg', marszobieg: 'Marszobieg', dlugi: 'Długi bieg', akcent: 'Mocny trening', test: 'Sprawdzian', start: 'Start' };
+  const PO_CO = { spokojny: 'Buduje wytrzymałość bez zmęczenia.', regeneracyjny: 'Rozluźnia nogi przed ważnym dniem.', marszobieg: 'Przyzwyczaja ciało do biegu bez przeciążenia.',
+    dlugi: 'Uczy organizm biec długo. Najważniejszy bieg tygodnia.', akcent: 'Podnosi tempo, które jesteś w stanie utrzymać.', test: 'Sprawdza postęp i aktualizuje prognozę.', start: 'Twój cel.' };
+  const MOC = { spokojny: ['spokojnie', 'lekko'], regeneracyjny: ['bardzo lekko', 'lekko'], marszobieg: ['spokojnie', 'lekko'], dlugi: ['spokojnie', 'lekko'],
+    akcent: ['mocno', 'mocno'], test: ['bardzo mocno', 'bardzo'], start: ['bardzo mocno', 'bardzo'] };
+  const DODATEK = { rozgrzewka: 'rozgrzewka dynamiczna', plyometria: 'skoki (plyometria) 10 min', sila: 'siła 20–30 min', mobilnosc: 'rozciąganie po biegu' };
+  const FAZA = { baza: 'baza', rozwoj: 'rozwój', specyficzna: 'pod start', taper: 'odpoczynek przed startem' };
+  const DZIEN = { pn: 'pn', wt: 'wt', sr: 'śr', czw: 'czw', pt: 'pt', sob: 'sob', nd: 'nd' };
+  const hm = (m) => (m >= 60 ? `${Math.floor(m / 60)} h ${m % 60 ? (m % 60) + ' min' : ''}`.trim() : `${m} min`);
+  const el = (tag, klasa, tekst) => { const e = document.createElement(tag); if (klasa) e.className = klasa; if (tekst !== undefined) e.textContent = tekst; return e; };
+  const dzisISO = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const krotko = (iso) => `${+iso.slice(8)}.${iso.slice(5, 7)}`;
+  let pelny = false;
+  try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
+
+  async function ulozPlan(co) { dane.plan = Plan.uloz(dane.profil, dzisISO()); await zapiszDane(co); }
+  function pokazPlan() {
+    const plan = dane.plan;
+    $('plan-brak').hidden = !!plan; $('plan-jest').hidden = !plan;
+    if (!plan) return;
+    const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
+    $('plan-cel').replaceChildren('Cel: ' + (c.typ === 'dystans' ? `${NAZWY[c.dystans_km] || c.dystans_km + ' km'}${c.czas ? ' w ' + c.czas : ''}` : `${c.minuty} min biegu bez przerwy`) + ' ', el('span', 'status ' + o.status, o.status));
+    $('plan-ocena').textContent = (o.prognoza ? `Prognoza z rekordu: ${o.prognoza}. ` : '') + o.uzasadnienie;
+    $('plan-uwagi').replaceChildren(...plan.uwagi.map((u) => el('p', 'komunikat', u)));
+    $('plan-bramki-tytul').hidden = $('plan-bramki').hidden = !plan.bramki.length;
+    $('plan-bramki').replaceChildren(...plan.bramki.map((b) => el('li', '', `Tydzień ${b.tydzien}: ${b.opis} – ${b.prog}.`)));
+    $('widok-prosty').setAttribute('aria-pressed', !pelny); $('widok-pelny').setAttribute('aria-pressed', pelny);
+    const dzis = dzisISO();
+    const biezacy = plan.tygodnie.findIndex((t, i) => dzis >= t.start && (i === plan.tygodnie.length - 1 || dzis < plan.tygodnie[i + 1].start));
+    $('plan-tygodnie').replaceChildren(...plan.tygodnie.map((t, i) => {
+      const d = el('details', 'tydzien'); d.open = i === Math.max(0, biezacy);
+      const koniec = new Date(new Date(t.start + 'T00:00:00Z').getTime() + 6 * 864e5).toISOString().slice(0, 10);
+      const s = el('summary');
+      s.append(el('span', '', `Tydzień ${t.nr}`), el('span', 'cichy', `${krotko(t.start)}–${krotko(koniec)} · ${hm(t.dni.reduce((a, x) => a + x.min, 0))} · ${FAZA[t.faza]}`));
+      d.append(s, ...t.dni.map((x) => {
+        const w = el('div', 'dzien' + (x.typ === 'wolne' ? ' wolne' : ''));
+        const nazwa = el('span', 'nazwa', NAZWA[x.typ]);
+        if (MOC[x.typ]) nazwa.append(el('span', 'moc ' + MOC[x.typ][1], MOC[x.typ][0]));
+        w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
+        const dod = x.dodatki.map((k) => DODATEK[k]).join(', ');
+        if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); return w; }
+        if (pelny) {
+          w.append(el('span', 'szczegoly', x.opis || ''));
+          w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
+        } else w.append(el('span', 'wiecej', PO_CO[x.typ] + (dod ? ' Do tego: ' + dod + '.' : '')));
+        return w;
+      }));
+      return d;
+    }));
+  }
+
   // --- widoki po otwarciu ---
   const NAZWY = { '5': '5 km', '10': '10 km', '21.0975': 'półmaraton', '42.195': 'maraton' };
   function pokazProfil() {
@@ -103,9 +155,9 @@
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
     for (const d of document.querySelectorAll('[data-panel]')) d.hidden = d.dataset.panel !== n;
-    if (n === 'profil') pokazProfil(); else pokazZapis();
+    if (n === 'plan') pokazPlan(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
-  function otwarty() { widok('otwarty'); zakladka('profil'); czuwaj(); }
+  function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
   function zablokuj() { dek = null; dane = null; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
     if (!$('pole-kod').hidden) $('przelacz-kod').click();   // zawsze wracaj do pola hasła
     widok(koperta ? 'zamkniety' : 'start'); }
@@ -136,7 +188,7 @@
       const p = profilZFormularza(), blad = bladProfilu(p);
       if (blad) return komunikat('blad-wywiad', blad);
       komunikat('blad-wywiad', '');
-      if (dek) { dane.profil = p; await zapiszDane('zmiana danych z wywiadu'); return otwarty(); }
+      if (dek) { dane.profil = p; await ulozPlan('zmiana danych z wywiadu, plan ułożony od nowa'); return otwarty(); }
       window._profilRoboczy = p; $('haslo-tytul').textContent = 'Ustaw hasło do sejfu'; widok('haslo');
     });
     akcja('form-haslo', 'haslo-zapisz', () => {
@@ -148,7 +200,8 @@
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu' }] };
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()),
+            historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
           $('kod-odz').textContent = w.kod; $('kod-potw').checked = false; $('kod-dalej').disabled = true; widok('kod');
@@ -173,6 +226,8 @@
       $('przelacz-kod').textContent = k ? 'Wróć do hasła' : 'Nie pamiętam hasła – użyj kodu odzyskiwania'; komunikat('blad-otworz', ''); };
 
     for (const b of document.querySelectorAll('nav.zakladki button')) b.onclick = () => zakladka(b.dataset.z);
+    for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu'); pokazPlan(); };
+    for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }
       catch (e) { $('kopia-tekst').select(); komunikat('kopia-info', 'Zaznaczyłem tekst – skopiuj go ręcznie.', 'ok'); } };
     for (const id of ['usun', 'usun2']) $(id).onclick = () => { $('usun-potw').hidden = false; $('usun-potw').scrollIntoView({ block: 'center' }); };

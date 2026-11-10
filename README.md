@@ -2,7 +2,7 @@
 
 Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy, plan, testy, prognozy, wskaźniki przeciążenia, mapy, pogoda, zegarki, PDF. Dane użytkownika tylko w sejfie zaszyfrowanym jego hasłem. Działa offline i na dowolnym serwerze.
 
-**Stan: pakiet startowy.** Jest specyfikacja, format planu i działające testy planu. Kodu aplikacji jeszcze tu nie ma.
+**Stan: krok 1.** Działa wywiad, sejf na hasło, ocena celu i układanie planu tydzień po tygodniu (`dist/index.html` – otwórz w przeglądarce, działa bez internetu). Jeszcze nie ma: dziennika, importu z zegarka, eksportu na zegarek, map, pogody, PDF, synchronizacji, wersji angielskiej.
 
 ## Co jest w środku
 
@@ -22,7 +22,9 @@ Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy,
 Wystarczy Python 3, bez instalowania czegokolwiek:
 
 ```
-python3 tests/sprawdz_plan.py --self-test
+python3 tests/sprawdz_plan.py --self-test        # reguły planu
+python3 tests/test_plan.py                       # generator z aplikacji (wymaga node)
+python3 build.py && python3 tests/test_sejf.py   # aplikacja w przeglądarce (wymaga playwright)
 python3 tests/sprawdz_plan.py tests/profile/maraton-320.json tests/przyklady/maraton-320.plan.json
 ```
 

@@ -263,7 +263,7 @@ python3 tests/sprawdz_plan.py --self-test
 | R2 | dni zablokowane przez użytkownika i limit czasu dnia (zawody bez limitu) |
 | R3 | dwa mocne dni (akcent, test, start) nie pod rząd; długi nie dzień po mocnym; mocny nie dzień po długim |
 | R4 | długi ≤ 170 min; symulacja startu ≤ 180 min, najwyżej 2 w planie |
-| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); pierwsze tygodnie względem obecnego obciążenia |
+| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); pierwsze tygodnie względem obecnego obciążenia; minuty startu docelowego nie liczą się |
 | R6 | w każdych 5 kolejnych tygodniach jeden lżejszy (≤ 88% poprzedniego) |
 | R7 | mocne minuty ≤ 25% czasu tygodnia (zawody nie liczą się) |
 | R8 | początkujący: ≥ 2 dni wolne w tygodniu |
@@ -280,10 +280,11 @@ Progi (110%, 88%, 25%, 7%, 70%) są wartościami wyjściowymi – zmiana wymaga 
 
 Biegacze testowi: `poczatkujacy-30min`, `maraton-320`, `nierealny-cel`, `powrot-po-kontuzji`, `brak-hrmax`. Nowa reguła = nowy profil lub nowa mutacja w self-teście.
 
-### 16.2 Testy aplikacji (do napisania razem z aplikacją)
+### 16.2 Testy aplikacji
+Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, widok planu, brak połączeń, ramka osadzona). Reszta powstaje razem z kolejnymi krokami.
 - sieć: żadnego połączenia poza listą z sekcji 11 (Playwright z atrapami, test pada przy obcej domenie);
 - sejf: brak danych otwartym tekstem w IndexedDB/localStorage, złe hasło nie otwiera, kod odzyskiwania działa, blokada po bezczynności;
-- plan z aplikacji dla 5 profili testowych przechodzi `tests/sprawdz_plan.py`;
+- plan z aplikacji dla 5 profili testowych i kilku tysięcy losowych przechodzi `tests/sprawdz_plan.py` – **działa**: `python3 tests/test_plan.py`;
 - eksport FIT: poprawna struktura i CRC; PDF: wiele stron bez uciętych bloków;
 - tryb offline: aplikacja startuje i pokazuje plan bez sieci;
 - dwa języki: brak brakujących kluczy w `i18n/pl.json` i `i18n/en.json`.
