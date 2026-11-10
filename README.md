@@ -11,6 +11,7 @@ Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy,
 | `SKILL.md` | skill dla Claude'a: zasady, sposób pracy, polecenie `/IPB` |
 | `docs/SPEC.md` | pełna specyfikacja (sekcje 1–16) |
 | `docs/REJESTR.md` | rejestr uwag i decyzji |
+| `docs/PLAN-BUDOWY.md` | co jest zrobione i co jest następne |
 | `docs/FORMAT-PLANU.md` | format `profil.json` i `plan.json` |
 | `tests/sprawdz_plan.py` | sprawdza plan względem reguł R1–R16 |
 | `tests/profile/` | 5 biegaczy testowych |

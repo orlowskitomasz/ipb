@@ -14,7 +14,9 @@ IPB to otwartoźródłowa aplikacja z planem biegowym szytym na miarę. **Źród
 | `/IPB [obszar]: uwaga` | dopisz wpis do rejestru (niżej), oceń wpływ na reguły, popraw SPEC/skill/testy, zgłoś sprzeczność z zasadami |
 | `/IPB plan` albo prośba o plan | wywiad → ocena celu → plan → **sprawdzenie R1–R16** → dopiero potem pokaż plan |
 | `/IPB sprawdź` + plan | sprawdź plan regułami R1–R16 i wypisz naruszenia |
-| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test` i pokaż wynik |
+| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
+| `/IPB dalej` | zbuduj pierwszy niezrobiony krok z `docs/PLAN-BUDOWY.md` według zasad z tego pliku, przetestuj, zapisz w repozytorium i pokaż działającą stronę |
+| `/IPB stan` | pokaż tabelę z `docs/PLAN-BUDOWY.md`: co zrobione, co następne |
 | `/IPB pytania`, `/IPB rejestr` | pokaż otwarte pytania / rejestr |
 | `/IPB decyzja: pytanie = odpowiedź` | zamknij pytanie, wpisz decyzję |
 | prośba o aplikację | pracuj w repozytorium według `docs/SPEC.md`, kolejność z sekcji 14; bez repozytorium – powiedz, że trzeba je najpierw założyć z pakietu startowego |
@@ -89,7 +91,7 @@ Testy aplikacji (sieć tylko do jawnej listy, sejf, FIT, PDF, offline, dwa języ
 
 ## 6. Praca nad aplikacją
 
-- Repozytorium: Codeberg (główne) + lustro GitHub. Jeden plik `index.html` budowany z modułów; polski i angielski; zegarki: Garmin, Suunto, Coros, Apple Watch.
+- Repozytorium robocze: `github.com/orlowskitomasz/ipb` (kopia na Codeberg później). Kolejność i stan kroków: `docs/PLAN-BUDOWY.md`. Jeden plik `index.html` budowany z modułów; polski i angielski; zegarki: Garmin, Suunto, Coros, Apple Watch.
 - Kolejność: sejf + wywiad + strefy + prognozy + plan → dziennik i import → eksport na zegarek i PDF → prywatność i PWA → mapy i pogoda → synchronizacja → pozostałe zegarki.
 - Każda zmiana: test, wpis w historii wersji bez danych użytkownika, numer wersji w nazwie pliku.
 - Punkt wyjścia: aplikacja referencyjna autora („Plan treningowy” 1.30) – przed publikacją usunąć z niej dane domyślne autora.
