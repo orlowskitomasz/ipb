@@ -16,6 +16,9 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · testy · Testy planu: 5 biegaczy testowych, reguły R1–R16, `tests/sprawdz_plan.py` z self-testem (SPEC sekcja 16) · przyjęte
 - 2026-11-10 · autor · plan · Krok 1 zbudowany: sejf na hasło, wywiad, ocena celu, generator planu (`src/plan.js`) i jego widok prosty/szczegółowy; generator sprawdzany regułami R1–R16 na 5 profilach i losowych · przyjęte
 - 2026-11-10 · autor · testy · R5: minuty startu docelowego w ostatnim tygodniu nie liczą się do wzrostu (tak jak w R2 i R7) · przyjęte
+- 2026-11-10 · autor · strefy · Krok 2 zbudowany: strefy (% tętna maks., Karvonen, Friel) i tempa z ostatniego wyniku, cel tętna/tempa przy każdym biegu, wpisywanie wyników testów przelicza strefy, prognozę i plan bez przesuwania tygodni; reguła R17 · przyjęte
+- 2026-11-10 · autor · prognozy · Prognoza liczy się z ostatniego wyniku (najnowsza data), nie z najlepszego – sprawdzian ma zmieniać prognozę w obie strony · przyjęte
 
 ## Otwarte pytania
-- (brak – nowe pytania dopisywać tutaj)
+- strefy: brakujące tętno maks. szacujemy wzorem Tanaki (208 − 0,7 × wiek), a próg jako 90% maks. – czy zostawić, czy bez pomiaru podawać tylko tempo i odczucie?
+- strefy: model Danielsa (VDOT) i progi z DFA alfa 1 nie są jeszcze w aplikacji – dodać w kroku 4 razem z importem plików?

@@ -39,7 +39,7 @@
       obciazenie: { h_tydz: liczba('f-h') ?? 0, km_tydz: liczba('f-km') ?? 0, najdluzszy_min: liczba('f-najdl') ?? 0 },
       dni: Object.fromEntries(DNI.map((d) => [d, { max_min: liczba('f-dzien-' + d) ?? 0 }])),
       rekordy: rek ? [{ dystans_km: Number($('f-rek-dyst').value), czas: rek, data: $('f-rek-data').value || null }] : [],
-      hrmax: liczba('f-hrmax'), lthr: liczba('f-lthr'),
+      hrmax: liczba('f-hrmax'), lthr: liczba('f-lthr'), hr_spocz: liczba('f-hrspocz'),
       cel: typ === 'dystans'
         ? { typ, dystans_km: Number($('f-cel-dyst').value), czas: $('f-cel-czas').value.trim() || null, data: $('f-cel-data').value || null }
         : { typ, minuty: liczba('f-cel-min') ?? 30, data: $('f-cel-data').value || null },
@@ -52,7 +52,7 @@
     ust('f-h', p.obciazenie.h_tydz); ust('f-km', p.obciazenie.km_tydz); ust('f-najdl', p.obciazenie.najdluzszy_min);
     for (const d of DNI) ust('f-dzien-' + d, p.dni[d].max_min);
     const r = p.rekordy[0]; ust('f-rek-dyst', r ? r.dystans_km : 10); ust('f-rek-czas', r && r.czas); ust('f-rek-data', r && r.data);
-    ust('f-hrmax', p.hrmax); ust('f-lthr', p.lthr);
+    ust('f-hrmax', p.hrmax); ust('f-lthr', p.lthr); ust('f-hrspocz', p.hr_spocz);
     ust('f-cel-typ', p.cel.typ); ust('f-cel-dyst', p.cel.dystans_km ?? 10); ust('f-cel-czas', p.cel.czas); ust('f-cel-min', p.cel.minuty); ust('f-cel-data', p.cel.data);
     celTyp();
   }
@@ -88,7 +88,68 @@
   let pelny = false;
   try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
 
-  async function ulozPlan(co) { dane.plan = Plan.uloz(dane.profil, dzisISO()); await zapiszDane(co); }
+  // Plan trzyma swój pierwszy poniedziałek: przeliczenie po teście nie przesuwa tygodni. „Od nowa” zaczyna od najbliższego.
+  async function ulozPlan(co, odNowa) {
+    const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
+    if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
+    dane.plan = Plan.uloz(dane.profil, dzisISO());
+    dane.profil.start_planu = dane.plan.tygodnie[0].start;
+    await zapiszDane(co);
+  }
+  function celTekst(x) {
+    const cz = [], t = x.cel_tetno, v = x.cel_tempo;
+    if (t) cz.push(t.od && t.do ? `tętno ${t.od}–${t.do}` : t.do ? `tętno do ${t.do}` : `tętno powyżej ${t.od}`);
+    if (v) cz.push(`tempo ${Strefy.mmss(v.od)}–${Strefy.mmss(v.do)}/km`);
+    return cz.length ? cz.join(' · ') + (x.szacunek && t ? ' (tętno to szacunek)' : '') : '';
+  }
+  function pokazStrefy() {
+    const s = Strefy.licz(dane.profil), r = Prognoza.ostatni(dane.profil.rekordy || []);
+    const wiersz = (k, v) => [el('dt', '', k), el('dd', '', v)];
+    $('progi-dl').replaceChildren(
+      ...wiersz('Tętno maksymalne', `${s.tetna.hrmax.v} (${s.tetna.hrmax.szacunek ? 'szacunek z wieku' : 'zmierzone'})`),
+      ...wiersz('Tętno progowe', `${s.tetna.lthr.v} (${s.tetna.lthr.szacunek ? 'szacunek' : 'zmierzone'})`),
+      ...wiersz('Ostatni wynik', r ? `${NAZWY[r.dystans_km] || r.dystans_km + ' km'} w ${r.czas}${r.data ? ', ' + r.data : ''}` : 'brak'));
+    $('progi-szacunek').hidden = !(s.tetna.hrmax.szacunek || s.tetna.lthr.szacunek);
+    const tabela = (tytul, opis, wiersze) => {
+      const k = el('div', 'karta'); k.style.cssText = 'display:flex; flex-direction:column; gap:8px';
+      const t = el('table', 'strefy');
+      for (const [a, b] of wiersze) { const tr = el('tr'); tr.append(el('td', '', a), el('td', '', b)); t.append(tr); }
+      k.append(el('h3', '', tytul), el('p', 'cichy', opis), t); return k;
+    };
+    const zakres = (a, b) => (a === null ? `do ${b}` : b === null ? `od ${a}` : `${a}–${b}`);
+    const karty = s.modele.map((m) => tabela(m.nazwa, m.opis, m.strefy.map(([n, a, b]) => [n, zakres(a, b)])));
+    if (s.tempa) {
+      const tz = (z) => `${Strefy.mmss(z[0])}–${Strefy.mmss(z[1])} /km`;
+      karty.push(tabela('Tempa', 'oszacowane wzorem Riegla z ostatniego wyniku', [['Spokojne', tz(s.tempa.E)], ['Maraton', tz(s.tempa.M)], ['Próg', tz(s.tempa.T)], ['VO2max (odcinki 3 min)', tz(s.tempa.I)]]));
+    }
+    $('strefy-modele').replaceChildren(...karty);
+    const testy = dane.testy || [];
+    $('testy-lista').replaceChildren(...(testy.length ? testy.map((t) => el('li', '', t.rodzaj === 'tetno'
+      ? `${t.data}: test 30 min – tętno progowe ${t.lthr}${t.hrmax ? ', najwyższe ' + t.hrmax : ''}`
+      : `${t.data}: ${NAZWY[t.dystans_km] || t.dystans_km + ' km'} w ${t.czas}`)) : [el('li', 'cichy', 'Jeszcze nic nie wpisano.')]));
+    if (!$('t-data').value) $('t-data').value = dzisISO();
+  }
+  async function zapiszTest() {
+    const rodzaj = $('t-rodzaj').value, data = $('t-data').value || dzisISO();
+    if (rodzaj === 'tetno') {
+      const lthr = liczba('t-lthr'), hrmax = liczba('t-hrmax');
+      if (!(lthr >= 90 && lthr <= 220)) return komunikat('t-info', 'Wpisz średnie tętno z ostatnich 20 minut testu (liczba między 90 a 220).');
+      if (hrmax && hrmax < lthr) return komunikat('t-info', 'Najwyższe tętno nie może być niższe od średniego.');
+      dane.profil.lthr = lthr;
+      if (hrmax) dane.profil.hrmax = Math.max(hrmax, dane.profil.hrmax || 0);
+      (dane.testy = dane.testy || []).push({ data, rodzaj, lthr, hrmax });
+      await ulozPlan(`wynik testu 30 min: tętno progowe ${lthr}; strefy i plan przeliczone`);
+    } else {
+      const czas = $('t-czas').value.trim(), dystans_km = Number($('t-dyst').value);
+      if (!/^\d{1,2}:\d{2}(:\d{2})?$/.test(czas)) return komunikat('t-info', 'Czas wpisz jako g:mm:ss, np. 0:24:30.');
+      dane.profil.rekordy = [...(dane.profil.rekordy || []), { dystans_km, czas, data }];
+      (dane.testy = dane.testy || []).push({ data, rodzaj, dystans_km, czas });
+      await ulozPlan(`wynik biegu kontrolnego: ${dystans_km} km w ${czas}; prognoza i plan przeliczone`);
+    }
+    $('t-lthr').value = $('t-hrmax').value = $('t-czas').value = '';
+    komunikat('t-info', 'Zapisano. Strefy, prognoza i plan są przeliczone.', 'ok');
+    pokazStrefy();
+  }
   function pokazPlan() {
     const plan = dane.plan;
     $('plan-brak').hidden = !!plan; $('plan-jest').hidden = !plan;
@@ -114,6 +175,8 @@
         w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
         const dod = x.dodatki.map((k) => DODATEK[k]).join(', ');
         if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); return w; }
+        const cel = celTekst(x);
+        if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
@@ -155,7 +218,7 @@
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
     for (const d of document.querySelectorAll('[data-panel]')) d.hidden = d.dataset.panel !== n;
-    if (n === 'plan') pokazPlan(); else if (n === 'profil') pokazProfil(); else pokazZapis();
+    if (n === 'plan') pokazPlan(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
   function zablokuj() { dek = null; dane = null; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
@@ -188,7 +251,7 @@
       const p = profilZFormularza(), blad = bladProfilu(p);
       if (blad) return komunikat('blad-wywiad', blad);
       komunikat('blad-wywiad', '');
-      if (dek) { dane.profil = p; await ulozPlan('zmiana danych z wywiadu, plan ułożony od nowa'); return otwarty(); }
+      if (dek) { p.start_planu = dane.profil.start_planu; dane.profil = p; await ulozPlan('zmiana danych z wywiadu, plan przeliczony'); return otwarty(); }
       window._profilRoboczy = p; $('haslo-tytul').textContent = 'Ustaw hasło do sejfu'; widok('haslo');
     });
     akcja('form-haslo', 'haslo-zapisz', () => {
@@ -200,10 +263,11 @@
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()),
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [],
             historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
+          dane.profil.start_planu = dane.plan.tygodnie[0].start; magazyn.pisz(await Sejf.zapisz(w.koperta, dek, dane));
           $('kod-odz').textContent = w.kod; $('kod-potw').checked = false; $('kod-dalej').disabled = true; widok('kod');
         }
         $('haslo-nowe').value = $('haslo-powt').value = '';
@@ -226,7 +290,9 @@
       $('przelacz-kod').textContent = k ? 'Wróć do hasła' : 'Nie pamiętam hasła – użyj kodu odzyskiwania'; komunikat('blad-otworz', ''); };
 
     for (const b of document.querySelectorAll('nav.zakladki button')) b.onclick = () => zakladka(b.dataset.z);
-    for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu'); pokazPlan(); };
+    for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
+    akcja('form-test', 't-zapisz', zapiszTest);
+    $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };
     for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }
       catch (e) { $('kopia-tekst').select(); komunikat('kopia-info', 'Zaznaczyłem tekst – skopiuj go ręcznie.', 'ok'); } };

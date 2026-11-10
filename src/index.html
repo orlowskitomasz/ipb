@@ -77,6 +77,7 @@
         <div class="siatka">
           <label for="f-hrmax">Tętno maksymalne<input id="f-hrmax" type="number" inputmode="numeric" placeholder="nie wiem"></label>
           <label for="f-lthr">Tętno progowe (LTHR)<input id="f-lthr" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+          <label for="f-hrspocz">Tętno spoczynkowe<input id="f-hrspocz" type="number" inputmode="numeric" placeholder="nie wiem"></label>
         </div>
         <h3>Cel</h3>
         <div class="siatka">
@@ -131,6 +132,7 @@
   <section id="w-otwarty" hidden>
     <nav class="zakladki" aria-label="Widoki">
       <button type="button" data-z="plan" aria-selected="true">Plan</button>
+      <button type="button" data-z="strefy" aria-selected="false">Strefy i testy</button>
       <button type="button" data-z="profil" aria-selected="false">Profil i cel</button>
       <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
     </nav>
@@ -157,6 +159,36 @@
         </div>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
+      </div>
+    </div>
+
+    <div data-panel="strefy" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Twoje progi</h3>
+        <dl id="progi-dl"></dl>
+        <p id="progi-szacunek" class="komunikat" hidden>Część wartości to szacunek z wieku. Zastąpi je wynik testu 30 minut – wpisz go niżej, a strefy i plan przeliczą się same.</p>
+      </div>
+      <div id="strefy-modele" style="display:flex; flex-direction:column; gap:16px"></div>
+      <form id="form-test" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+        <h3>Wpisz wynik sprawdzianu</h3>
+        <div class="siatka">
+          <label for="t-rodzaj">Rodzaj<select id="t-rodzaj"><option value="tetno">test 30 minut (tętno progowe)</option><option value="kontrolny">bieg kontrolny lub zawody</option></select></label>
+          <label for="t-data">Data<input id="t-data" type="date"></label>
+        </div>
+        <div id="t-pola-tetno" class="siatka">
+          <label for="t-lthr">Średnie tętno z ostatnich 20 minut<input id="t-lthr" type="number" inputmode="numeric"></label>
+          <label for="t-hrmax">Najwyższe tętno w teście (jeśli znasz)<input id="t-hrmax" type="number" inputmode="numeric"></label>
+        </div>
+        <div id="t-pola-kontrolny" class="siatka" hidden>
+          <label for="t-dyst">Dystans<select id="t-dyst"><option value="5">5 km</option><option value="10">10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="t-czas">Czas (g:mm:ss)<input id="t-czas" type="text" inputmode="numeric" placeholder="0:24:30"></label>
+        </div>
+        <p id="t-info" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="t-zapisz" class="glowny" type="button">Zapisz wynik</button></div>
+      </form>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Zapisane wyniki</h3>
+        <ul id="testy-lista" class="lista"></ul>
       </div>
     </div>
 

@@ -255,7 +255,7 @@ python3 tests/sprawdz_plan.py PROFIL.json PLAN.json
 python3 tests/sprawdz_plan.py --self-test
 ```
 
-`--self-test` sprawdza 5 biegaczy testowych (`tests/profile/`) z przykładowymi planami (`tests/przyklady/`) oraz 17 celowo zepsutych planów – każdy błąd musi zostać wykryty.
+`--self-test` sprawdza 5 biegaczy testowych (`tests/profile/`) z planami z generatora aplikacji (`tests/przyklady/`, odświeżane przez `python3 tests/test_plan.py --zapisz`) oraz 18 celowo zepsutych planów – każdy błąd musi zostać wykryty.
 
 | Reguła | Co sprawdza |
 |---|---|
@@ -270,11 +270,12 @@ python3 tests/sprawdz_plan.py --self-test
 | R9 | początkujący: bez akcentów przez 8 tygodni; marszobieg w 1. tygodniu przy obciążeniu < 1,5 h/tydz. |
 | R10 | powrót po przerwie: 2 tygodnie bez mocnych dni, 1. tydzień ≤ obecne obciążenie |
 | R11 | brak HRmax/LTHR → test w tygodniach 1–4 (nie dotyczy początkujących i powrotu) |
-| R12 | uczciwa ocena celu: cel > 7% szybszy od prognozy Riegla → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
+| R12 | uczciwa ocena celu: cel > 7% szybszy od prognozy Riegla z **ostatniego** wyniku → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
 | R13 | ostatni tydzień zawiera start; od półmaratonu taper: ostatni tydzień (bez startu) ≤ 70% szczytu |
 | R14 | od półmaratonu: bramki decyzyjne i test/start kontrolny wcześniej niż 3 tyg. przed celem |
 | R15 | od półmaratonu: długi bieg (lub start/test ≥ 90 min) w każdym tygodniu poza ostatnim |
 | R16 | siła w ≥ 75% tygodni; plyometria nie dzień przed mocnym dniem, nie w tygodniu startu, u początkujących nie w tyg. 1–4 |
+| R17 | każdy bieg (poza testem) ma cel: zakres tętna lub tempa; start z czasem docelowym ma tempo |
 
 Progi (110%, 88%, 25%, 7%, 70%) są wartościami wyjściowymi – zmiana wymaga wpisu w `docs/REJESTR.md` i poprawki w `tests/sprawdz_plan.py`.
 

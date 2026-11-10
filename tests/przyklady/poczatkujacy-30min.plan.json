@@ -2,15 +2,21 @@
  "profil": "poczatkujacy-30min",
  "ocena_celu": {
   "status": "realny",
-  "uzasadnienie": "Cel na czas biegu, progresja marszobiegu przez 10 tygodni."
+  "prognoza": null,
+  "uzasadnienie": "Brak rekordu do prognozy – cel zostanie sprawdzony pierwszym testem."
  },
- "bramki": [
-  {
-   "tydzien": 5,
-   "opis": "15 min biegu ciągłego bez zadyszki",
-   "prog": "jeśli nie – powtórz tydzień 4–5"
+ "bramki": [],
+ "uwagi": [],
+ "strefy": {
+  "hrmax": {
+   "v": 183,
+   "szacunek": true
+  },
+  "lthr": {
+   "v": 165,
+   "szacunek": true
   }
- ],
+ },
  "tygodnie": [
   {
    "nr": 1,
@@ -30,8 +36,14 @@
      "min": 18,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -53,9 +65,13 @@
      "min": 18,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -71,7 +87,12 @@
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -90,11 +111,17 @@
     {
      "dzien": "wt",
      "typ": "marszobieg",
-     "min": 22,
+     "min": 21,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -113,12 +140,16 @@
     {
      "dzien": "pt",
      "typ": "marszobieg",
-     "min": 22,
+     "min": 21,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -134,7 +165,12 @@
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 1 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -153,11 +189,17 @@
     {
      "dzien": "wt",
      "typ": "marszobieg",
-     "min": 25,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -176,12 +218,16 @@
     {
      "dzien": "pt",
      "typ": "marszobieg",
-     "min": 25,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -193,11 +239,16 @@
     {
      "dzien": "nd",
      "typ": "marszobieg",
-     "min": 34,
+     "min": 32,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 2 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -216,11 +267,17 @@
     {
      "dzien": "wt",
      "typ": "marszobieg",
-     "min": 22,
+     "min": 21,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -239,12 +296,16 @@
     {
      "dzien": "pt",
      "typ": "marszobieg",
-     "min": 22,
+     "min": 21,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -256,11 +317,16 @@
     {
      "dzien": "nd",
      "typ": "marszobieg",
-     "min": 28,
+     "min": 27,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 3 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -282,8 +348,14 @@
      "min": 27,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -305,9 +377,13 @@
      "min": 27,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -319,11 +395,16 @@
     {
      "dzien": "nd",
      "typ": "marszobieg",
-     "min": 36,
+     "min": 35,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 5 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -342,11 +423,18 @@
     {
      "dzien": "wt",
      "typ": "marszobieg",
-     "min": 31,
+     "min": 30,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
+      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -365,12 +453,16 @@
     {
      "dzien": "pt",
      "typ": "marszobieg",
-     "min": 31,
+     "min": 30,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -382,11 +474,16 @@
     {
      "dzien": "nd",
      "typ": "marszobieg",
-     "min": 40,
+     "min": 39,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Marszobieg: 8 min biegu / 2 min marszu, powtarzaj do końca czasu.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -404,12 +501,19 @@
     },
     {
      "dzien": "wt",
-     "typ": "marszobieg",
-     "min": 34,
+     "typ": "spokojny",
+     "min": 33,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
+      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -427,13 +531,17 @@
     },
     {
      "dzien": "pt",
-     "typ": "marszobieg",
-     "min": 34,
+     "typ": "spokojny",
+     "min": 33,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -444,12 +552,17 @@
     },
     {
      "dzien": "nd",
-     "typ": "marszobieg",
-     "min": 46,
+     "typ": "spokojny",
+     "min": 43,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -468,11 +581,18 @@
     {
      "dzien": "wt",
      "typ": "spokojny",
-     "min": 29,
+     "min": 28,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
+      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -491,12 +611,16 @@
     {
      "dzien": "pt",
      "typ": "spokojny",
-     "min": 29,
+     "min": 28,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -508,18 +632,23 @@
     {
      "dzien": "nd",
      "typ": "spokojny",
-     "min": 38,
+     "min": 37,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
   {
    "nr": 9,
    "start": "2027-01-11",
-   "faza": "taper",
+   "faza": "specyficzna",
    "dni": [
     {
      "dzien": "pn",
@@ -531,11 +660,18 @@
     {
      "dzien": "wt",
      "typ": "spokojny",
-     "min": 36,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
+      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -554,12 +690,16 @@
     {
      "dzien": "pt",
      "typ": "spokojny",
-     "min": 36,
+     "min": 24,
      "mocne_min": 0,
      "dodatki": [
-      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -571,11 +711,16 @@
     {
      "dzien": "nd",
      "typ": "spokojny",
-     "min": 48,
+     "min": 31,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   },
@@ -594,11 +739,16 @@
     {
      "dzien": "wt",
      "typ": "spokojny",
-     "min": 20,
+     "min": 22,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny, krótki bieg.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
@@ -617,11 +767,16 @@
     {
      "dzien": "pt",
      "typ": "spokojny",
-     "min": 20,
+     "min": 22,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny, krótki bieg.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     },
     {
      "dzien": "sob",
@@ -637,7 +792,12 @@
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Cel: 30 min biegu bez przerwy, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 147
+     },
+     "szacunek": true
     }
    ]
   }

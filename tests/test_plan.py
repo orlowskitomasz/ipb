@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Sprawdza generator planu z aplikacji (src/plan.js) regułami R1–R16.
+"""Sprawdza generator planu z aplikacji (src/plan.js) regułami R1–R17.
 
 5 biegaczy testowych + losowe profile (stałe ziarno). Wymaga: node.
-Uruchom: python3 tests/test_plan.py [ile_losowych]
+Uruchom: python3 tests/test_plan.py [ile_losowych] [--zapisz]
 """
 import json, pathlib, random, subprocess, sys
 from collections import Counter
@@ -42,12 +42,16 @@ def losowy(r, i):
 
 if __name__ == "__main__":
     import datetime
-    ile = int(sys.argv[1]) if len(sys.argv) > 1 else 500
+    liczby = [a for a in sys.argv[1:] if a.isdigit()]
+    ile = int(liczby[0]) if liczby else 500
     stale = [json.loads(p.read_text(encoding="utf-8")) for p in sorted((TU / "profile").glob("*.json"))]
     r = random.Random(20261110)
     losowe = [losowy(r, i) for i in range(ile)]
     for p in losowe:
         p["cel"]["data"] = str(datetime.date(2026, 11, 16) + datetime.timedelta(days=p.pop("_offset")))
+    if "--zapisz" in sys.argv:        # odśwież tests/przyklady/ planami z generatora aplikacji
+        for prof, plan in zip(stale, uloz(stale)):
+            (TU / "przyklady" / f"{prof['id']}.plan.json").write_text(json.dumps({"profil": prof["id"], **plan}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     ok, licznik = True, Counter()
     for prof, plan in zip(stale + losowe, uloz(stale + losowe)):
         bl = sprawdz(prof, plan)

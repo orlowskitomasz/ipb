@@ -3,20 +3,36 @@
  "ocena_celu": {
   "status": "ambitny",
   "prognoza": "2:01:54",
-  "uzasadnienie": "Riegel z 5 km 26:30 daje ok. 2:02 – cel 1:59 jest 2% szybszy."
+  "uzasadnienie": "Cel jest o 2% szybszy od prognozy – wymaga postępu, sprawdzą go testy pośrednie."
  },
  "bramki": [
   {
    "tydzien": 2,
    "opis": "test 30 min",
-   "prog": "wyznacza strefy – bez niego strefy są szacunkiem"
+   "prog": "wyznacza tętno progowe – do tego czasu strefy są szacunkiem"
+  },
+  {
+   "tydzien": 5,
+   "opis": "bieg kontrolny 5 km",
+   "prog": "25:52 lub szybciej – cel zostaje; wolniej o ponad 3% – cel do korekty"
   },
   {
    "tydzien": 9,
-   "opis": "10 km",
-   "prog": "≤ 55:00 – cel zostaje; > 56:30 – cel 2:03"
+   "opis": "bieg kontrolny 5 km",
+   "prog": "25:52 lub szybciej – cel zostaje; wolniej o ponad 3% – cel do korekty"
   }
  ],
+ "uwagi": [],
+ "strefy": {
+  "hrmax": {
+   "v": 175,
+   "szacunek": true
+  },
+  "lthr": {
+   "v": 158,
+   "szacunek": true
+  }
+ },
  "tygodnie": [
   {
    "nr": 1,
@@ -39,26 +55,51 @@
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 142,
+      "do": 152
+     },
+     "cel_tempo": {
+      "od": 347,
+      "do": 360
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 19,
+     "min": 18,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 25,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, podbiegi: 6 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -70,20 +111,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 19,
+     "min": 18,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 57,
+     "min": 54,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -101,35 +161,37 @@
     },
     {
      "dzien": "wt",
-     "typ": "akcent",
-     "min": 33,
-     "mocne_min": 13,
-     "dodatki": [
-      "rozgrzewka",
-      "plyometria",
-      "mobilnosc"
-     ]
-    },
-    {
-     "dzien": "sr",
-     "typ": "spokojny",
-     "min": 18,
-     "mocne_min": 0,
-     "dodatki": [
-      "sila",
-      "mobilnosc"
-     ]
-    },
-    {
-     "dzien": "czw",
      "typ": "test",
-     "min": 33,
-     "mocne_min": 13,
+     "min": 55,
+     "mocne_min": 22,
      "dodatki": [
       "rozgrzewka",
       "mobilnosc"
      ],
-     "opis": "test 30 min (wyznaczenie LTHR i HRmax)"
+     "opis": "Test 30 min: rozgrzewka 10–15 min, potem 30 min równo, najmocniej jak dasz radę utrzymać. Średnie tętno z ostatnich 20 min to Twoje tętno progowe."
+    },
+    {
+     "dzien": "sr",
+     "typ": "wolne",
+     "min": 0,
+     "mocne_min": 0,
+     "dodatki": []
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ],
+     "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -141,20 +203,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 18,
+     "min": 19,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 63,
+     "min": 58,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -173,32 +254,57 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 36,
-     "mocne_min": 14,
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 23,
+     "min": 26,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
+     "typ": "akcent",
      "min": 30,
-     "mocne_min": 0,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 142,
+      "do": 152
+     },
+     "cel_tempo": {
+      "od": 347,
+      "do": 360
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -210,20 +316,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 23,
+     "min": 26,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 68,
+     "min": 63,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -242,32 +367,57 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 32,
-     "mocne_min": 13,
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 142,
+      "do": 152
+     },
+     "cel_tempo": {
+      "od": 347,
+      "do": 360
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 20,
+     "min": 18,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 26,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, podbiegi: 6 × 1 min żwawo pod górę, powrót truchtem, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -279,20 +429,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 20,
+     "min": 18,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 60,
+     "min": 54,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -310,33 +479,49 @@
     },
     {
      "dzien": "wt",
-     "typ": "akcent",
-     "min": 39,
-     "mocne_min": 16,
+     "typ": "test",
+     "min": 45,
+     "mocne_min": 18,
      "dodatki": [
       "rozgrzewka",
-      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę."
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 25,
+     "min": 23,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 33,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
+      "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -348,20 +533,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 24,
+     "min": 23,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 74,
+     "min": 68,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -380,32 +584,57 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 43,
-     "mocne_min": 17,
+     "min": 31,
+     "mocne_min": 12,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, bieg z narastającą prędkością: ostatnie 12 min coraz mocniej, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "do": 158
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 27,
+     "min": 35,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 36,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 31,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, sub-próg: 2 × 6 min „komfortowo mocno”, przerwa 1 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 142,
+      "do": 152
+     },
+     "cel_tempo": {
+      "od": 347,
+      "do": 360
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -417,20 +646,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 27,
+     "min": 35,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 81,
+     "min": 73,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -449,32 +697,61 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 47,
-     "mocne_min": 19,
+     "min": 33,
+     "mocne_min": 13,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 30,
+     "min": 38,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 40,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 33,
+     "mocne_min": 13,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, VO2max: 4 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 158
+     },
+     "cel_tempo": {
+      "od": 298,
+      "do": 313
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -486,20 +763,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 29,
+     "min": 38,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 89,
+     "min": 80,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -518,32 +814,61 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 41,
-     "mocne_min": 16,
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, VO2max: 4 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 158
+     },
+     "cel_tempo": {
+      "od": 298,
+      "do": 313
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 26,
+     "min": 31,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 34,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, bieg progowy ciągły 12 min, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -555,20 +880,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 26,
+     "min": 31,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 78,
+     "min": 68,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -586,35 +930,54 @@
     },
     {
      "dzien": "wt",
-     "typ": "akcent",
-     "min": 51,
-     "mocne_min": 20,
-     "dodatki": [
-      "rozgrzewka",
-      "plyometria",
-      "mobilnosc"
-     ]
-    },
-    {
-     "dzien": "sr",
-     "typ": "spokojny",
-     "min": 28,
-     "mocne_min": 0,
-     "dodatki": [
-      "sila",
-      "mobilnosc"
-     ]
-    },
-    {
-     "dzien": "czw",
      "typ": "test",
-     "min": 51,
-     "mocne_min": 20,
+     "min": 45,
+     "mocne_min": 18,
      "dodatki": [
       "rozgrzewka",
       "mobilnosc"
      ],
-     "opis": "test 10 km"
+     "opis": "Bieg kontrolny 5 km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę."
+    },
+    {
+     "dzien": "sr",
+     "typ": "spokojny",
+     "min": 37,
+     "mocne_min": 0,
+     "dodatki": [
+      "sila",
+      "mobilnosc"
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
+    },
+    {
+     "dzien": "czw",
+     "typ": "akcent",
+     "min": 36,
+     "mocne_min": 14,
+     "dodatki": [
+      "rozgrzewka",
+      "plyometria",
+      "mobilnosc"
+     ],
+     "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -626,20 +989,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 28,
+     "min": 37,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 97,
+     "min": 86,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -658,32 +1040,61 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 56,
-     "mocne_min": 22,
+     "min": 39,
+     "mocne_min": 15,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 35,
+     "min": 44,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 47,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 39,
+     "mocne_min": 15,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, VO2max: 5 × 3 min mocno, przerwa 2–3 min truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 158
+     },
+     "cel_tempo": {
+      "od": 298,
+      "do": 313
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -695,20 +1106,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 36,
+     "min": 44,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 106,
+     "min": 94,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -727,32 +1157,57 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 56,
-     "mocne_min": 22,
+     "min": 42,
+     "mocne_min": 16,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, zmienne tempo: 3 × (1 km w tempie celu 5:38/km + 1 km luźniej), schłodzenie do końca czasu.",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 35,
+     "min": 45,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 47,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 42,
+     "mocne_min": 16,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -764,20 +1219,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 36,
+     "min": 45,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 106,
+     "min": 107,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie. Ćwicz jedzenie i picie tak jak na starcie.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -796,32 +1270,57 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 49,
-     "mocne_min": 20,
+     "min": 34,
+     "mocne_min": 13,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, odcinki progowe: 2 × 8 min, przerwa 90 s truchtu, schłodzenie do końca czasu.",
+     "cel_tetno": {
+      "od": 150,
+      "do": 158
+     },
+     "cel_tempo": {
+      "od": 330,
+      "do": 340
+     },
+     "szacunek": true
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 31,
+     "min": 38,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 41,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 34,
+     "mocne_min": 13,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, tempo startowe: 2 × 2 km w tempie celu (5:38/km), przerwa 2 min, schłodzenie do końca czasu.",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     },
     {
      "dzien": "pt",
@@ -833,20 +1332,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 31,
+     "min": 38,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 93,
+     "min": 81,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie. Ćwicz jedzenie i picie tak jak na starcie.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -865,32 +1383,52 @@
     {
      "dzien": "wt",
      "typ": "akcent",
-     "min": 40,
-     "mocne_min": 16,
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
       "rozgrzewka",
       "plyometria",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, tempo startowe: 2 × 2 km w tempie celu (5:38/km), przerwa 2 min, schłodzenie do końca czasu.",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     },
     {
      "dzien": "sr",
      "typ": "spokojny",
-     "min": 25,
+     "min": 26,
      "mocne_min": 0,
      "dodatki": [
       "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
-     "typ": "spokojny",
-     "min": 34,
-     "mocne_min": 0,
+     "typ": "akcent",
+     "min": 30,
+     "mocne_min": 12,
      "dodatki": [
+      "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka 10–15 min, zmienne tempo: 2 × (1 km w tempie celu 5:38/km + 1 km luźniej), schłodzenie do końca czasu.",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     },
     {
      "dzien": "pt",
@@ -902,20 +1440,39 @@
     {
      "dzien": "sob",
      "typ": "spokojny",
-     "min": 25,
+     "min": 26,
      "mocne_min": 0,
      "dodatki": [
+      "sila",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny bieg w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "dlugi",
-     "min": 76,
+     "min": 63,
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Długi bieg spokojnie, w tempie rozmowy.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     }
    ]
   },
@@ -939,14 +1496,30 @@
      "dodatki": [
       "rozgrzewka",
       "mobilnosc"
-     ]
+     ],
+     "opis": "Rozgrzewka, potem 3 × 3 min w tempie celu (5:38/km), przerwa 2 min. Bez zmęczenia.",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     },
     {
      "dzien": "sr",
-     "typ": "wolne",
-     "min": 0,
+     "typ": "spokojny",
+     "min": 35,
      "mocne_min": 0,
-     "dodatki": []
+     "dodatki": [
+      "mobilnosc"
+     ],
+     "opis": "Spokojny, krótki bieg.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "czw",
@@ -955,7 +1528,16 @@
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Spokojny, krótki bieg.",
+     "cel_tetno": {
+      "do": 141
+     },
+     "cel_tempo": {
+      "od": 406,
+      "do": 450
+     },
+     "szacunek": true
     },
     {
      "dzien": "pt",
@@ -971,16 +1553,24 @@
      "mocne_min": 0,
      "dodatki": [
       "mobilnosc"
-     ]
+     ],
+     "opis": "Bardzo lekki rozruch, 3–4 krótkie przebieżki.",
+     "cel_tetno": {
+      "do": 134
+     },
+     "szacunek": true
     },
     {
      "dzien": "nd",
      "typ": "start",
-     "min": 120,
-     "mocne_min": 120,
-     "dodatki": [
-      "mobilnosc"
-     ]
+     "min": 119,
+     "mocne_min": 119,
+     "dodatki": [],
+     "opis": "Start docelowy: 21.0975 km w 1:59:00 (5:38/km).",
+     "cel_tempo": {
+      "od": 332,
+      "do": 345
+     }
     }
    ]
   }

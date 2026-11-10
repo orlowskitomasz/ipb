@@ -7,7 +7,8 @@ from playwright.sync_api import sync_playwright
 
 STRONA = (pathlib.Path(__file__).parent.parent / "dist/index.html").as_uri()
 HASLO, NOWE = "kon bateria zszywka 42", "inne dlugie haslo 2026"
-JAWNE = ["1988", "regularnie", "0:52:30", "rok_urodzenia", "obciazenie", "hrmax", "tygodnie", "akcent"]
+# tylko znaczniki, które nie mogą trafić się przypadkiem w zaszyfrowanym tekście (base64 nie ma „_”, „:” ani cudzysłowu w środku)
+JAWNE = ["rok_urodzenia", "0:52:30", '"profil"', '"hrmax"', '"tygodnie"', "regularnie", "obciazenie"]
 wyniki = []
 
 def sprawdz(nazwa, warunek):
@@ -53,13 +54,34 @@ with sync_playwright() as pw:
             and page.locator("details.tydzien").first.locator(".dzien").count() == 7)
     sprawdz("widok prosty mówi „po co”, szczegółowy pokazuje rozpiskę",
             "Buduje wytrzymałość" in page.inner_text("#plan-tygodnie") and "Rozgrzewka 10–15 min" not in page.inner_text("#plan-tygodnie"))
+    pierwszy_tydzien = page.locator("details.tydzien summary").first.inner_text()
     page.click("#widok-pelny")
     sprawdz("widok szczegółowy pokazuje rozpiskę treningu", "Rozgrzewka 10–15 min" in page.inner_text("#plan-tygodnie"))
     sprawdz("plan z testem tętna, bo w przykładzie brak HRmax", "Tydzień 2: test 30 min" in page.inner_text("#plan-bramki"))
     sprawdz("telefon 390 px: plan bez przewijania w bok", page.evaluate("document.documentElement.scrollWidth <= innerWidth"))
+    plan1 = page.inner_text("#plan-tygodnie")
+    sprawdz("każdy bieg ma cel; bez pomiaru tętno jest oznaczone jako szacunek", "tętno do 145 · tempo" in plan1 and "(tętno to szacunek)" in plan1)
+    page.click("nav.zakladki button[data-z=strefy]")
+    sprawdz("strefy: modele obok siebie i tempa z ostatniego wyniku",
+            page.locator("#strefy-modele .karta").count() == 3 and page.is_visible("#progi-szacunek") and "Próg" in page.inner_text("#strefy-modele"))
+    page.click("#t-zapisz")
+    sprawdz("pusty wynik testu odrzucony", "między 90 a 220" in page.inner_text("#t-info"))
+    page.fill("#t-lthr", "170"); page.fill("#t-hrmax", "186"); page.click("#t-zapisz")
+    page.wait_for_function("document.getElementById('t-info').textContent.startsWith('Zapisano')")
+    sprawdz("wynik testu 30 min zmienia progi na zmierzone", "170 (zmierzone)" in page.inner_text("#progi-dl") and page.is_hidden("#progi-szacunek"))
+    page.click("nav.zakladki button[data-z=plan]")
+    plan2 = page.inner_text("#plan-tygodnie")
+    sprawdz("po teście plan ma nowe tętno i nie jest już szacunkiem", "tętno do 151" in plan2 and "szacunek" not in plan2)
+    sprawdz("przeliczenie nie przesunęło tygodni", page.locator("details.tydzien summary").first.inner_text() == pierwszy_tydzien)
+    page.click("nav.zakladki button[data-z=strefy]"); page.select_option("#t-rodzaj", "kontrolny")
+    page.select_option("#t-dyst", "10"); page.fill("#t-czas", "0:58:00"); page.fill("#t-data", "2026-12-20"); page.click("#t-zapisz")
+    page.wait_for_function("document.getElementById('t-info').textContent.startsWith('Zapisano')")
+    page.click("nav.zakladki button[data-z=plan]")
+    sprawdz("słabszy bieg kontrolny zmienia ocenę celu i daje cel pośredni", "nierealny" in page.inner_text("#plan-cel") and "2:08" in page.inner_text("#plan-cel"))
+    sprawdz("zapisane wyniki są w sejfie, nie otwartym tekstem", "0:58:00" not in surowe(page))
     page.click("nav.zakladki button[data-z=profil]")
-    sprawdz("ocena celu z przykładu: realny", page.inner_text("#ocena-status") == "realny")
-    sprawdz("brak tętna → zapowiedź testu", page.is_visible("#brak-tetna"))
+    sprawdz("ocena celu po wynikach: nierealny", page.inner_text("#ocena-status") == "nierealny")
+    sprawdz("po wpisaniu testu zapowiedź testu tętna znika", page.is_hidden("#brak-tetna"))
     page.click("nav.zakladki button[data-z=zapis]")
     sprawdz("ekran „Co jest zapisane” pokazuje 0 połączeń", page.inner_text("#siec-ile").startswith("0"))
     sprawdz("telefon 390 px: brak przewijania w bok", page.evaluate("document.documentElement.scrollWidth <= innerWidth"))

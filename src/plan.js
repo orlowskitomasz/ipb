@@ -66,15 +66,15 @@ const Plan = (() => {
   }
 
   const AKCENTY = {
-    baza: [(m) => `sub-próg: ${ogr(Math.round(m / 6), 2, 6)} × 6 min „komfortowo mocno”, przerwa 1 min truchtu`,
-           (m) => `podbiegi: ${ogr(Math.round(m / 2), 6, 12)} × 1 min żwawo pod górę, powrót truchtem`,
-           (m) => `bieg z narastającą prędkością: ostatnie ${m} min coraz mocniej`],
-    rozwoj: [(m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`,
-             (m) => `VO2max: ${ogr(Math.round(m / 3), 3, 6)} × 3 min mocno, przerwa 2–3 min truchtu`,
-             (m) => `bieg progowy ciągły ${m} min`],
-    specyficzna: [(m, t) => `tempo startowe: ${Math.max(2, Math.round(m / 9))} × 2 km w tempie celu${t ? ` (${t}/km)` : ''}, przerwa 2 min`,
-                  (m, t) => `zmienne tempo: ${Math.max(2, Math.round(m / 5))} × (1 km w tempie celu${t ? ` ${t}/km` : ''} + 1 km luźniej)`,
-                  (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`],
+    baza: [['subprog', (m) => `sub-próg: ${ogr(Math.round(m / 6), 2, 6)} × 6 min „komfortowo mocno”, przerwa 1 min truchtu`],
+           ['doprogu', (m) => `podbiegi: ${ogr(Math.round(m / 2), 6, 12)} × 1 min żwawo pod górę, powrót truchtem`],
+           ['doprogu', (m) => `bieg z narastającą prędkością: ostatnie ${m} min coraz mocniej`]],
+    rozwoj: [['prog', (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`],
+             ['vo2', (m) => `VO2max: ${ogr(Math.round(m / 3), 3, 6)} × 3 min mocno, przerwa 2–3 min truchtu`],
+             ['prog', (m) => `bieg progowy ciągły ${m} min`]],
+    specyficzna: [['cel', (m, t) => `tempo startowe: ${Math.max(2, Math.round(m / 9))} × 2 km w tempie celu${t ? ` (${t}/km)` : ''}, przerwa 2 min`],
+                  ['cel', (m, t) => `zmienne tempo: ${Math.max(2, Math.round(m / 5))} × (1 km w tempie celu${t ? ` ${t}/km` : ''} + 1 km luźniej)`],
+                  ['prog', (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`]],
   };
   AKCENTY.taper = AKCENTY.specyficzna;
   const MARSZOBIEG = ['1 min biegu / 2 min marszu', '2 min biegu / 2 min marszu', '3 min biegu / 2 min marszu',
@@ -106,7 +106,12 @@ const Plan = (() => {
     let sufit = uzyte.reduce((a, d) => a + lim[d], 0) + limDl;
     if (zaczyna) sufit = Math.min(sufit, Math.max(baza * 2, 3 * (cel.minuty || 30)));
     const udzialDl = !dystans || cel.dystans_km < 21 ? 0.30 : cel.dystans_km >= 42 ? 0.34 : 0.36;
-    const tempoCelu = dystans && cel.czas ? tempo(Prognoza.sek(cel.czas) / cel.dystans_km) : null;
+    const sekCelu = dystans && cel.czas ? Prognoza.sek(cel.czas) / cel.dystans_km : null;
+    const tempoCelu = sekCelu ? tempo(sekCelu) : null;
+    const strefy = Strefy.licz(profil, +String(dzis).slice(0, 4));
+    const celTempa = sekCelu ? { cel_tempo: { od: Math.round(sekCelu * 0.98), do: Math.round(sekCelu * 1.02) } } : null;
+    // cel dnia: tętno i/lub tempo (R17); „cel” = tempo startowe, a gdy cel nie ma czasu – próg
+    const celDnia = (d, rodzaj) => Object.assign(d, rodzaj === 'cel' ? (celTempa || Strefy.cel('prog', strefy)) : Strefy.cel(rodzaj, strefy));
     if (!uzyte.length && r.dlugi === null) uwagi.push('W wywiadzie nie ma żadnego dnia na bieganie.');
     if (!zaczyna && baza < 60) uwagi.push('Przy obciążeniu poniżej godziny na tydzień lepiej wybrać poziom „zaczynam” – plan ruszy wtedy od marszobiegu.');
 
@@ -210,8 +215,9 @@ const Plan = (() => {
               ? 'Test 30 min: rozgrzewka 10–15 min, potem 30 min równo, najmocniej jak dasz radę utrzymać. Średnie tętno z ostatnich 20 min to Twoje tętno progowe.'
               : `Bieg kontrolny ${dystTestu} km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.`);
           } else {
-            const wzor = AKCENTY[faza][(i + j) % 3](Math.max(6, mm), tempoCelu);
-            ust(d, 'akcent', m, mm, `Rozgrzewka 10–15 min, ${wzor}, schłodzenie do końca czasu.`);
+            const [rodzaj, wzor] = AKCENTY[faza][(i + j) % 3];
+            ust(d, 'akcent', m, mm, `Rozgrzewka 10–15 min, ${wzor(Math.max(6, mm), tempoCelu)}, schłodzenie do końca czasu.`);
+            celDnia(dni[d], rodzaj);
           }
         });
         if (r.dlugi !== null && dl) ust(r.dlugi, 'dlugi', dl, 0, faza === 'specyficzna' && dlugiCel
@@ -219,8 +225,16 @@ const Plan = (() => {
         for (const d of lekkie) {
           const m = lekkieMin[d]; if (!m) continue;
           if (zaczyna && mieszany && nr < przelom) ust(d, 'marszobieg', m, 0, `Marszobieg: ${MARSZOBIEG[Math.min(5, Math.floor(6 * i / przelom))]}, powtarzaj do końca czasu.`);
-          else ust(d, 'spokojny', m, 0, 'Spokojny bieg w tempie rozmowy' + (profil.lthr ? ` (tętno do ok. ${Math.round(0.89 * profil.lthr)}).` : '.'));
+          else ust(d, 'spokojny', m, 0, 'Spokojny bieg w tempie rozmowy.');
         }
+      }
+
+      // --- cele tętna i tempa dla pozostałych biegów (R17) ---
+      for (const d of dni) {
+        if (d.typ === 'spokojny' || d.typ === 'dlugi' || d.typ === 'marszobieg') celDnia(d, 'lekki');
+        else if (d.typ === 'regeneracyjny') celDnia(d, 'regeneracja');
+        else if (d.typ === 'akcent' && !d.cel_tetno && !d.cel_tempo) celDnia(d, 'cel');
+        else if (d.typ === 'start' && celTempa) Object.assign(d, celTempa);
       }
 
       // --- uzupełnienia (R16) ---
@@ -241,7 +255,7 @@ const Plan = (() => {
     const bramki = Object.entries(testy).map(([nr, rodzaj]) => rodzaj === 'tetno'
       ? { tydzien: +nr, opis: 'test 30 min', prog: 'wyznacza tętno progowe – do tego czasu strefy są szacunkiem' }
       : { tydzien: +nr, opis: `bieg kontrolny ${dystTestu} km`, prog: progTestu ? `${progTestu} lub szybciej – cel zostaje; wolniej o ponad 3% – cel do korekty` : 'wynik posłuży do prognozy' });
-    return { ocena_celu: ocena, bramki, uwagi, tygodnie };
+    return { ocena_celu: ocena, bramki, uwagi, strefy: { hrmax: strefy.tetna.hrmax, lthr: strefy.tetna.lthr }, tygodnie };
   }
   return { uloz, DNI };
 })();

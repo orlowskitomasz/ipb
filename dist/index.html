@@ -73,6 +73,10 @@ details.tydzien[open] summary { border-bottom: 1px solid var(--linia) }
 .dzien .szczegoly { grid-column: 2 / -1; font-size: .9rem }
 .moc { font-size: .78rem; font-weight: 600; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; margin-left: 8px; white-space: nowrap }
 .moc.lekko { color: var(--ok) } .moc.mocno { color: var(--uwaga) } .moc.bardzo { color: var(--zle) }
+table.strefy { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums }
+table.strefy td { padding: 6px 0; border-bottom: 1px solid var(--linia) } table.strefy tr:last-child td { border-bottom: 0 }
+table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight: 600 }
+.dzien .cel { grid-column: 2 / -1; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums }
 @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0 } dd { margin-bottom: 8px } }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }
 
@@ -153,6 +157,7 @@ details.tydzien[open] summary { border-bottom: 1px solid var(--linia) }
         <div class="siatka">
           <label for="f-hrmax">Tętno maksymalne<input id="f-hrmax" type="number" inputmode="numeric" placeholder="nie wiem"></label>
           <label for="f-lthr">Tętno progowe (LTHR)<input id="f-lthr" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+          <label for="f-hrspocz">Tętno spoczynkowe<input id="f-hrspocz" type="number" inputmode="numeric" placeholder="nie wiem"></label>
         </div>
         <h3>Cel</h3>
         <div class="siatka">
@@ -207,6 +212,7 @@ details.tydzien[open] summary { border-bottom: 1px solid var(--linia) }
   <section id="w-otwarty" hidden>
     <nav class="zakladki" aria-label="Widoki">
       <button type="button" data-z="plan" aria-selected="true">Plan</button>
+      <button type="button" data-z="strefy" aria-selected="false">Strefy i testy</button>
       <button type="button" data-z="profil" aria-selected="false">Profil i cel</button>
       <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
     </nav>
@@ -233,6 +239,36 @@ details.tydzien[open] summary { border-bottom: 1px solid var(--linia) }
         </div>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <p class="cichy">Plan powstaje z jawnych reguł (długi bieg najwyżej 170 min, wzrost tygodnia do 10%, co czwarty tydzień lżejszy, mocne dni nigdy pod rząd). Dni wolne i limity minut pochodzą z Twojego wywiadu.</p>
+      </div>
+    </div>
+
+    <div data-panel="strefy" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Twoje progi</h3>
+        <dl id="progi-dl"></dl>
+        <p id="progi-szacunek" class="komunikat" hidden>Część wartości to szacunek z wieku. Zastąpi je wynik testu 30 minut – wpisz go niżej, a strefy i plan przeliczą się same.</p>
+      </div>
+      <div id="strefy-modele" style="display:flex; flex-direction:column; gap:16px"></div>
+      <form id="form-test" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+        <h3>Wpisz wynik sprawdzianu</h3>
+        <div class="siatka">
+          <label for="t-rodzaj">Rodzaj<select id="t-rodzaj"><option value="tetno">test 30 minut (tętno progowe)</option><option value="kontrolny">bieg kontrolny lub zawody</option></select></label>
+          <label for="t-data">Data<input id="t-data" type="date"></label>
+        </div>
+        <div id="t-pola-tetno" class="siatka">
+          <label for="t-lthr">Średnie tętno z ostatnich 20 minut<input id="t-lthr" type="number" inputmode="numeric"></label>
+          <label for="t-hrmax">Najwyższe tętno w teście (jeśli znasz)<input id="t-hrmax" type="number" inputmode="numeric"></label>
+        </div>
+        <div id="t-pola-kontrolny" class="siatka" hidden>
+          <label for="t-dyst">Dystans<select id="t-dyst"><option value="5">5 km</option><option value="10">10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="t-czas">Czas (g:mm:ss)<input id="t-czas" type="text" inputmode="numeric" placeholder="0:24:30"></label>
+        </div>
+        <p id="t-info" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="t-zapisz" class="glowny" type="button">Zapisz wynik</button></div>
+      </form>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Zapisane wyniki</h3>
+        <ul id="testy-lista" class="lista"></ul>
       </div>
     </div>
 
@@ -379,8 +415,9 @@ const Prognoza = (() => {
   const sek = (t) => t.split(':').map(Number).reduce((a, x) => a * 60 + x, 0);
   const czas = (s) => { s = Math.round(s); const p = (n) => String(n).padStart(2, '0');
     return `${Math.floor(s / 3600)}:${p(Math.floor(s / 60) % 60)}:${p(s % 60)}`; };
-  const riegel = (rekordy, km) => rekordy.length
-    ? Math.min(...rekordy.map((r) => sek(r.czas) * (km / r.dystans_km) ** 1.06)) : null;
+  // Liczy się ostatni wynik (najnowsza data), nie najlepszy w życiu: sprawdzian ma zmieniać prognozę w obie strony.
+  const ostatni = (rekordy) => rekordy.reduce((n, r) => (!n || (r.data || '') > (n.data || '') ? r : n), null);
+  const riegel = (rekordy, km) => { const r = ostatni(rekordy); return r ? sek(r.czas) * (km / r.dystans_km) ** 1.06 : null; };
 
   function ocena(profil) {
     const c = profil.cel;
@@ -392,7 +429,61 @@ const Prognoza = (() => {
     if (q < 0.98) return { status: 'ambitny', prognoza: czas(pr), uzasadnienie: `Cel jest o ${proc}% szybszy od prognozy – wymaga postępu, sprawdzą go testy pośrednie.` };
     return { status: 'realny', prognoza: czas(pr), uzasadnienie: 'Cel mieści się w prognozie z rekordu.' };
   }
-  return { sek, czas, riegel, ocena };
+  return { sek, czas, riegel, ostatni, ocena };
+})();
+
+// Strefy tętna i tempa (docs/SPEC.md sekcja 4). Kilka modeli obok siebie; plan korzysta z progu (LTHR).
+// Wartości zmierzone mają pierwszeństwo; brakujące są szacowane i wyraźnie oznaczane jako szacunek.
+const Strefy = (() => {
+  const zaokr = (x) => Math.round(x);
+  const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
+
+  // Tętno maksymalne i progowe: pomiar albo szacunek (Tanaka 2001: 208 − 0,7 × wiek; próg ≈ 90% maks.)
+  function tetna(profil, rok = new Date().getFullYear()) {
+    const hrmax = profil.hrmax ? { v: profil.hrmax, szacunek: false } : { v: zaokr(208 - 0.7 * (rok - profil.rok_urodzenia)), szacunek: true };
+    const lthr = profil.lthr ? { v: profil.lthr, szacunek: false } : { v: zaokr(0.9 * hrmax.v), szacunek: true };
+    return { hrmax, lthr };
+  }
+
+  // Tempa z ostatniego wyniku wzorem Riegla: próg = tempo wysiłku 60 min, VO2max = tempo wysiłku 12 min.
+  function tempa(profil) {
+    const r = Prognoza.ostatni(profil.rekordy || []);
+    if (!r) return null;
+    const t1 = Prognoza.sek(r.czas), d1 = r.dystans_km;
+    const dystans = (t) => d1 * (t / t1) ** (1 / 1.06);
+    const T = 3600 / dystans(3600), I = 720 / dystans(720), M = t1 * (42.195 / d1) ** 1.06 / 42.195;
+    return { E: [T * 1.22, T * 1.35], M: [M * 0.99, M * 1.02], T: [T * 0.99, T * 1.02], I: [I * 0.98, I * 1.03], zrodlo: r };
+  }
+
+  // Cel na dzień planu: zakres tętna i/lub tempa. rodzaj: lekki | regeneracja | subprog | prog | vo2 | doprogu
+  function cel(rodzaj, s) {
+    const L = s.tetna.lthr.v, t = s.tempa, sz = s.tetna.lthr.szacunek ? { szacunek: true } : {};
+    const tempo = (z) => (z ? { cel_tempo: { od: zaokr(z[0]), do: zaokr(z[1]) } } : {});
+    switch (rodzaj) {
+      case 'lekki': return { cel_tetno: { do: zaokr(0.89 * L) }, ...tempo(t && t.E), ...sz };
+      case 'regeneracja': return { cel_tetno: { do: zaokr(0.85 * L) }, ...sz };
+      case 'subprog': return { cel_tetno: { od: zaokr(0.90 * L), do: zaokr(0.96 * L) }, ...tempo(t && [t.T[1] * 1.02, t.T[1] * 1.06]), ...sz };
+      case 'prog': return { cel_tetno: { od: zaokr(0.95 * L), do: L }, ...tempo(t && t.T), ...sz };
+      case 'vo2': return { cel_tetno: { od: L }, ...tempo(t && t.I), ...sz };
+      default: return { cel_tetno: { do: L }, ...sz };
+    }
+  }
+
+  function licz(profil, rok) {
+    const tt = tetna(profil, rok), H = tt.hrmax.v, L = tt.lthr.v, S = profil.hr_spocz;
+    const pasma = [['Z1 bardzo lekko', 0.5, 0.6], ['Z2 lekko', 0.6, 0.7], ['Z3 umiarkowanie', 0.7, 0.8], ['Z4 mocno', 0.8, 0.9], ['Z5 bardzo mocno', 0.9, 1]];
+    const modele = [
+      { nazwa: '% tętna maksymalnego', opis: `tętno maks. ${H}${tt.hrmax.szacunek ? ' (szacunek z wieku)' : ' (zmierzone)'}`, szacunek: tt.hrmax.szacunek,
+        strefy: pasma.map(([n, a, b]) => [n, zaokr(a * H), zaokr(b * H)]) },
+      S ? { nazwa: 'Karvonen (rezerwa tętna)', opis: `tętno spoczynkowe ${S}, maks. ${H}`, szacunek: tt.hrmax.szacunek,
+        strefy: pasma.map(([n, a, b]) => [n, zaokr(S + a * (H - S)), zaokr(S + b * (H - S))]) } : null,
+      { nazwa: 'Friel (% tętna progowego)', opis: `tętno progowe ${L}${tt.lthr.szacunek ? ' (szacunek: 90% maks.)' : ' (zmierzone)'} – z tego modelu korzysta plan`, szacunek: tt.lthr.szacunek,
+        strefy: [['Z1 regeneracja', null, zaokr(0.85 * L) - 1], ['Z2 spokojnie', zaokr(0.85 * L), zaokr(0.89 * L)], ['Z3 umiarkowanie', zaokr(0.90 * L), zaokr(0.94 * L)],
+          ['Z4 pod progiem', zaokr(0.95 * L), zaokr(0.99 * L)], ['Z5 powyżej progu', L, null]] },
+    ].filter(Boolean);
+    return { tetna: tt, tempa: tempa(profil), modele };
+  }
+  return { licz, cel, mmss };
 })();
 
 // Układanie planu (docs/SPEC.md sekcja 6). Wynik w formacie docs/FORMAT-PLANU.md,
@@ -463,15 +554,15 @@ const Plan = (() => {
   }
 
   const AKCENTY = {
-    baza: [(m) => `sub-próg: ${ogr(Math.round(m / 6), 2, 6)} × 6 min „komfortowo mocno”, przerwa 1 min truchtu`,
-           (m) => `podbiegi: ${ogr(Math.round(m / 2), 6, 12)} × 1 min żwawo pod górę, powrót truchtem`,
-           (m) => `bieg z narastającą prędkością: ostatnie ${m} min coraz mocniej`],
-    rozwoj: [(m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`,
-             (m) => `VO2max: ${ogr(Math.round(m / 3), 3, 6)} × 3 min mocno, przerwa 2–3 min truchtu`,
-             (m) => `bieg progowy ciągły ${m} min`],
-    specyficzna: [(m, t) => `tempo startowe: ${Math.max(2, Math.round(m / 9))} × 2 km w tempie celu${t ? ` (${t}/km)` : ''}, przerwa 2 min`,
-                  (m, t) => `zmienne tempo: ${Math.max(2, Math.round(m / 5))} × (1 km w tempie celu${t ? ` ${t}/km` : ''} + 1 km luźniej)`,
-                  (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`],
+    baza: [['subprog', (m) => `sub-próg: ${ogr(Math.round(m / 6), 2, 6)} × 6 min „komfortowo mocno”, przerwa 1 min truchtu`],
+           ['doprogu', (m) => `podbiegi: ${ogr(Math.round(m / 2), 6, 12)} × 1 min żwawo pod górę, powrót truchtem`],
+           ['doprogu', (m) => `bieg z narastającą prędkością: ostatnie ${m} min coraz mocniej`]],
+    rozwoj: [['prog', (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`],
+             ['vo2', (m) => `VO2max: ${ogr(Math.round(m / 3), 3, 6)} × 3 min mocno, przerwa 2–3 min truchtu`],
+             ['prog', (m) => `bieg progowy ciągły ${m} min`]],
+    specyficzna: [['cel', (m, t) => `tempo startowe: ${Math.max(2, Math.round(m / 9))} × 2 km w tempie celu${t ? ` (${t}/km)` : ''}, przerwa 2 min`],
+                  ['cel', (m, t) => `zmienne tempo: ${Math.max(2, Math.round(m / 5))} × (1 km w tempie celu${t ? ` ${t}/km` : ''} + 1 km luźniej)`],
+                  ['prog', (m) => `odcinki progowe: ${Math.max(2, Math.round(m / 8))} × 8 min, przerwa 90 s truchtu`]],
   };
   AKCENTY.taper = AKCENTY.specyficzna;
   const MARSZOBIEG = ['1 min biegu / 2 min marszu', '2 min biegu / 2 min marszu', '3 min biegu / 2 min marszu',
@@ -503,7 +594,12 @@ const Plan = (() => {
     let sufit = uzyte.reduce((a, d) => a + lim[d], 0) + limDl;
     if (zaczyna) sufit = Math.min(sufit, Math.max(baza * 2, 3 * (cel.minuty || 30)));
     const udzialDl = !dystans || cel.dystans_km < 21 ? 0.30 : cel.dystans_km >= 42 ? 0.34 : 0.36;
-    const tempoCelu = dystans && cel.czas ? tempo(Prognoza.sek(cel.czas) / cel.dystans_km) : null;
+    const sekCelu = dystans && cel.czas ? Prognoza.sek(cel.czas) / cel.dystans_km : null;
+    const tempoCelu = sekCelu ? tempo(sekCelu) : null;
+    const strefy = Strefy.licz(profil, +String(dzis).slice(0, 4));
+    const celTempa = sekCelu ? { cel_tempo: { od: Math.round(sekCelu * 0.98), do: Math.round(sekCelu * 1.02) } } : null;
+    // cel dnia: tętno i/lub tempo (R17); „cel” = tempo startowe, a gdy cel nie ma czasu – próg
+    const celDnia = (d, rodzaj) => Object.assign(d, rodzaj === 'cel' ? (celTempa || Strefy.cel('prog', strefy)) : Strefy.cel(rodzaj, strefy));
     if (!uzyte.length && r.dlugi === null) uwagi.push('W wywiadzie nie ma żadnego dnia na bieganie.');
     if (!zaczyna && baza < 60) uwagi.push('Przy obciążeniu poniżej godziny na tydzień lepiej wybrać poziom „zaczynam” – plan ruszy wtedy od marszobiegu.');
 
@@ -607,8 +703,9 @@ const Plan = (() => {
               ? 'Test 30 min: rozgrzewka 10–15 min, potem 30 min równo, najmocniej jak dasz radę utrzymać. Średnie tętno z ostatnich 20 min to Twoje tętno progowe.'
               : `Bieg kontrolny ${dystTestu} km na czas po rozgrzewce 10–15 min. Wynik aktualizuje prognozę.`);
           } else {
-            const wzor = AKCENTY[faza][(i + j) % 3](Math.max(6, mm), tempoCelu);
-            ust(d, 'akcent', m, mm, `Rozgrzewka 10–15 min, ${wzor}, schłodzenie do końca czasu.`);
+            const [rodzaj, wzor] = AKCENTY[faza][(i + j) % 3];
+            ust(d, 'akcent', m, mm, `Rozgrzewka 10–15 min, ${wzor(Math.max(6, mm), tempoCelu)}, schłodzenie do końca czasu.`);
+            celDnia(dni[d], rodzaj);
           }
         });
         if (r.dlugi !== null && dl) ust(r.dlugi, 'dlugi', dl, 0, faza === 'specyficzna' && dlugiCel
@@ -616,8 +713,16 @@ const Plan = (() => {
         for (const d of lekkie) {
           const m = lekkieMin[d]; if (!m) continue;
           if (zaczyna && mieszany && nr < przelom) ust(d, 'marszobieg', m, 0, `Marszobieg: ${MARSZOBIEG[Math.min(5, Math.floor(6 * i / przelom))]}, powtarzaj do końca czasu.`);
-          else ust(d, 'spokojny', m, 0, 'Spokojny bieg w tempie rozmowy' + (profil.lthr ? ` (tętno do ok. ${Math.round(0.89 * profil.lthr)}).` : '.'));
+          else ust(d, 'spokojny', m, 0, 'Spokojny bieg w tempie rozmowy.');
         }
+      }
+
+      // --- cele tętna i tempa dla pozostałych biegów (R17) ---
+      for (const d of dni) {
+        if (d.typ === 'spokojny' || d.typ === 'dlugi' || d.typ === 'marszobieg') celDnia(d, 'lekki');
+        else if (d.typ === 'regeneracyjny') celDnia(d, 'regeneracja');
+        else if (d.typ === 'akcent' && !d.cel_tetno && !d.cel_tempo) celDnia(d, 'cel');
+        else if (d.typ === 'start' && celTempa) Object.assign(d, celTempa);
       }
 
       // --- uzupełnienia (R16) ---
@@ -638,7 +743,7 @@ const Plan = (() => {
     const bramki = Object.entries(testy).map(([nr, rodzaj]) => rodzaj === 'tetno'
       ? { tydzien: +nr, opis: 'test 30 min', prog: 'wyznacza tętno progowe – do tego czasu strefy są szacunkiem' }
       : { tydzien: +nr, opis: `bieg kontrolny ${dystTestu} km`, prog: progTestu ? `${progTestu} lub szybciej – cel zostaje; wolniej o ponad 3% – cel do korekty` : 'wynik posłuży do prognozy' });
-    return { ocena_celu: ocena, bramki, uwagi, tygodnie };
+    return { ocena_celu: ocena, bramki, uwagi, strefy: { hrmax: strefy.tetna.hrmax, lthr: strefy.tetna.lthr }, tygodnie };
   }
   return { uloz, DNI };
 })();
@@ -684,7 +789,7 @@ const Plan = (() => {
       obciazenie: { h_tydz: liczba('f-h') ?? 0, km_tydz: liczba('f-km') ?? 0, najdluzszy_min: liczba('f-najdl') ?? 0 },
       dni: Object.fromEntries(DNI.map((d) => [d, { max_min: liczba('f-dzien-' + d) ?? 0 }])),
       rekordy: rek ? [{ dystans_km: Number($('f-rek-dyst').value), czas: rek, data: $('f-rek-data').value || null }] : [],
-      hrmax: liczba('f-hrmax'), lthr: liczba('f-lthr'),
+      hrmax: liczba('f-hrmax'), lthr: liczba('f-lthr'), hr_spocz: liczba('f-hrspocz'),
       cel: typ === 'dystans'
         ? { typ, dystans_km: Number($('f-cel-dyst').value), czas: $('f-cel-czas').value.trim() || null, data: $('f-cel-data').value || null }
         : { typ, minuty: liczba('f-cel-min') ?? 30, data: $('f-cel-data').value || null },
@@ -697,7 +802,7 @@ const Plan = (() => {
     ust('f-h', p.obciazenie.h_tydz); ust('f-km', p.obciazenie.km_tydz); ust('f-najdl', p.obciazenie.najdluzszy_min);
     for (const d of DNI) ust('f-dzien-' + d, p.dni[d].max_min);
     const r = p.rekordy[0]; ust('f-rek-dyst', r ? r.dystans_km : 10); ust('f-rek-czas', r && r.czas); ust('f-rek-data', r && r.data);
-    ust('f-hrmax', p.hrmax); ust('f-lthr', p.lthr);
+    ust('f-hrmax', p.hrmax); ust('f-lthr', p.lthr); ust('f-hrspocz', p.hr_spocz);
     ust('f-cel-typ', p.cel.typ); ust('f-cel-dyst', p.cel.dystans_km ?? 10); ust('f-cel-czas', p.cel.czas); ust('f-cel-min', p.cel.minuty); ust('f-cel-data', p.cel.data);
     celTyp();
   }
@@ -733,7 +838,68 @@ const Plan = (() => {
   let pelny = false;
   try { pelny = localStorage.getItem('ipb.widok') === 'pelny'; } catch (e) { /* ustawienie widoku jest opcjonalne */ }
 
-  async function ulozPlan(co) { dane.plan = Plan.uloz(dane.profil, dzisISO()); await zapiszDane(co); }
+  // Plan trzyma swój pierwszy poniedziałek: przeliczenie po teście nie przesuwa tygodni. „Od nowa” zaczyna od najbliższego.
+  async function ulozPlan(co, odNowa) {
+    const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
+    if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
+    dane.plan = Plan.uloz(dane.profil, dzisISO());
+    dane.profil.start_planu = dane.plan.tygodnie[0].start;
+    await zapiszDane(co);
+  }
+  function celTekst(x) {
+    const cz = [], t = x.cel_tetno, v = x.cel_tempo;
+    if (t) cz.push(t.od && t.do ? `tętno ${t.od}–${t.do}` : t.do ? `tętno do ${t.do}` : `tętno powyżej ${t.od}`);
+    if (v) cz.push(`tempo ${Strefy.mmss(v.od)}–${Strefy.mmss(v.do)}/km`);
+    return cz.length ? cz.join(' · ') + (x.szacunek && t ? ' (tętno to szacunek)' : '') : '';
+  }
+  function pokazStrefy() {
+    const s = Strefy.licz(dane.profil), r = Prognoza.ostatni(dane.profil.rekordy || []);
+    const wiersz = (k, v) => [el('dt', '', k), el('dd', '', v)];
+    $('progi-dl').replaceChildren(
+      ...wiersz('Tętno maksymalne', `${s.tetna.hrmax.v} (${s.tetna.hrmax.szacunek ? 'szacunek z wieku' : 'zmierzone'})`),
+      ...wiersz('Tętno progowe', `${s.tetna.lthr.v} (${s.tetna.lthr.szacunek ? 'szacunek' : 'zmierzone'})`),
+      ...wiersz('Ostatni wynik', r ? `${NAZWY[r.dystans_km] || r.dystans_km + ' km'} w ${r.czas}${r.data ? ', ' + r.data : ''}` : 'brak'));
+    $('progi-szacunek').hidden = !(s.tetna.hrmax.szacunek || s.tetna.lthr.szacunek);
+    const tabela = (tytul, opis, wiersze) => {
+      const k = el('div', 'karta'); k.style.cssText = 'display:flex; flex-direction:column; gap:8px';
+      const t = el('table', 'strefy');
+      for (const [a, b] of wiersze) { const tr = el('tr'); tr.append(el('td', '', a), el('td', '', b)); t.append(tr); }
+      k.append(el('h3', '', tytul), el('p', 'cichy', opis), t); return k;
+    };
+    const zakres = (a, b) => (a === null ? `do ${b}` : b === null ? `od ${a}` : `${a}–${b}`);
+    const karty = s.modele.map((m) => tabela(m.nazwa, m.opis, m.strefy.map(([n, a, b]) => [n, zakres(a, b)])));
+    if (s.tempa) {
+      const tz = (z) => `${Strefy.mmss(z[0])}–${Strefy.mmss(z[1])} /km`;
+      karty.push(tabela('Tempa', 'oszacowane wzorem Riegla z ostatniego wyniku', [['Spokojne', tz(s.tempa.E)], ['Maraton', tz(s.tempa.M)], ['Próg', tz(s.tempa.T)], ['VO2max (odcinki 3 min)', tz(s.tempa.I)]]));
+    }
+    $('strefy-modele').replaceChildren(...karty);
+    const testy = dane.testy || [];
+    $('testy-lista').replaceChildren(...(testy.length ? testy.map((t) => el('li', '', t.rodzaj === 'tetno'
+      ? `${t.data}: test 30 min – tętno progowe ${t.lthr}${t.hrmax ? ', najwyższe ' + t.hrmax : ''}`
+      : `${t.data}: ${NAZWY[t.dystans_km] || t.dystans_km + ' km'} w ${t.czas}`)) : [el('li', 'cichy', 'Jeszcze nic nie wpisano.')]));
+    if (!$('t-data').value) $('t-data').value = dzisISO();
+  }
+  async function zapiszTest() {
+    const rodzaj = $('t-rodzaj').value, data = $('t-data').value || dzisISO();
+    if (rodzaj === 'tetno') {
+      const lthr = liczba('t-lthr'), hrmax = liczba('t-hrmax');
+      if (!(lthr >= 90 && lthr <= 220)) return komunikat('t-info', 'Wpisz średnie tętno z ostatnich 20 minut testu (liczba między 90 a 220).');
+      if (hrmax && hrmax < lthr) return komunikat('t-info', 'Najwyższe tętno nie może być niższe od średniego.');
+      dane.profil.lthr = lthr;
+      if (hrmax) dane.profil.hrmax = Math.max(hrmax, dane.profil.hrmax || 0);
+      (dane.testy = dane.testy || []).push({ data, rodzaj, lthr, hrmax });
+      await ulozPlan(`wynik testu 30 min: tętno progowe ${lthr}; strefy i plan przeliczone`);
+    } else {
+      const czas = $('t-czas').value.trim(), dystans_km = Number($('t-dyst').value);
+      if (!/^\d{1,2}:\d{2}(:\d{2})?$/.test(czas)) return komunikat('t-info', 'Czas wpisz jako g:mm:ss, np. 0:24:30.');
+      dane.profil.rekordy = [...(dane.profil.rekordy || []), { dystans_km, czas, data }];
+      (dane.testy = dane.testy || []).push({ data, rodzaj, dystans_km, czas });
+      await ulozPlan(`wynik biegu kontrolnego: ${dystans_km} km w ${czas}; prognoza i plan przeliczone`);
+    }
+    $('t-lthr').value = $('t-hrmax').value = $('t-czas').value = '';
+    komunikat('t-info', 'Zapisano. Strefy, prognoza i plan są przeliczone.', 'ok');
+    pokazStrefy();
+  }
   function pokazPlan() {
     const plan = dane.plan;
     $('plan-brak').hidden = !!plan; $('plan-jest').hidden = !plan;
@@ -759,6 +925,8 @@ const Plan = (() => {
         w.append(el('span', 'kto', DZIEN[x.dzien]), nazwa, el('span', 'ile', x.min ? hm(x.min) : ''));
         const dod = x.dodatki.map((k) => DODATEK[k]).join(', ');
         if (x.typ === 'wolne') { if (dod) w.append(el('span', 'wiecej', 'Bez biegu: ' + dod + '.')); return w; }
+        const cel = celTekst(x);
+        if (cel) w.append(el('span', 'cel', cel));
         if (pelny) {
           w.append(el('span', 'szczegoly', x.opis || ''));
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
@@ -800,7 +968,7 @@ const Plan = (() => {
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
     for (const d of document.querySelectorAll('[data-panel]')) d.hidden = d.dataset.panel !== n;
-    if (n === 'plan') pokazPlan(); else if (n === 'profil') pokazProfil(); else pokazZapis();
+    if (n === 'plan') pokazPlan(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
   function zablokuj() { dek = null; dane = null; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
@@ -833,7 +1001,7 @@ const Plan = (() => {
       const p = profilZFormularza(), blad = bladProfilu(p);
       if (blad) return komunikat('blad-wywiad', blad);
       komunikat('blad-wywiad', '');
-      if (dek) { dane.profil = p; await ulozPlan('zmiana danych z wywiadu, plan ułożony od nowa'); return otwarty(); }
+      if (dek) { p.start_planu = dane.profil.start_planu; dane.profil = p; await ulozPlan('zmiana danych z wywiadu, plan przeliczony'); return otwarty(); }
       window._profilRoboczy = p; $('haslo-tytul').textContent = 'Ustaw hasło do sejfu'; widok('haslo');
     });
     akcja('form-haslo', 'haslo-zapisz', () => {
@@ -845,10 +1013,11 @@ const Plan = (() => {
         if (dek) {                                   // zmiana hasła po otwarciu kodem odzyskiwania
           magazyn.pisz(await Sejf.zmienHaslo(koperta, dek, h)); await zapiszDane('zmiana hasła'); otwarty();
         } else {
-          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()),
+          const pierwsze = { profil: window._profilRoboczy, plan: Plan.uloz(window._profilRoboczy, dzisISO()), testy: [],
             historia: [{ kiedy: new Date().toISOString().slice(0, 16).replace('T', ' '), co: 'założenie sejfu i ułożenie planu' }] };
           const w = await Sejf.utworz(h, pierwsze);
           delete window._profilRoboczy; dek = w.dek; dane = pierwsze; magazyn.pisz(w.koperta);
+          dane.profil.start_planu = dane.plan.tygodnie[0].start; magazyn.pisz(await Sejf.zapisz(w.koperta, dek, dane));
           $('kod-odz').textContent = w.kod; $('kod-potw').checked = false; $('kod-dalej').disabled = true; widok('kod');
         }
         $('haslo-nowe').value = $('haslo-powt').value = '';
@@ -871,7 +1040,9 @@ const Plan = (() => {
       $('przelacz-kod').textContent = k ? 'Wróć do hasła' : 'Nie pamiętam hasła – użyj kodu odzyskiwania'; komunikat('blad-otworz', ''); };
 
     for (const b of document.querySelectorAll('nav.zakladki button')) b.onclick = () => zakladka(b.dataset.z);
-    for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu'); pokazPlan(); };
+    for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
+    akcja('form-test', 't-zapisz', zapiszTest);
+    $('t-rodzaj').onchange = () => { const t = $('t-rodzaj').value === 'tetno'; $('t-pola-tetno').hidden = !t; $('t-pola-kontrolny').hidden = t; komunikat('t-info', ''); };
     for (const [id, v] of [['widok-prosty', false], ['widok-pelny', true]]) $(id).onclick = () => { pelny = v; try { localStorage.setItem('ipb.widok', v ? 'pelny' : 'prosty'); } catch (e) { /* opcjonalne */ } pokazPlan(); };
     $('kopiuj').onclick = async () => { try { await navigator.clipboard.writeText($('kopia-tekst').value); komunikat('kopia-info', 'Skopiowano. Wklej do pliku tekstowego i zachowaj.', 'ok'); }
       catch (e) { $('kopia-tekst').select(); komunikat('kopia-info', 'Zaznaczyłem tekst – skopiuj go ręcznie.', 'ok'); } };

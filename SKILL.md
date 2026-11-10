@@ -79,11 +79,12 @@ Jest repozytorium i powłoka → `python3 tests/sprawdz_plan.py profil.json plan
 | R9 | początkujący: 8 tygodni bez akcentów; marszobieg w 1. tygodniu przy < 1,5 h/tydz. |
 | R10 | powrót po przerwie: 2 tygodnie bez mocnych dni, 1. tydzień ≤ obecne obciążenie |
 | R11 | brak HRmax/LTHR → test w tygodniach 1–4 (nie dla początkujących i powrotu) |
-| R12 | cel > 7% szybszy od prognozy → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
+| R12 | cel > 7% szybszy od prognozy z ostatniego wyniku → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
 | R13 | ostatni tydzień zawiera start; od półmaratonu ostatni tydzień bez startu ≤ 70% szczytu |
 | R14 | od półmaratonu: bramki + test/start kontrolny wcześniej niż 3 tyg. przed celem |
 | R15 | od półmaratonu: długi bieg (lub start/test ≥ 90 min) co tydzień poza ostatnim |
 | R16 | siła w ≥ 75% tygodni; plyometria nie dzień przed mocnym dniem, nie w tygodniu startu, u początkujących nie w tyg. 1–4 |
+| R17 | każdy bieg (poza testem) ma cel: zakres tętna lub tempa; start z czasem docelowym ma tempo |
 
 Biegacze testowi (`tests/profile/`): początkujący z celem „30 min bez przerwy”, maratończyk 3:20, cel nierealny, powrót po kontuzji, brak HRmax. Po każdej zmianie reguł w skillu lub SPEC: popraw `tests/sprawdz_plan.py`, dodaj profil lub zepsuty plan, uruchom `--self-test`.
 

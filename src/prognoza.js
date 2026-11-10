@@ -3,8 +3,9 @@ const Prognoza = (() => {
   const sek = (t) => t.split(':').map(Number).reduce((a, x) => a * 60 + x, 0);
   const czas = (s) => { s = Math.round(s); const p = (n) => String(n).padStart(2, '0');
     return `${Math.floor(s / 3600)}:${p(Math.floor(s / 60) % 60)}:${p(s % 60)}`; };
-  const riegel = (rekordy, km) => rekordy.length
-    ? Math.min(...rekordy.map((r) => sek(r.czas) * (km / r.dystans_km) ** 1.06)) : null;
+  // Liczy się ostatni wynik (najnowsza data), nie najlepszy w życiu: sprawdzian ma zmieniać prognozę w obie strony.
+  const ostatni = (rekordy) => rekordy.reduce((n, r) => (!n || (r.data || '') > (n.data || '') ? r : n), null);
+  const riegel = (rekordy, km) => { const r = ostatni(rekordy); return r ? sek(r.czas) * (km / r.dystans_km) ** 1.06 : null; };
 
   function ocena(profil) {
     const c = profil.cel;
@@ -16,5 +17,5 @@ const Prognoza = (() => {
     if (q < 0.98) return { status: 'ambitny', prognoza: czas(pr), uzasadnienie: `Cel jest o ${proc}% szybszy od prognozy – wymaga postępu, sprawdzą go testy pośrednie.` };
     return { status: 'realny', prognoza: czas(pr), uzasadnienie: 'Cel mieści się w prognozie z rekordu.' };
   }
-  return { sek, czas, riegel, ocena };
+  return { sek, czas, riegel, ostatni, ocena };
 })();

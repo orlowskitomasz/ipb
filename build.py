@@ -13,7 +13,7 @@ LIB = "lib/hash-wasm-argon2-4.12.0.umd.min.js"   # MIT, wbudowane – żadnego p
 fragment = (czytaj("src/index.html")
             .replace("/*CSS*/", czytaj("src/style.css"))
             .replace("/*LIB*/", czytaj(LIB))
-            .replace("/*JS*/", "\n".join(czytaj(f"src/{m}.js") for m in ("sejf", "prognoza", "plan", "app"))))
+            .replace("/*JS*/", "\n".join(czytaj(f"src/{m}.js") for m in ("sejf", "prognoza", "strefy", "plan", "app"))))
 
 # Krok 1 nie łączy się z niczym: connect-src 'none'. Lista z docs/SPEC.md sekcja 11 dojdzie z mapami i pogodą.
 CSP = ("default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; "

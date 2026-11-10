@@ -2,7 +2,7 @@
 
 Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy, plan, testy, prognozy, wskaźniki przeciążenia, mapy, pogoda, zegarki, PDF. Dane użytkownika tylko w sejfie zaszyfrowanym jego hasłem. Działa offline i na dowolnym serwerze.
 
-**Stan: krok 1.** Działa wywiad, sejf na hasło, ocena celu i układanie planu tydzień po tygodniu (`dist/index.html` – otwórz w przeglądarce, działa bez internetu). Jeszcze nie ma: dziennika, importu z zegarka, eksportu na zegarek, map, pogody, PDF, synchronizacji, wersji angielskiej.
+**Stan: krok 2 z 9** (`docs/PLAN-BUDOWY.md`). Działa wywiad, sejf na hasło, ocena celu, układanie planu tydzień po tygodniu, strefy i tempa, wpisywanie wyników testów (`dist/index.html` – otwórz w przeglądarce, działa bez internetu). Jeszcze nie ma: dziennika, importu z zegarka, eksportu na zegarek, map, pogody, PDF, synchronizacji, wersji angielskiej.
 
 ## Co jest w środku
 
@@ -16,7 +16,9 @@ Otwartoźródłowa aplikacja z planem biegowym szytym na miarę: wywiad, strefy,
 | `tests/sprawdz_plan.py` | sprawdza plan względem reguł R1–R16 |
 | `tests/profile/` | 5 biegaczy testowych |
 | `tests/przyklady/` | przykładowe plany, które przechodzą testy |
-| `tests/zbuduj_przyklady.py` | odtwarza przykładowe plany (to nie jest silnik planu) |
+| `tests/test_plan.py` | sprawdza generator planu z aplikacji na 5 profilach i losowych |
+| `tests/test_sejf.py` | test aplikacji w przeglądarce |
+| `src/`, `build.py`, `dist/index.html` | kod aplikacji, składanie i gotowa strona |
 
 ## Uruchomienie testów
 

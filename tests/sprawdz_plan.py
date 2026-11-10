@@ -5,7 +5,7 @@ Użycie:
   python3 tests/sprawdz_plan.py PROFIL.json PLAN.json   # sprawdza jeden plan
   python3 tests/sprawdz_plan.py --self-test             # przykłady + celowo zepsute plany
 
-Format plików: docs/FORMAT-PLANU.md. Reguły R1–R16: docs/SPEC.md, sekcja 16.
+Format plików: docs/FORMAT-PLANU.md. Reguły R1–R17: docs/SPEC.md, sekcja 16.
 Tylko biblioteka standardowa. Kod wyjścia 0 = plan przechodzi.
 """
 import copy, json, math, pathlib, sys
@@ -29,9 +29,14 @@ def sek(t):
 
 
 def prognoza_riegel(rekordy, dystans_km):
-    """Najlepsza (najszybsza) prognoza z rekordów; None gdy brak rekordów."""
-    w = [sek(r["czas"]) * (dystans_km / r["dystans_km"]) ** RIEGEL for r in rekordy or []]
-    return min(w) if w else None
+    """Prognoza z ostatniego wyniku (najnowsza data); None gdy brak wyników."""
+    if not rekordy:
+        return None
+    r = rekordy[0]
+    for x in rekordy[1:]:
+        if (x.get("data") or "") > (r.get("data") or ""):
+            r = x
+    return sek(r["czas"]) * (dystans_km / r["dystans_km"]) ** RIEGEL
 
 
 def suma(tydz, bez_startu=False):
@@ -193,6 +198,17 @@ def sprawdz(profil, plan):
             b.append(("R16", f"tydz. {nr}: plyometria w tygodniu startu"))
         if poziom == "zaczynam" and nr <= 4:
             b.append(("R16", f"tydz. {nr}: plyometria u początkującego w pierwszych 4 tyg."))
+
+    # R17 – każdy bieg ma cel: zakres tętna lub tempa (test = wysiłek maksymalny, bez celu)
+    for nr, d in plaski:
+        if d["typ"] in ("spokojny", "regeneracyjny", "marszobieg", "dlugi", "akcent") and not (d.get("cel_tetno") or d.get("cel_tempo")):
+            b.append(("R17", f"tydz. {nr} {d['dzien']}: bieg bez celu tętna ani tempa"))
+        if d["typ"] == "start" and profil["cel"].get("czas") and nr == tyg[-1]["nr"] and not d.get("cel_tempo"):
+            b.append(("R17", f"tydz. {nr} {d['dzien']}: start bez tempa docelowego"))
+        for k in ("cel_tetno", "cel_tempo"):
+            z = d.get(k) or {}
+            if z.get("od") and z.get("do") and z["od"] > z["do"]:     # tempo w s/km: „od” to szybszy koniec
+                b.append(("R17", f"tydz. {nr} {d['dzien']}: {k} ma odwrócony zakres"))
     return b
 
 
@@ -230,6 +246,7 @@ def _m_r13(p):
 def _m_r14(p): p["bramki"] = []
 def _m_r15(p): next(d for d in p["tygodnie"][4]["dni"] if d["typ"] == "dlugi").update(typ="spokojny")
 def _m_r16(p): _dzien(p, 6, "sr").setdefault("dodatki", []).append("plyometria")
+def _m_r17(p): _dzien(p, 5, "nd").pop("cel_tetno", None); _dzien(p, 5, "nd").pop("cel_tempo", None)
 
 MUTACJE = [  # (przykład, oczekiwana reguła, mutacja)
     ("maraton-320", "R1", _m_r1), ("maraton-320", "R2", _m_r2), ("maraton-320", "R3", _m_r3),
@@ -237,7 +254,7 @@ MUTACJE = [  # (przykład, oczekiwana reguła, mutacja)
     ("maraton-320", "R7", _m_r7), ("poczatkujacy-30min", "R8", _m_r8), ("poczatkujacy-30min", "R9", _m_r9a),
     ("poczatkujacy-30min", "R9", _m_r9b), ("powrot-po-kontuzji", "R10", _m_r10), ("brak-hrmax", "R11", _m_r11),
     ("nierealny-cel", "R12", _m_r12), ("maraton-320", "R13", _m_r13), ("maraton-320", "R14", _m_r14),
-    ("maraton-320", "R15", _m_r15), ("maraton-320", "R16", _m_r16),
+    ("maraton-320", "R15", _m_r15), ("maraton-320", "R16", _m_r16), ("maraton-320", "R17", _m_r17),
 ]
 
 
@@ -270,5 +287,5 @@ if __name__ == "__main__":
     bledy = sprawdz(prof, pl)
     for r, o in bledy:
         print(f"{r}: {o}")
-    print("PLAN OK – wszystkie reguły R1–R16 spełnione" if not bledy else f"{len(bledy)} naruszeń")
+    print("PLAN OK – wszystkie reguły R1–R17 spełnione" if not bledy else f"{len(bledy)} naruszeń")
     sys.exit(1 if bledy else 0)
