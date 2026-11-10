@@ -34,7 +34,7 @@ with sync_playwright() as pw:
     page.goto(STRONA)
 
     widoczny(page, "start")
-    page.click("#zacznij"); page.click("#przyklad"); page.click("#form-wywiad button[type=submit]")
+    page.click("#zacznij"); page.click("#przyklad"); page.click("#wywiad-dalej")
     widoczny(page, "haslo")
     page.fill("#haslo-nowe", "krotkie"); page.fill("#haslo-powt", "krotkie"); page.click("#haslo-zapisz")
     sprawdz("za krótkie hasło odrzucone", page.is_visible("#blad-haslo") and surowe(page) is None)
@@ -62,7 +62,7 @@ with sync_playwright() as pw:
     otworz(page, HASLO); widoczny(page, "otwarty")
     sprawdz("dobre hasło otwiera sejf", "1988" in page.inner_text("#profil-dl"))
 
-    page.click("#edytuj"); page.fill("#f-rok", "1990"); page.click("#form-wywiad button[type=submit]"); widoczny(page, "otwarty")
+    page.click("#edytuj"); page.fill("#f-rok", "1990"); page.click("#wywiad-dalej"); widoczny(page, "otwarty")
     page.reload(); widoczny(page, "zamkniety")
     sprawdz("po odświeżeniu strony sejf jest zamknięty", page.is_hidden("#w-otwarty"))
     otworz(page, HASLO); widoczny(page, "otwarty")
@@ -91,6 +91,20 @@ with sync_playwright() as pw:
     page.clock.install(); page.click("#zablokuj"); otworz(page, HASLO); widoczny(page, "otwarty")
     page.clock.fast_forward(16 * 60 * 1000)
     sprawdz("automatyczna blokada po 15 minutach", page.is_visible("#w-zamkniety"))
+
+    # ta sama strona w ramce bez allow-forms i bez dostępu do pamięci (tak działają podglądy osadzone)
+    ctx2 = br.new_context(viewport={"width": 390, "height": 800})
+    ctx2.route("https://ipb.test/", lambda r: r.fulfill(content_type="text/html",
+               body='<iframe id="f" sandbox="allow-scripts" style="width:390px;height:800px;border:0"></iframe>'))
+    ramka = ctx2.new_page(); ramka.goto("https://ipb.test/")
+    ramka.evaluate("h => { document.getElementById('f').srcdoc = h }", pathlib.Path(STRONA[7:]).read_text(encoding="utf-8"))
+    f = ramka.frame_locator("#f")
+    f.locator("#zacznij").click(); f.locator("#przyklad").click(); f.locator("#wywiad-dalej").click()
+    f.locator("#haslo-nowe").fill(HASLO); f.locator("#haslo-powt").fill(HASLO); f.locator("#haslo-powt").press("Enter")
+    f.locator("#w-kod:not([hidden])").wait_for(timeout=60000)
+    f.locator("#kod-potw").check(); f.locator("#kod-dalej").click()
+    sprawdz("w osadzonej ramce przyciski i Enter działają", f.locator("#w-otwarty").is_visible())
+    sprawdz("bez dostępu do pamięci strona ostrzega, że dane znikną", f.locator("#ostrz-pamiec").is_visible())
 
     sprawdz("strona nie wykonała żadnego połączenia poza własnym plikiem", zadania and all(u == STRONA for u in zadania))
     sprawdz("brak błędów w konsoli", not bledy)

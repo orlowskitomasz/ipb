@@ -11,6 +11,7 @@
 </header>
 
 <main>
+  <p id="blad-ogolny" class="komunikat zle" hidden></p>
   <p id="ostrz-pamiec" class="komunikat" hidden>Ta przeglądarka nie pozwala stronie nic zapisać. Sejf działa tylko do zamknięcia karty – zrób kopię w zakładce „Co jest zapisane”.</p>
 
   <section id="w-start">
@@ -90,7 +91,7 @@
           <label for="f-cel-min">Ile minut bez przerwy<input id="f-cel-min" type="number" inputmode="numeric" value="30"></label>
         </div>
         <p id="blad-wywiad" class="komunikat zle" hidden></p>
-        <div class="rzad"><button class="glowny" type="submit">Dalej</button></div>
+        <div class="rzad"><button id="wywiad-dalej" class="glowny" type="button">Dalej</button></div>
       </section>
     </form>
   </section>
@@ -102,7 +103,7 @@
       <label for="haslo-nowe">Hasło (co najmniej 12 znaków)<input id="haslo-nowe" type="password" autocomplete="new-password"></label>
       <label for="haslo-powt">Powtórz hasło<input id="haslo-powt" type="password" autocomplete="new-password"></label>
       <p id="blad-haslo" class="komunikat zle" hidden></p>
-      <div class="rzad"><button id="haslo-zapisz" class="glowny" type="submit">Zaszyfruj i zapisz</button></div>
+      <div class="rzad"><button id="haslo-zapisz" class="glowny" type="button">Zaszyfruj i zapisz</button></div>
     </form>
   </section>
 
@@ -121,7 +122,7 @@
       <label id="pole-haslo" for="haslo-otworz">Hasło<input id="haslo-otworz" type="password" autocomplete="current-password"></label>
       <label id="pole-kod" for="kod-wpisz" hidden>Kod odzyskiwania<input id="kod-wpisz" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
       <p id="blad-otworz" class="komunikat zle" hidden></p>
-      <div class="rzad"><button id="otworz" class="glowny" type="submit">Otwórz sejf</button>
+      <div class="rzad"><button id="otworz" class="glowny" type="button">Otwórz sejf</button>
         <button id="przelacz-kod" type="button">Nie pamiętam hasła – użyj kodu odzyskiwania</button></div>
     </form>
     <div class="rzad"><button id="usun" class="grozny" type="button">Usuń wszystko</button></div>

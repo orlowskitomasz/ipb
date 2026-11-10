@@ -23,7 +23,9 @@
   function komunikat(id, tekst, rodzaj = 'zle') { const e = $(id); e.textContent = tekst; e.className = 'komunikat ' + rodzaj; e.hidden = !tekst; }
   async function zajety(przycisk, f) {
     przycisk.disabled = true; const t = przycisk.textContent; przycisk.textContent = 'Szyfruję…';
-    try { return await f(); } finally { przycisk.disabled = false; przycisk.textContent = t; }
+    try { return await f(); }
+    catch (e) { $('blad-ogolny').textContent = 'Nie udało się zaszyfrować danych w tej przeglądarce (' + (e && e.message || e) + '). Otwórz stronę w aktualnej przeglądarce przez https albo z pliku.'; $('blad-ogolny').hidden = false; }
+    finally { przycisk.disabled = false; przycisk.textContent = t; }
   }
 
   // --- wywiad ↔ profil (format: docs/FORMAT-PLANU.md) ---
@@ -114,6 +116,13 @@
   }
 
   // --- zdarzenia ---
+  // Nie polegamy na zdarzeniu submit: w ramkach bez uprawnienia allow-forms przeglądarka go nie wysyła.
+  function akcja(formId, przyciskId, f) {
+    const form = $(formId);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    $(przyciskId).addEventListener('click', f);
+    form.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') { e.preventDefault(); f(); } });
+  }
   function start() {
     koperta = magazyn.czytaj();
     for (const z of ['pointerdown', 'keydown']) addEventListener(z, czuwaj, { passive: true });
@@ -123,16 +132,14 @@
     $('przyklad').onclick = () => { formularzZProfilu(PRZYKLAD); komunikat('blad-wywiad', 'Wpisano dane przykładowe – zmień je na swoje.', 'ok'); };
     $('edytuj').onclick = () => { formularzZProfilu(dane.profil); $('wywiad-tytul').textContent = 'Zmiana danych'; komunikat('blad-wywiad', ''); widok('wywiad'); };
 
-    $('form-wywiad').onsubmit = async (e) => {
-      e.preventDefault();
+    akcja('form-wywiad', 'wywiad-dalej', async () => {
       const p = profilZFormularza(), blad = bladProfilu(p);
       if (blad) return komunikat('blad-wywiad', blad);
       komunikat('blad-wywiad', '');
       if (dek) { dane.profil = p; await zapiszDane('zmiana danych z wywiadu'); return otwarty(); }
       window._profilRoboczy = p; $('haslo-tytul').textContent = 'Ustaw hasło do sejfu'; widok('haslo');
-    };
-    $('form-haslo').onsubmit = (e) => {
-      e.preventDefault();
+    });
+    akcja('form-haslo', 'haslo-zapisz', () => {
       const h = $('haslo-nowe').value;
       if (h.length < 12) return komunikat('blad-haslo', 'Hasło musi mieć co najmniej 12 znaków. Dobrze działa kilka słów, np. zdanie, które pamiętasz.');
       if (h !== $('haslo-powt').value) return komunikat('blad-haslo', 'Oba hasła muszą być takie same.');
@@ -148,12 +155,11 @@
         }
         $('haslo-nowe').value = $('haslo-powt').value = '';
       });
-    };
+    });
     $('kod-potw').onchange = () => { $('kod-dalej').disabled = !$('kod-potw').checked; };
     $('kod-dalej').onclick = () => { $('kod-odz').textContent = ''; otwarty(); };
 
-    $('form-otworz').onsubmit = (e) => {
-      e.preventDefault();
+    akcja('form-otworz', 'otworz', () => {
       const kodem = !$('pole-kod').hidden;
       return zajety($('otworz'), async () => {
         try {
@@ -162,7 +168,7 @@
           if (kodem) { $('haslo-tytul').textContent = 'Ustaw nowe hasło'; widok('haslo'); } else otwarty();
         } catch (err) { komunikat('blad-otworz', kodem ? 'Ten kod nie otwiera sejfu. Sprawdź, czy przepisałeś go w całości.' : 'To hasło nie otwiera sejfu. Spróbuj jeszcze raz albo użyj kodu odzyskiwania.'); }
       });
-    };
+    });
     $('przelacz-kod').onclick = () => { const k = $('pole-kod').hidden; $('pole-kod').hidden = !k; $('pole-haslo').hidden = k;
       $('przelacz-kod').textContent = k ? 'Wróć do hasła' : 'Nie pamiętam hasła – użyj kodu odzyskiwania'; komunikat('blad-otworz', ''); };
 
