@@ -15,7 +15,7 @@ IPB to otwartoźródłowa aplikacja z planem biegowym szytym na miarę. **Źród
 | `/IPB plan` albo prośba o plan | wywiad → ocena celu → plan → **sprawdzenie R1–R16** → dopiero potem pokaż plan |
 | `/IPB sprawdź` + plan | sprawdź plan walidatorem (R1–R22) i wypisz ustalenia według poziomu |
 | `/IPB oceń` + plan z dowolnego źródła | przepisz plan do `plan.json`, wypisz, czego nie dało się odczytać, uruchom walidator, pokaż ustalenia według poziomu ze źródłem i pewnością |
-| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_silnik.py`, `python3 tests/test_eksport.py`, `python3 tests/test_dziennik.py` i `python3 build.py && python3 tests/test_sejf.py`, pokaż wynik |
+| `/IPB testy` | uruchom `python3 tests/sprawdz_plan.py --self-test`, `python3 tests/test_plan.py`, `python3 tests/test_silnik.py`, `python3 tests/test_eksport.py`, `python3 tests/test_dziennik.py`, `python3 tests/test_trasy.py` i `python3 build.py && python3 tests/test_sejf.py && python3 tests/test_offline.py && python3 tests/test_mapa.py`, pokaż wynik |
 | `/IPB dalej` | zbuduj pierwszy niezrobiony krok z `docs/PLAN-BUDOWY.md` według zasad z tego pliku, przetestuj, zapisz w repozytorium i pokaż działającą stronę |
 | `/IPB stan` | pokaż tabelę z `docs/PLAN-BUDOWY.md`: co zrobione, co następne |
 | `/IPB pytania`, `/IPB rejestr` | pokaż otwarte pytania / rejestr |
@@ -91,6 +91,9 @@ Jest repozytorium i powłoka → `python3 tests/sprawdz_plan.py profil.json plan
 | R20 | informacja: ostatni wynik starszy niż 6 miesięcy |
 | R21 | każdy bieg ma podany cel („po co”) i miejsce w cyklu |
 | R22 | informacja: rozkład czasu w strefach (opis układu, nie ocena) |
+| R23 | trasa: długość równa treningowi; propozycja poza ±8% nie jest pokazywana |
+| R24 | trasa: część główna (odcinki, test, tempo) z dala od skrzyżowań; rozgrzewka nigdy nie jest wydłużana |
+| R25 | informacja: pogoda i zmierzch dla godzin biegu; nie zmienia planu |
 
 **Poziomy ustaleń:** krytyczne (tylko R1 i R2: format i twarde ograniczenia zawodnika), istotne zastrzeżenie, uwaga, informacja. Plan z generatora nie może mieć ustaleń powyżej informacji. Pełny opis każdej reguły (klasa źródła A–D, źródło, pewność, korekta) jest w `src/reguly.js`; reguły wykonuje `src/walidator.js`, a `tests/sprawdz_plan.py` tylko go uruchamia.
 

@@ -1,6 +1,7 @@
 // Rejestr reguł i źródeł (docs/SPEC.md sekcja 17). Jedno miejsce, z którego korzysta walidator, aplikacja, skill i testy.
 // poziom: krytyczne | zastrzezenie (istotne zastrzeżenie) | uwaga | informacja. Pewność: niska | srednia | wysoka.
 // klasa źródła: A dowody naukowe · B uznana metodologia trenerska · C algorytm z otwartego kodu · D heurystyka projektu.
+// modul: 'trasy' = reguła modułu tras i pogody (src/trasy.js), nie walidatora planu.
 // potwierdzone: false = źródło podane z pamięci (autor, rok, czasopismo), jeszcze nie otwarte i nie sprawdzone.
 const REGULY = {
   R1: { nazwa: 'Format planu', poziom: 'krytyczne', klasa: 'D', pewnosc: 'wysoka', zrodlo: 'docs/FORMAT-PLANU.md', potwierdzone: true,
@@ -47,4 +48,10 @@ const REGULY = {
     uzasadnienie: 'Każdy trening ma mieć podany cel fizjologiczny i powód, dla którego stoi w tym miejscu cyklu.', korekta: 'Dopisz, po co jest ten trening i dlaczego teraz.' },
   R22: { nazwa: 'Rozkład intensywności', poziom: 'informacja', klasa: 'A', pewnosc: 'srednia', zrodlo: 'Seiler 2010 (IJSPP); Stöggl i Sperlich 2014 (Front Physiol); wynik zależy od metody liczenia', potwierdzone: false,
     uzasadnienie: 'To opis, nie ocena. Liczone czasem w strefie; liczone celem sesji dałoby inne proporcje. Badania nie wykazały trwałej przewagi jednego układu u amatorów.', korekta: 'Nic nie trzeba zmieniać.' },
+  R23: { modul: 'trasy', nazwa: 'Długość trasy równa treningowi', poziom: 'uwaga', klasa: 'D', pewnosc: 'wysoka', zrodlo: 'wymaganie projektu (SPEC zasada 7)', potwierdzone: true,
+    uzasadnienie: 'Długość treningu z planu ma pierwszeństwo przed trasą. Propozycja różniąca się o więcej niż 8% nie jest pokazywana.', korekta: 'Zmień miejsce startu albo dystans; plan działa też bez trasy.' },
+  R24: { modul: 'trasy', nazwa: 'Część główna z dala od skrzyżowań', poziom: 'uwaga', klasa: 'D', pewnosc: 'srednia', zrodlo: 'heurystyka projektu; dane OpenStreetMap przez BRouter', potwierdzone: true,
+    uzasadnienie: 'Odcinki, test i tempo wymagają równego wysiłku; przejścia i światła go przerywają. Rozgrzewka trwa tyle, ile w planie – trasa jest dobierana do treningu, nie odwrotnie.', korekta: 'Wybierz inną propozycję albo odwróć kierunek pętli.' },
+  R25: { modul: 'trasy', nazwa: 'Pogoda i światło', poziom: 'informacja', klasa: 'D', pewnosc: 'srednia', zrodlo: 'prognoza Open-Meteo; zmierzch cywilny liczony lokalnie (przybliżenie NOAA)', potwierdzone: true,
+    uzasadnienie: 'To informacja do decyzji o porze i ubraniu. Prognoza bywa nietrafna; aplikacja nie zmienia przez nią planu.', korekta: 'Rozważ inną godzinę albo oświetloną trasę.' },
 };

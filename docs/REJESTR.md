@@ -28,6 +28,9 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · zegarki · Krok 5, część pierwsza: trening strukturalny jako plik FIT (rozgrzewka, odcinki z powtórzeniami, cel tętna lub tempa, schłodzenie otwarte) i kalendarz ICS z celem dnia i uzasadnieniem; pliki sprawdzone oficjalnym dekoderem Garmin FIT SDK · przyjęte
 - 2026-11-11 · autor · druk · Krok 5, część druga: plan do druku (tydzień na stronie A4 poziomo, kolumna „Wykonanie”) i karta pojedynczego treningu z krokami; PDF robi przeglądarka („Zapisz jako PDF”), bez dodatkowej biblioteki · przyjęte
 - 2026-11-11 · autor · hosting · Krok 6, część pierwsza: praca bez internetu (service worker tylko dla własnej domeny, najpierw sieć, potem kopia), ekran „Co i dokąd wysyłamy”, instrukcja `docs/HOSTING.md` (Caddy, nginx + certbot, hosting statyczny) · przyjęte
+- 2026-11-11 · autor · prywatność · Zgoda na anonimowe połączenia z zewnątrz dla map, tras i pogody · przyjęte
+- 2026-11-11 · autor · mapy · Krok 7, część pierwsza: trasy z BRoutera (pętle w 8 kierunkach, twardy filtr ±8%, ślepe odnogi wycinane, skrzyżowania z wagami, część główna liczona osobno), pogoda z Open-Meteo dla godzin biegu (obszar zaokrąglony do 0,1°), zmierzch liczony lokalnie, podkład OpenStreetMap, GPX, karta trasy. Sieć dopiero po zgodzie zapisanej w sejfie; lista serwerów w `src/trasy.js` i w CSP; dziennik połączeń na ekranie. Reguły R23–R25. Overpass nie jest używany – dane o otoczeniu daje BRouter · przyjęte
+- 2026-11-11 · autor · prywatność · Do serwera map OSM przeglądarka wysyła adres serwisu (sam początek, bez ścieżki), bo serwer odrzuca zapytania bez niego; do tras i pogody adres strony nie jest wysyłany · przyjęte
 
 ## Otwarte pytania
 - zegarki: plik FIT nie był jeszcze wgrany na prawdziwy zegarek – do sprawdzenia przez autora (Garmin).
@@ -39,3 +42,5 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - strefy: model Danielsa (VDOT) i progi z DFA alfa 1 nie są jeszcze w aplikacji – dodać w kroku 4 razem z importem plików?
 - język: wersja angielska wymaga wyniesienia wszystkich napisów (także opisów treningów i reguł) do słownika – duża zmiana; robić przed mapami czy po?
 - zegarki: skrypt do Garmin Connect – nie da się go sprawdzić bez konta autora; czy plik FIT wystarcza?
+- mapy: trasy, pogoda i podkład były sprawdzane tylko na atrapach – do sprawdzenia przez autora na prawdziwych serwerach (w kilku miejscach, także z pliku na dysku: podkład OSM może wymagać strony https).
+- mapy: ręczna edycja trasy jak w gpx.studio, import własnych tras i pytanie „dlaczego taka trasa” – następna część kroku 7?

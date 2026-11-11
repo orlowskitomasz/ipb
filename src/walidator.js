@@ -1,4 +1,4 @@
-// Walidator planu: jedyne miejsce, w którym żyją reguły R1–R22 (opis i źródła: src/reguly.js).
+// Walidator planu: jedyne miejsce, w którym żyją reguły planu R1–R22 (opis i źródła: src/reguly.js).
 // Używają go aplikacja, skill (/IPB sprawdź, /IPB oceń) i testy (tests/sprawdz_plan.py jest tylko nakładką).
 // Ustalenie: {id, nazwa, poziom, tydzien, opis, dane, uzasadnienie, zrodlo, klasa, pewnosc, korekta}.
 // Ustalenie mówi „plan odbiega od reguły”, nigdy „ten trening spowoduje uraz”.

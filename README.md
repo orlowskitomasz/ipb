@@ -33,6 +33,8 @@ python3 tests/test_silnik.py                     # rejestr reguł, VDOT, prognoz
 python3 tests/test_eksport.py                    # kalendarz ICS i trening FIT (wymaga node)
 python3 build.py && python3 tests/test_sejf.py   # aplikacja w przeglądarce (wymaga playwright)
 python3 tests/test_offline.py                    # praca bez internetu po pierwszym otwarciu (wymaga playwright)
+python3 tests/test_trasy.py                      # trasy, GPX, pogoda, słońce na atrapie serwera tras (wymaga node)
+python3 tests/test_mapa.py                       # trasa i pogoda dnia w przeglądarce; pilnuje, dokąd strona się łączy (wymaga playwright i node)
 python3 tests/sprawdz_plan.py tests/profile/maraton-320.json tests/przyklady/maraton-320.plan.json
 ```
 

@@ -38,7 +38,10 @@ if __name__ == "__main__":
 
     wal = (SRC / "walidator.js").read_text(encoding="utf-8")
     uzyte = set(re.findall(r"dodaj\('(R\d+)'", wal))
-    sprawdz("każda reguła walidatora ma wpis w rejestrze i odwrotnie", uzyte == set(w["reguly"]), sorted(uzyte ^ set(w["reguly"])))
+    planu = {k for k, x in w["reguly"].items() if not x.get("modul")}
+    sprawdz("każda reguła walidatora ma wpis w rejestrze i odwrotnie", uzyte == planu, sorted(uzyte ^ planu))
+    kod_tras = (SRC / "trasy.js").read_text(encoding="utf-8") + (SRC / "app.js").read_text(encoding="utf-8")
+    sprawdz("reguły modułu tras (R23–R25) są przywołane w jego kodzie", all(k in kod_tras for k in set(w["reguly"]) - planu) and len(set(w["reguly"]) - planu) == 3)
     pola = {"nazwa", "poziom", "klasa", "pewnosc", "zrodlo", "potwierdzone", "uzasadnienie", "korekta"}
     sprawdz("każdy wpis ma komplet pól, znaną klasę, poziom i pewność", all(pola <= set(x) and x["klasa"] in "ABCD" and x["poziom"] in ("krytyczne", "zastrzezenie", "uwaga", "informacja")
             and x["pewnosc"] in ("niska", "srednia", "wysoka") for x in w["reguly"].values()))

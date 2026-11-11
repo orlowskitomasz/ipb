@@ -85,6 +85,17 @@ table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight
 .slupek .tor { background: var(--tlo); border: 1px solid var(--linia); border-radius: 99px; height: 14px; overflow: hidden }
 .slupek .tor i { display: block; height: 100%; background: var(--akcent); border-radius: 99px }
 input[type="file"] { padding: 8px }
+/* Mapa: kafelki jako obrazki, trasa jako SVG */
+.trasa { display: flex; flex-direction: column; gap: 12px }
+.mapa { position: relative; height: min(60vh, 380px); overflow: hidden; border: 1px solid var(--linia); border-radius: 8px; background: var(--kod); touch-action: none; cursor: grab; user-select: none }
+.mapa #mapa-warstwy, .mapa #mapa-kafle, .mapa svg { position: absolute; inset: 0 } .mapa svg { width: 100%; height: 100%; pointer-events: none }
+.mapa img { position: absolute; width: 256px; height: 256px; max-width: none; pointer-events: none }
+.mapa .celownik { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 28px; line-height: 1; color: #b3261e; font-weight: 700; pointer-events: none; text-shadow: 0 0 3px #fff }
+.mapa .zoom { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px } .mapa .zoom button { width: 44px; min-height: 44px; padding: 0; font-size: 1.3rem; background: var(--karta) }
+.mapa .podpis { position: absolute; right: 0; bottom: 0; font-size: .7rem; padding: 1px 6px; background: rgba(255, 255, 255, .8); color: #222 }
+.propozycja { border: 1px solid var(--linia); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px } .propozycja.wybrana { border-color: var(--akcent); border-width: 2px }
+#druk .mapa { border: 1px solid #777; border-radius: 0; margin: 0 auto 3mm } #druk .mapa .zoom, #druk .mapa .celownik { display: none } #druk svg.profil { width: 100%; height: 30mm; border: 0.3mm solid #777 }
+
 /* Druk: na ekranie niewidoczny; w druku zostaje tylko #druk, tydzień na stronę A4 w poziomie */
 #druk { display: none }
 @page { size: A4 landscape; margin: 12mm }
@@ -265,6 +276,37 @@ input[type="file"] { padding: 8px }
         </div>
         <p id="eksport-info" class="komunikat" hidden></p>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
+        <div id="trasa" class="karta trasa" hidden>
+          <h3 id="trasa-tytul"></h3>
+          <div id="trasa-zgoda" style="display:flex; flex-direction:column; gap:8px">
+            <p>Trasy i pogoda potrzebują internetu. Po włączeniu aplikacja łączy się tylko z trzema serwerami i wysyła im wyłącznie współrzędne – nic o Tobie, bez ciasteczek i bez adresu tej strony w zapytaniach o trasę i pogodę:</p>
+            <ul class="lista">
+              <li><strong>brouter.de</strong> – punkty, przez które ma biec trasa (dokładne, bo od nich zależy przebieg);</li>
+              <li><strong>api.open-meteo.com</strong> – obszar zaokrąglony do ok. 10 km i data biegu;</li>
+              <li><strong>tile.openstreetmap.org</strong> – numery fragmentów mapy, które oglądasz; ten serwer widzi też adres strony, z której korzystasz (bez niego nie wydaje map).</li>
+            </ul>
+            <p class="cichy">Każdy serwer widzi adres IP Twojego urządzenia, jak przy każdej stronie w internecie. Mapy i pogodę wyłączysz w zakładce „Co jest zapisane”.</p>
+            <div class="rzad"><button id="siec-wlacz" class="glowny" type="button">Włącz mapy i pogodę</button><button id="tr-zamknij0" type="button">Zamknij</button></div>
+          </div>
+          <div id="trasa-srodek" hidden style="display:flex; flex-direction:column; gap:12px">
+            <div class="rzad"><button id="tr-gps" type="button">Moje położenie</button><button id="tr-start" type="button" hidden>Zapisany Start</button><button id="tr-zapamietaj" type="button">Zapamiętaj to miejsce jako Start</button></div>
+            <div id="mapa" class="mapa">
+              <div id="mapa-warstwy"><div id="mapa-kafle"></div><svg id="mapa-rys" xmlns="http://www.w3.org/2000/svg"></svg></div>
+              <span class="celownik" aria-hidden="true">+</span>
+              <span class="zoom"><button id="mapa-plus" type="button" aria-label="Przybliż mapę">+</button><button id="mapa-minus" type="button" aria-label="Oddal mapę">−</button></span>
+              <span class="podpis">© OpenStreetMap contributors</span>
+            </div>
+            <p class="cichy">Trasy zaczynają się w środku mapy (krzyżyk). Przesuń mapę palcem i przybliż ją przyciskami. Położenie telefonu jest używane tylko po naciśnięciu „Moje położenie” i nie jest zapisywane.</p>
+            <div class="siatka">
+              <label for="tr-km">Długość trasy (km)<input id="tr-km" type="number" inputmode="decimal" step="0.1" min="1" max="60"></label>
+              <label for="tr-godz">Godzina startu<input id="tr-godz" type="time" value="17:00"></label>
+            </div>
+            <div class="rzad"><button id="tr-szukaj" class="glowny" type="button">Szukaj tras</button><button id="tr-pogoda-btn" type="button">Pogoda na ten bieg</button><button id="tr-zamknij" type="button">Zamknij</button></div>
+            <p id="tr-pogoda" class="komunikat info" hidden></p>
+            <p id="tr-info" class="komunikat" hidden></p>
+            <div id="tr-lista" style="display:flex; flex-direction:column; gap:8px"></div>
+          </div>
+        </div>
         <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
         <p class="cichy">Plan powstaje z jawnych reguł R1–R20. Każda uwaga podaje regułę, jej pochodzenie i pewność: część to wyniki badań, część praktyka trenerska, część umowne ustalenia tego projektu (np. limit 170 min długiego biegu albo wzrost tygodnia do 10%). Twarde są tylko Twoje dni wolne i limity minut.</p>
       </div>
@@ -373,8 +415,10 @@ input[type="file"] { padding: 8px }
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Co i dokąd wysyłamy</h3>
-        <p><strong>Teraz: nic.</strong> Aplikacja nie łączy się z żadnym serwerem. Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce.</p>
-        <p class="cichy">Gdy dojdą mapy i pogoda, aplikacja będzie pytać wyłącznie o kafelki mapy, trasę i prognozę (OpenStreetMap, BRouter, Overpass, Open-Meteo) i wyśle tam tylko współrzędne, bez żadnych danych o Tobie. Każde takie połączenie będzie można wyłączyć, a ich lista pojawi się tutaj.</p>
+        <p id="siec-stan"></p>
+        <p class="cichy">Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce i nigdzie nie są wysyłane. Mapy, trasy i pogoda – tylko po włączeniu – pytają trzy serwery: brouter.de (punkty trasy), api.open-meteo.com (obszar zaokrąglony do ok. 10 km i data), tile.openstreetmap.org (fragmenty mapy; widzi też adres tej strony). Wysyłane są wyłącznie współrzędne, bez ciasteczek i bez danych o Tobie. Innych połączeń blokuje sama przeglądarka (polityka CSP strony).</p>
+        <div class="rzad"><button id="siec-przelacz" type="button"></button></div>
+        <pre id="siec-dziennik" hidden></pre>
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Kopia zapasowa</h3>
@@ -481,6 +525,7 @@ const Sejf = (() => {
 // Rejestr reguł i źródeł (docs/SPEC.md sekcja 17). Jedno miejsce, z którego korzysta walidator, aplikacja, skill i testy.
 // poziom: krytyczne | zastrzezenie (istotne zastrzeżenie) | uwaga | informacja. Pewność: niska | srednia | wysoka.
 // klasa źródła: A dowody naukowe · B uznana metodologia trenerska · C algorytm z otwartego kodu · D heurystyka projektu.
+// modul: 'trasy' = reguła modułu tras i pogody (src/trasy.js), nie walidatora planu.
 // potwierdzone: false = źródło podane z pamięci (autor, rok, czasopismo), jeszcze nie otwarte i nie sprawdzone.
 const REGULY = {
   R1: { nazwa: 'Format planu', poziom: 'krytyczne', klasa: 'D', pewnosc: 'wysoka', zrodlo: 'docs/FORMAT-PLANU.md', potwierdzone: true,
@@ -527,6 +572,12 @@ const REGULY = {
     uzasadnienie: 'Każdy trening ma mieć podany cel fizjologiczny i powód, dla którego stoi w tym miejscu cyklu.', korekta: 'Dopisz, po co jest ten trening i dlaczego teraz.' },
   R22: { nazwa: 'Rozkład intensywności', poziom: 'informacja', klasa: 'A', pewnosc: 'srednia', zrodlo: 'Seiler 2010 (IJSPP); Stöggl i Sperlich 2014 (Front Physiol); wynik zależy od metody liczenia', potwierdzone: false,
     uzasadnienie: 'To opis, nie ocena. Liczone czasem w strefie; liczone celem sesji dałoby inne proporcje. Badania nie wykazały trwałej przewagi jednego układu u amatorów.', korekta: 'Nic nie trzeba zmieniać.' },
+  R23: { modul: 'trasy', nazwa: 'Długość trasy równa treningowi', poziom: 'uwaga', klasa: 'D', pewnosc: 'wysoka', zrodlo: 'wymaganie projektu (SPEC zasada 7)', potwierdzone: true,
+    uzasadnienie: 'Długość treningu z planu ma pierwszeństwo przed trasą. Propozycja różniąca się o więcej niż 8% nie jest pokazywana.', korekta: 'Zmień miejsce startu albo dystans; plan działa też bez trasy.' },
+  R24: { modul: 'trasy', nazwa: 'Część główna z dala od skrzyżowań', poziom: 'uwaga', klasa: 'D', pewnosc: 'srednia', zrodlo: 'heurystyka projektu; dane OpenStreetMap przez BRouter', potwierdzone: true,
+    uzasadnienie: 'Odcinki, test i tempo wymagają równego wysiłku; przejścia i światła go przerywają. Rozgrzewka trwa tyle, ile w planie – trasa jest dobierana do treningu, nie odwrotnie.', korekta: 'Wybierz inną propozycję albo odwróć kierunek pętli.' },
+  R25: { modul: 'trasy', nazwa: 'Pogoda i światło', poziom: 'informacja', klasa: 'D', pewnosc: 'srednia', zrodlo: 'prognoza Open-Meteo; zmierzch cywilny liczony lokalnie (przybliżenie NOAA)', potwierdzone: true,
+    uzasadnienie: 'To informacja do decyzji o porze i ubraniu. Prognoza bywa nietrafna; aplikacja nie zmienia przez nią planu.', korekta: 'Rozważ inną godzinę albo oświetloną trasę.' },
 };
 
 // Prognoza wyniku dwiema metodami i ocena celu (reguła R12, źródła w src/reguly.js).
@@ -957,7 +1008,7 @@ const Podpowiedzi = (() => {
   return { zastosuj };
 })();
 
-// Walidator planu: jedyne miejsce, w którym żyją reguły R1–R22 (opis i źródła: src/reguly.js).
+// Walidator planu: jedyne miejsce, w którym żyją reguły planu R1–R22 (opis i źródła: src/reguly.js).
 // Używają go aplikacja, skill (/IPB sprawdź, /IPB oceń) i testy (tests/sprawdz_plan.py jest tylko nakładką).
 // Ustalenie: {id, nazwa, poziom, tydzien, opis, dane, uzasadnienie, zrodlo, klasa, pewnosc, korekta}.
 // Ustalenie mówi „plan odbiega od reguły”, nigdy „ten trening spowoduje uraz”.
@@ -1360,6 +1411,263 @@ const Eksport = (() => {
   return { kroki, ics, fit, crc16, nazwaTreningu, celTekst };
 })();
 
+// Trasy, pogoda i mapa (krok 7 budowy; docs/SPEC.md sekcja 9, reguły R23–R25).
+// Jedyny moduł, który łączy się z internetem, i tylko z trzema serwerami z listy HOSTY.
+// Wysyłane są wyłącznie współrzędne: punkty trasy (BRouter), obszar zaokrąglony do 0,1° i data (Open-Meteo), numery kafelków (OpenStreetMap).
+const Trasy = (() => {
+  const HOSTY = { trasa: 'https://brouter.de', pogoda: 'https://api.open-meteo.com', mapa: 'https://tile.openstreetmap.org' };
+  const RAD = Math.PI / 180, R_ZIEMI = 6371000, TOLERANCJA = 0.08;
+
+  // --- geometria; punkt = [lon, lat, wysokość] ---
+  function odl(a, b) {
+    const df = (b[1] - a[1]) * RAD, dl = (b[0] - a[0]) * RAD, s = Math.sin(df / 2) ** 2 + Math.cos(a[1] * RAD) * Math.cos(b[1] * RAD) * Math.sin(dl / 2) ** 2;
+    return 2 * R_ZIEMI * Math.asin(Math.sqrt(s));
+  }
+  function przesun(p, kierunek, m) {
+    const d = m / R_ZIEMI, f1 = p[1] * RAD, l1 = p[0] * RAD, k = kierunek * RAD;
+    const f2 = Math.asin(Math.sin(f1) * Math.cos(d) + Math.cos(f1) * Math.sin(d) * Math.cos(k));
+    return [(l1 + Math.atan2(Math.sin(k) * Math.sin(d) * Math.cos(f1), Math.cos(d) - Math.sin(f1) * Math.sin(f2))) / RAD, f2 / RAD];
+  }
+  function narastajaco(pts) { const s = [0]; for (let i = 1; i < pts.length; i++) s.push(s[i - 1] + odl(pts[i - 1], pts[i])); return s; }
+  const kratka = (p, m) => `${Math.round(p[1] * 111320 / m)}:${Math.round(p[0] * 111320 * Math.cos(p[1] * RAD) / m)}`;
+  const STRONY = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  function kierunek(a, b) {
+    const y = Math.sin((b[0] - a[0]) * RAD) * Math.cos(b[1] * RAD), x = Math.cos(a[1] * RAD) * Math.sin(b[1] * RAD) - Math.sin(a[1] * RAD) * Math.cos(b[1] * RAD) * Math.cos((b[0] - a[0]) * RAD);
+    return STRONY[Math.round(((Math.atan2(y, x) / RAD + 360) % 360) / 45) % 8];
+  }
+
+  // --- BRouter: odpowiedź → punkty z opisem (skrzyżowania w punktach, rodzaj drogi na odcinkach) ---
+  const urlTrasy = (punkty) => `${HOSTY.trasa}/brouter?lonlats=${punkty.map((p) => `${p[0].toFixed(5)},${p[1].toFixed(5)}`).join('|')}&profile=trekking&alternativeidx=0&format=geojson`;
+  const tagi = (t) => Object.fromEntries(String(t || '').split(' ').filter(Boolean).map((x) => { const i = x.indexOf('='); return [x.slice(0, i), x.slice(i + 1)]; }));
+  const PRZEJSCIA = ['uncontrolled', 'zebra', 'marked', 'unmarked', 'island', 'yes'];
+  function wagaWezla(n) {
+    if (n.highway === 'traffic_signals' || n.crossing === 'traffic_signals') return 2;
+    if (n.railway === 'level_crossing' || n.railway === 'crossing') return 1.5;
+    if (n.estimated_crossing_class !== undefined) return +n.estimated_crossing_class >= 1 ? 2 : 1;
+    if (n.highway === 'crossing' || PRZEJSCIA.includes(n.crossing)) return 1;
+    return 0;
+  }
+  const wagaDrogi = (w) => (w.footway === 'crossing' || w.cycleway === 'crossing' || w.path === 'crossing' ? (w.crossing === 'traffic_signals' ? 2 : 1) : 0);
+  const SCIEZKI = ['footway', 'cycleway', 'path', 'pedestrian', 'track', 'bridleway'], GLOWNE = ['primary', 'secondary', 'trunk', 'primary_link', 'secondary_link', 'trunk_link'];
+  function czytajBrouter(json) {
+    const f = json && json.features && json.features[0];
+    if (!f || !f.geometry || !f.geometry.coordinates || f.geometry.coordinates.length < 2) throw new Error('serwer tras zwrócił odpowiedź bez trasy');
+    const pts = f.geometry.coordinates.map((c) => [c[0], c[1], c[2] || 0]), s = narastajaco(pts), dl = s[s.length - 1];
+    const skrz = new Array(pts.length).fill(0), droga = new Array(pts.length).fill(null);     // droga[i] opisuje odcinek i → i+1
+    const m = f.properties && f.properties.messages;
+    let maTagi = false, maOtoczenie = false;
+    if (m && m.length > 1) {
+      const k = Object.fromEntries(m[0].map((n, i) => [n, i]));
+      maTagi = k.NodeTags !== undefined;
+      const suma = m.slice(1).reduce((a, w) => a + (+w[k.Distance] || 0), 0) || 1;
+      let przed = 0, j = 0;
+      for (const w of m.slice(1)) {
+        const po = przed + (+w[k.Distance] || 0) * dl / suma, wt = tagi(w[k.WayTags]), nt = tagi(k.NodeTags !== undefined ? w[k.NodeTags] : '');
+        const zielen = Math.max(+wt.estimated_forest_class || 0, +wt.estimated_river_class || 0) >= 3, miasto = Math.max(+wt.estimated_town_class || 0, +wt.estimated_noise_class || 0) >= 4;
+        if (wt.estimated_forest_class !== undefined || wt.estimated_town_class !== undefined) maOtoczenie = true;
+        const opis = { sciezka: SCIEZKI.includes(wt.highway), glowna: GLOWNE.includes(wt.highway), schody: wt.highway === 'steps', zielen, miasto };
+        const pierwszy = j;
+        while (j < pts.length - 1 && (s[j] + s[j + 1]) / 2 <= po) droga[j++] = opis;
+        const tu = Math.min(pts.length - 1, j);
+        // węzeł z tagami: najbliższy punkt geometrii w oknie ±40 punktów wokół miejsca wynikającego z dystansu
+        const wn = wagaWezla(nt), wd = wagaDrogi(wt);
+        if (wn) {
+          const cel = [+w[k.Longitude] / 1e6, +w[k.Latitude] / 1e6]; let naj = tu, d0 = Infinity;
+          for (let i = Math.max(0, tu - 40); i <= Math.min(pts.length - 1, tu + 40); i++) { const d = odl(pts[i], cel); if (d < d0) { d0 = d; naj = i; } }
+          skrz[naj] = Math.max(skrz[naj], wn);
+        }
+        if (wd) { const sr = Math.min(pts.length - 1, Math.round((pierwszy + tu) / 2)); skrz[sr] = Math.max(skrz[sr], wd); }
+        przed = po;
+      }
+      for (let i = 0; i < pts.length - 1; i++) if (!droga[i]) droga[i] = droga[i - 1] || null;
+    }
+    return { pts, skrz, droga, maTagi, maOtoczenie };
+  }
+
+  // --- sprzątanie i miary ---
+  // Ślepa odnoga: trasa dobiega do punktu pośredniego i wraca tą samą drogą (do 1,2 km w jedną stronę) – wycinamy przed liczeniem długości.
+  function wytnijOdnogi(t) {
+    const { pts } = t, s = narastajaco(pts), zostaw = new Array(pts.length).fill(true);
+    const wPoblizu = (d) => { let j = 1; while (j < s.length - 1 && s[j] < d) j++; const u = s[j] > s[j - 1] ? (d - s[j - 1]) / (s[j] - s[j - 1]) : 0; return [pts[j - 1][0] + (pts[j][0] - pts[j - 1][0]) * u, pts[j - 1][1] + (pts[j][1] - pts[j - 1][1]) * u]; };
+    for (let i = 0; i < pts.length - 2; i++) {
+      let j = -1;
+      for (let x = i + 2; x < pts.length && s[x] - s[i] <= 2400; x++) if (s[x] - s[i] > 60 && odl(pts[i], pts[x]) < 20) j = x;
+      if (j < 0) continue;
+      const d = s[j] - s[i];
+      if (odl(wPoblizu(s[i] + d / 4), wPoblizu(s[i] + 3 * d / 4)) > 25) continue;        // prawdziwa mała pętla, nie odnoga
+      for (let x = i + 1; x <= j; x++) zostaw[x] = false;
+      i = j;
+    }
+    const f = (a) => a.filter((_, i) => zostaw[i]);
+    return { ...t, pts: f(pts), skrz: f(t.skrz), droga: f(t.droga) };
+  }
+  function probki(pts, co) {                                  // punkty co `co` metrów po trasie
+    const s = narastajaco(pts), w = []; let j = 0;
+    for (let d = 0; d <= s[s.length - 1]; d += co) {
+      while (j < pts.length - 2 && s[j + 1] < d) j++;
+      const u = s[j + 1] > s[j] ? (d - s[j]) / (s[j + 1] - s[j]) : 0;
+      w.push([pts[j][0] + (pts[j + 1][0] - pts[j][0]) * u, pts[j][1] + (pts[j + 1][1] - pts[j][1]) * u]);
+    }
+    return w;
+  }
+  function powtorzenia(pts) {                                 // udział trasy biegnący drugi raz tą samą drogą
+    const p = probki(pts, 20), siatka = new Map();
+    p.forEach((q, i) => { const k = kratka(q, 20); if (!siatka.has(k)) siatka.set(k, []); siatka.get(k).push(i); });
+    let ile = 0;
+    p.forEach((q, i) => {
+      const y = Math.round(q[1] * 111320 / 20), x = Math.round(q[0] * 111320 * Math.cos(q[1] * RAD) / 20);
+      for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (const o of siatka.get(`${y + a}:${x + b}`) || []) if (Math.abs(o - i) * 20 >= 300 && odl(q, p[o]) < 20) { ile++; return; }
+    });
+    return p.length ? ile / p.length : 0;
+  }
+  // Miary całej trasy i części głównej (odcinki, test, tempo), jeśli podano jej położenie w metrach od startu.
+  function miary(t, glowna) {
+    const { pts } = t, s = narastajaco(pts), dl = s[s.length - 1];
+    let gora = 0, m = { sciezka: 0, glowna: 0, zielen: 0, miasto: 0 }, schody = 0, opisane = 0, ulG = 0, dlG = 0, minG = Infinity, maxG = -Infinity;
+    const wG = (i) => glowna && s[i] >= glowna.od && s[i] <= glowna.do;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const d = s[i + 1] - s[i], o = t.droga[i];
+      if (pts[i + 1][2] > pts[i][2]) gora += pts[i + 1][2] - pts[i][2];
+      if (o) { opisane += d; for (const k in m) if (o[k]) m[k] += d; if (o.schody && !(t.droga[i - 1] && t.droga[i - 1].schody)) schody++; }
+      if (wG(i)) { dlG += d; if (o && !o.sciezka) ulG += d; minG = Math.min(minG, pts[i][2]); maxG = Math.max(maxG, pts[i][2]); }
+    }
+    // dwa oznaczenia bliżej niż 30 m po trasie to jedno skrzyżowanie (zostaje wyższa waga)
+    const lista = []; t.skrz.forEach((w, i) => { if (!w) return; const p = lista[lista.length - 1]; if (p && s[i] - p.m < 30) p.w = Math.max(p.w, w); else lista.push({ m: s[i], w }); });
+    const wGl = lista.filter((x) => glowna && x.m >= glowna.od && x.m <= glowna.do);
+    const u = (x) => (opisane ? x / opisane : 0);
+    return { dl, gora: Math.round(gora), skrzyzowania: lista.length, wagaSkrz: lista.reduce((a, x) => a + x.w, 0), sciezki: u(m.sciezka), glowne: u(m.glowna), zielen: u(m.zielen), miasto: u(m.miasto), schody,
+      powt: powtorzenia(pts), glowna: glowna ? { skrzyzowania: wGl.length, waga: wGl.reduce((a, x) => a + x.w, 0), roznica: dlG ? Math.round(maxG - minG) : 0, ulice: dlG ? ulG / dlG : 0 } : null };
+  }
+  function ocena(t, m, cel) {                                  // start 100 pkt, kary; wagi z planowania tras, do strojenia
+    const km = m.dl / 1000, odch = Math.abs(m.dl - cel) / cel; let p = 100;
+    if (odch > 0.04) p -= (odch - 0.04) * 220;
+    p -= (m.gora / km) * (m.glowna ? 2.4 : 1.2);
+    p -= (1 - m.sciezki) * 12 + m.glowne * 28 + m.schody * 8;
+    if (t.maTagi) p -= (m.wagaSkrz / km) * 9;
+    p -= m.powt * 32;
+    if (m.glowna) p -= m.glowna.waga * 12 + m.glowna.roznica * 2.5 + m.glowna.ulice * 30;
+    if (t.maOtoczenie) p -= m.miasto * 28 + (1 - m.zielen) * 14;
+    return Math.round(p);
+  }
+  function dlaczego(t, m, start) {
+    const w = [`${(m.dl / 1000).toFixed(1).replace('.', ',')} km`];
+    w.push(t.maTagi ? `skrzyżowania i przejścia: ${m.skrzyzowania}${m.glowna ? ` (w części głównej: ${m.glowna.skrzyzowania})` : ''}` : 'brak danych o skrzyżowaniach');
+    if (t.maOtoczenie) w.push(`zieleń ${Math.round(m.zielen * 100)}%`);
+    w.push(m.powt < 0.05 ? 'pętla bez powtórzeń' : `${Math.round(m.powt * 100)}% tą samą drogą`, `${m.gora} m w górę`, `${Math.round(m.sciezki * 100)}% ścieżkami`);
+    const d = odl(start, t.pts[0]); if (d > 150) w.push(`początek ${(d / 1000).toFixed(1).replace('.', ',')} km na ${kierunek(start, t.pts[0])} od Startu`);
+    return w.join(' · ');
+  }
+  const odwroc = (t) => { const pts = [...t.pts].reverse(), skrz = [...t.skrz].reverse(), droga = t.droga.slice(0, -1).reverse(); droga.push(null); return { ...t, pts, skrz, droga }; };
+
+  // --- szukanie: pętle w 8 kierunkach (pięciokąt i trójkąt na przemian), zapasowo tam i z powrotem ---
+  const OBWOD = { kolo: 10 * Math.sin(36 * RAD), trojkat: 2 + 2 * Math.sin(50 * RAD) };
+  function ksztalt(rodzaj, start, kier, r) {
+    if (rodzaj === 'trojkat') return [start, przesun(start, kier - 50, r), przesun(start, kier + 50, r), start];
+    if (rodzaj === 'powrot') return [start, przesun(start, kier, r), start];
+    const c = przesun(start, kier, r);
+    return [start, ...[1, 2, 3, 4].map((i) => przesun(c, kier + 180 + 72 * i, r)), start];
+  }
+  // pobierz(url, co) → tekst odpowiedzi; rzuca błąd przy braku sieci. Zapytania idą po kolei – to serwer społecznościowy.
+  async function szukaj({ start, km, glowna, pobierz, postep }) {
+    const cel = km * 1000, pamiec = new Map(), znalezione = []; let blad = '';
+    const trasa = async (punkty) => {
+      const url = urlTrasy(punkty);
+      if (!pamiec.has(url)) {
+        const tekst = await pobierz(url, 'trasa');
+        if (!tekst.trim().startsWith('{')) throw new Error('serwer tras: ' + tekst.trim().slice(0, 160));
+        pamiec.set(url, wytnijOdnogi(czytajBrouter(JSON.parse(tekst))));
+      }
+      return pamiec.get(url);
+    };
+    const proba = async (rodzaj, kier) => {
+      let r = cel / (1.3 * (rodzaj === 'powrot' ? 2 : OBWOD[rodzaj])), naj = null;
+      for (let i = 0; i < 3; i++) {
+        let t; try { t = await trasa(ksztalt(rodzaj, start, kier, r)); } catch (e) { if (e.przerwij) throw e; blad = e.message; break; }   // brak drogi w tym kierunku: następny kierunek
+        const dl = narastajaco(t.pts).pop(), odch = Math.abs(dl - cel) / cel;
+        if (!naj || odch < naj.odch) naj = { t, odch };
+        if (odch <= 0.04 || dl < 50) break;
+        r *= cel / dl;
+      }
+      if (naj && naj.odch <= TOLERANCJA) znalezione.push({ ...naj.t, tam_i_z_powrotem: rodzaj === 'powrot' });   // R23: poza ±8% trasa nie trafia na listę
+    };
+    for (let i = 0; i < 8; i++) { if (postep) postep(i + 1, 8); await proba(i % 2 ? 'trojkat' : 'kolo', i * 45); }
+    const petle = () => znalezione.filter((t) => !t.tam_i_z_powrotem && powtorzenia(t.pts) < 0.35).length;
+    if (petle() < 2) for (const k of [0, 60, 300]) await proba('powrot', k);
+    const oceniona = (t) => { const m = miary(t, glowna); return { ...t, miary: m, punkty: ocena(t, m, cel) }; };
+    let lista = znalezione.map((t) => {
+      const a = oceniona(t); if (!glowna) return a;
+      const b = oceniona(odwroc(t)); return b.punkty > a.punkty ? b : a;                     // od kierunku zależy, gdzie wypadną odcinki
+    }).sort((a, b) => b.punkty - a.punkty);
+    const kratki = (t) => new Set(probki(t.pts, 40).map((p) => kratka(p, 60)));
+    const wynik = [];
+    for (const t of lista) {
+      const k = kratki(t);
+      if (wynik.some((w) => { const kw = kratki(w); let wsp = 0; for (const x of k) if (kw.has(x)) wsp++; return wsp / Math.min(k.size, kw.size) >= 0.8; })) continue;
+      wynik.push({ ...t, dlaczego: dlaczego(t, t.miary, start) + (t.tam_i_z_powrotem ? ' · tam i z powrotem (zapas – za mało dobrych pętli)' : '') });
+      if (wynik.length === 3) break;
+    }
+    return { trasy: wynik, blad };
+  }
+
+  // --- trening na trasie: gdzie w metrach wypada część główna i każdy szybki odcinek ---
+  function glownaCzesc(kroki, tempoLekko, tempoMocno) {
+    const dlKroku = (k) => (k.dystans_m ? k.dystans_m : (k.czas_s || 0) / (k.rola === 'praca' ? tempoMocno : tempoLekko) * 1000);
+    const rozwin = []; kroki.forEach((k) => { if (k.razy) { const blok = rozwin.slice(k.powtorz_od); for (let i = 1; i < k.razy; i++) rozwin.push(...blok); } else rozwin.push(k); });
+    if (!rozwin.some((k) => k.rola === 'rozgrzewka')) return null;
+    let m = 0, czas = 0, czasDo = 0; const odcinki = [];
+    for (const k of rozwin) {
+      const d = dlKroku(k); czas += k.czas_s || d * (k.rola === 'praca' ? tempoMocno : tempoLekko) / 1000;
+      if (k.rola === 'praca' && d > 0) { odcinki.push({ od: Math.round(m), do: Math.round(m + d) }); czasDo = czas; }
+      m += d;
+    }
+    return odcinki.length ? { od: odcinki[0].od, do: odcinki[odcinki.length - 1].do, odcinki, czas_s: Math.round(czasDo) } : null;
+  }
+  function punktNa(pts, m) { const s = narastajaco(pts); let i = 0; while (i < s.length - 1 && s[i] < m) i++; return pts[i]; }
+
+  // --- GPX 1.1: cały trening jako ślad, znaczniki startu i odcinków ---
+  const xml = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  function gpx(nazwa, pts, glowna) {
+    const wpt = (p, n) => `<wpt lat="${p[1].toFixed(6)}" lon="${p[0].toFixed(6)}"><name>${xml(n)}</name></wpt>`;
+    const zn = [wpt(pts[0], 'Start')];
+    if (glowna) glowna.odcinki.forEach((o, i) => zn.push(wpt(punktNa(pts, o.od), `Start ${i + 1}`), wpt(punktNa(pts, o.do), `Koniec ${i + 1}`)));
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<gpx version="1.1" creator="IPB" xmlns="http://www.topografix.com/GPX/1/1">\n${zn.join('\n')}\n<trk><name>${xml(nazwa)}</name><trkseg>\n`
+      + pts.map((p) => `<trkpt lat="${p[1].toFixed(6)}" lon="${p[0].toFixed(6)}"><ele>${Math.round(p[2] || 0)}</ele></trkpt>`).join('\n') + '\n</trkseg></trk>\n</gpx>\n';
+  }
+
+  // --- pogoda: Open-Meteo dla godzin biegu; obszar zaokrąglony do 0,1° (ok. 10 km) ---
+  const urlPogody = (lat, lon, data) => `${HOSTY.pogoda}/v1/forecast?latitude=${lat.toFixed(1)}&longitude=${lon.toFixed(1)}&hourly=temperature_2m,apparent_temperature,precipitation,precipitation_probability,wind_speed_10m,wind_direction_10m,wind_gusts_10m,weather_code,is_day&timezone=auto&start_date=${data}&end_date=${data}`;
+  const KODY = [[95, 'burza'], [71, 'śnieg'], [51, 'deszcz'], [45, 'mgła'], [3, 'pochmurno'], [1, 'częściowe zachmurzenie'], [0, 'bezchmurnie']];
+  const opisKodu = (k) => (k >= 85 && k <= 86 ? 'śnieg' : k >= 80 && k <= 82 ? 'deszcz' : KODY.find(([od]) => k >= od)[1]);
+  const GROZA = (k) => (k >= 95 ? 5 : (k >= 71 && k <= 77) || k === 85 || k === 86 ? 4 : k >= 51 ? 3 : k >= 45 ? 2 : k >= 1 ? 1 : 0);
+  function pogoda(json, godzOd, godzDo) {                     // godziny lokalne miejsca biegu, np. 17 i 18.5
+    const h = json && json.hourly; if (!h || !h.time || !h.time.length) return null;
+    const idx = h.time.map((t, i) => [+t.slice(11, 13), i]).filter(([g]) => g >= Math.floor(godzOd) && g <= Math.floor(godzDo - 0.01)).map(([, i]) => i);
+    if (!idx.length) return null;
+    const sr = (k) => idx.reduce((a, i) => a + (h[k][i] ?? 0), 0) / idx.length, max = (k) => Math.max(...idx.map((i) => h[k][i] ?? 0));
+    let x = 0, y = 0; for (const i of idx) { x += h.wind_speed_10m[i] * Math.sin(h.wind_direction_10m[i] * RAD); y += h.wind_speed_10m[i] * Math.cos(h.wind_direction_10m[i] * RAD); }   // wiatr uśredniany wektorowo
+    const kod = idx.map((i) => h.weather_code[i]).sort((a, b) => GROZA(b) - GROZA(a))[0];
+    return { temp: Math.round(sr('temperature_2m')), odczuwalna: Math.round(sr('apparent_temperature')), opad_mm: Math.round(idx.reduce((a, i) => a + (h.precipitation[i] || 0), 0) * 10) / 10,
+      szansa_opadu: max('precipitation_probability'), wiatr: Math.round(Math.hypot(x, y) / idx.length), wiatr_z: STRONY[Math.round(((Math.atan2(x, y) / RAD + 360) % 360) / 45) % 8],
+      porywy: Math.round(max('wind_gusts_10m')), opis: opisKodu(kod), noc: idx.some((i) => h.is_day[i] === 0) };
+  }
+  // Wschód, zachód i zmierzch cywilny (słońce 6° pod horyzontem), przybliżenie NOAA; wynik w godzinach UTC albo null (dzień lub noc polarna).
+  function slonce(lat, lon, data) {
+    const d = new Date(data + 'T00:00:00Z'), n = Math.floor((d - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5), g = 2 * Math.PI / 365 * (n - 1 + 0.5);
+    const rownanie = 229.18 * (0.000075 + 0.001868 * Math.cos(g) - 0.032077 * Math.sin(g) - 0.014615 * Math.cos(2 * g) - 0.040849 * Math.sin(2 * g));
+    const dekl = 0.006918 - 0.399912 * Math.cos(g) + 0.070257 * Math.sin(g) - 0.006758 * Math.cos(2 * g) + 0.000907 * Math.sin(2 * g) - 0.002697 * Math.cos(3 * g) + 0.00148 * Math.sin(3 * g);
+    const kat = (zenit) => { const c = (Math.cos(zenit * RAD) - Math.sin(lat * RAD) * Math.sin(dekl)) / (Math.cos(lat * RAD) * Math.cos(dekl)); return Math.abs(c) > 1 ? null : Math.acos(c) / RAD; };
+    const poludnie = (720 - 4 * lon - rownanie) / 60, h = kat(90.833), z = kat(96);
+    return { wschod: h === null ? null : poludnie - h / 15, zachod: h === null ? null : poludnie + h / 15, swit: z === null ? null : poludnie - z / 15, zmierzch: z === null ? null : poludnie + z / 15 };
+  }
+
+  // --- mapa: położenie w pikselach świata (odwzorowanie kafelków OSM) ---
+  const naPiksele = (lon, lat, z) => { const n = 256 * 2 ** z, s = Math.sin(lat * RAD); return [(lon + 180) / 360 * n, (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * n]; };
+  const zPikseli = (x, y, z) => { const n = 256 * 2 ** z; return [x / n * 360 - 180, Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) / RAD]; };
+  const urlKafla = (z, x, y) => `${HOSTY.mapa}/${z}/${x}/${y}.png`;
+
+  return { HOSTY, TOLERANCJA, odl, przesun, narastajaco, czytajBrouter, wytnijOdnogi, powtorzenia, miary, ocena, szukaj, glownaCzesc, punktNa, gpx, urlTrasy, urlPogody, pogoda, slonce, naPiksele, zPikseli, urlKafla, ksztalt };
+})();
+
 // Interfejs kroku 1: wywiad → sejf na hasło → profil, ocena celu, podgląd tego, co jest zapisane.
 (() => {
   const KLUCZ = 'ipb.sejf.v1', BEZCZYNNOSC_MS = 15 * 60 * 1000, DNI = ['pn', 'wt', 'sr', 'czw', 'pt', 'sob', 'nd'];
@@ -1620,8 +1928,147 @@ const Eksport = (() => {
     komunikat('t-info', 'Zapisano. Strefy, prognoza i plan są przeliczone.', 'ok');
     pokazStrefy();
   }
+  // --- trasy, mapa i pogoda (krok 7). Sieć tylko po zgodzie zapisanej w sejfie; każde połączenie trafia do dziennika na ekranie. ---
+  const polaczenia = [], pogodaPamiec = new Map(), mapa = { lon: 19.4, lat: 52.0, z: 6 };
+  let tr = null;                                            // otwarty dzień: { x, t, dataDnia, glowna, trasy, wybrana }
+  const teraz = () => new Date().toTimeString().slice(0, 5), przec = (n, m = 1) => n.toFixed(m).replace('.', ',');
+  async function pobierzSiec(url, co) {
+    const host = new URL(url).host, blad = (t) => { const e = new Error(t); e.przerwij = true; return e; };
+    if (!dane || !dane.siec) throw blad('mapy i pogoda są wyłączone');
+    polaczenia.push(`${teraz()}  ${host}  ${co}`);
+    const ster = new AbortController(), czas = setTimeout(() => ster.abort(), 15000);
+    let r;
+    try { r = await fetch(url, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: ster.signal }); }
+    catch (e) { throw blad(`brak połączenia z ${host}. Sprawdź internet; w podglądzie w oknie Claude połączenia są zablokowane – otwórz aplikację z pliku albo ze swojego serwera`); }
+    finally { clearTimeout(czas); }
+    if ([429, 502, 503, 504].includes(r.status)) throw blad(`serwer ${host} jest przeciążony albo niedostępny (${r.status}). Spróbuj za kilka minut`);
+    return r.text();
+  }
+  function rysujMape() {
+    const m = $('mapa'), W = m.clientWidth, H = m.clientHeight, n = 2 ** mapa.z, [cx, cy] = Trasy.naPiksele(mapa.lon, mapa.lat, mapa.z), x0 = cx - W / 2, y0 = cy - H / 2, kafle = [];
+    if (!W) return;
+    if (dane && dane.siec) for (let kx = Math.floor(x0 / 256); kx * 256 < x0 + W; kx++) for (let ky = Math.max(0, Math.floor(y0 / 256)); ky * 256 < y0 + H && ky < n; ky++) {
+      const i = new Image(); i.alt = ''; i.draggable = false; i.referrerPolicy = 'origin';    // serwer map OSM odrzuca zapytania bez adresu strony; wysyłamy sam adres serwisu, bez ścieżki
+      i.style.left = Math.round(kx * 256 - x0) + 'px'; i.style.top = Math.round(ky * 256 - y0) + 'px';
+      i.onerror = () => { i.remove(); komunikat('tr-info', 'Nie udało się pobrać podkładu mapy z tile.openstreetmap.org. Serwer map wymaga otwarcia aplikacji ze strony https (nie z pliku i nie w podglądzie). Trasy i pogoda działają bez podkładu.'); };
+      i.src = Trasy.urlKafla(mapa.z, ((kx % n) + n) % n, ky); kafle.push(i);
+    }
+    $('mapa-kafle').replaceChildren(...kafle);
+    const NS = 'http://www.w3.org/2000/svg', svg = $('mapa-rys'), rys = [];
+    const linia = (pts, kolor, grubosc) => { const l = document.createElementNS(NS, 'polyline'); l.setAttribute('points', pts.map((p) => { const [x, y] = Trasy.naPiksele(p[0], p[1], mapa.z); return `${(x - x0).toFixed(1)},${(y - y0).toFixed(1)}`; }).join(' '));
+      l.setAttribute('fill', 'none'); l.setAttribute('stroke', kolor); l.setAttribute('stroke-width', grubosc); l.setAttribute('stroke-linejoin', 'round'); l.setAttribute('stroke-linecap', 'round'); rys.push(l); };
+    const kolko = (p, kolor) => { const [x, y] = Trasy.naPiksele(p[0], p[1], mapa.z), c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x - x0); c.setAttribute('cy', y - y0); c.setAttribute('r', 6); c.setAttribute('fill', kolor); c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-width', 2); rys.push(c); };
+    if (tr && tr.trasy.length) {
+      tr.trasy.forEach((t, i) => { if (i !== tr.wybrana) linia(t.pts, '#5b6b7a', 3); });
+      const w = tr.trasy[tr.wybrana]; linia(w.pts, '#ffffff', 8); linia(w.pts, '#0b57d0', 5);
+      if (tr.glowna) { const s = Trasy.narastajaco(w.pts); for (const o of tr.glowna.odcinki) linia(w.pts.filter((_, i) => s[i] >= o.od && s[i] <= o.do), '#b3261e', 5); }   // szybkie odcinki na czerwono
+      kolko(w.pts[0], '#1f7a3a');
+    }
+    svg.replaceChildren(...rys);
+    $('mapa-warstwy').style.transform = '';
+  }
+  function dopasujMape(pts) {
+    const m = $('mapa'), W = m.clientWidth - 40, H = m.clientHeight - 40, lon = pts.map((p) => p[0]), lat = pts.map((p) => p[1]);
+    const a = [Math.min(...lon), Math.max(...lat)], b = [Math.max(...lon), Math.min(...lat)];
+    mapa.lon = (a[0] + b[0]) / 2; mapa.lat = (a[1] + b[1]) / 2;
+    for (mapa.z = 17; mapa.z > 3; mapa.z--) { const p = Trasy.naPiksele(a[0], a[1], mapa.z), q = Trasy.naPiksele(b[0], b[1], mapa.z); if (q[0] - p[0] <= W && q[1] - p[1] <= H) break; }
+    rysujMape();
+  }
+  function stanSieci() {
+    const wl = !!(dane && dane.siec);
+    $('siec-stan').replaceChildren(el('strong', '', wl ? 'Mapy i pogoda: włączone. ' : 'Teraz: nic. '), wl ? 'Aplikacja łączy się z trzema serwerami wymienionymi niżej, tylko gdy otwierasz trasę dnia.' : 'Aplikacja nie łączy się z żadnym serwerem.');
+    $('siec-przelacz').textContent = wl ? 'Wyłącz mapy i pogodę' : 'Włącz mapy i pogodę';
+    $('siec-dziennik').textContent = 'Połączenia od otwarcia sejfu (godzina, serwer, po co):\n' + polaczenia.join('\n'); $('siec-dziennik').hidden = !polaczenia.length;
+    $('trasa-zgoda').hidden = wl; $('trasa-srodek').hidden = !wl;
+  }
+  async function ustawSiec(wl) { dane.siec = wl; await zapiszDane(wl ? 'włączone mapy i pogoda' : 'wyłączone mapy i pogoda'); stanSieci(); if (wl) rysujMape(); else zamknijTrase(); }
+  function zamknijTrase() { tr = null; $('plan-jest').append($('trasa')); $('trasa').hidden = true; $('tr-lista').replaceChildren(); $('mapa-kafle').replaceChildren(); $('mapa-rys').replaceChildren(); komunikat('tr-info', ''); komunikat('tr-pogoda', ''); }
+  // Długość trasy = długość treningu (R23): czas dnia × tempo ze stref; dla akcentu także położenie części głównej (R24).
+  function trasaDnia(x) {
+    const t = Strefy.licz(dane.profil).tempa, lekko = t && t.E ? (t.E[0] + t.E[1]) / 2 : 390, cel = x.cel_tempo ? (x.cel_tempo.od + x.cel_tempo.do) / 2 : null;
+    if (!(x.typ === 'akcent' || x.typ === 'test')) return { km: x.min * 60 / (cel || lekko), glowna: null, szacunek: !cel };
+    const g = Trasy.glownaCzesc(Eksport.kroki(x), lekko, cel || lekko * 0.85);
+    return g ? { km: (g.do + Math.max(0, x.min * 60 - g.czas_s) / lekko * 1000) / 1000, glowna: g, szacunek: !t } : { km: x.min * 60 / lekko, glowna: null, szacunek: true };
+  }
+  function otworzTrase(w, t, x, dataDnia) {
+    const d = trasaDnia(x), zap = (dane.trasy || {})[dataDnia];
+    tr = { x, t, dataDnia, glowna: zap ? zap.glowna : d.glowna, trasy: zap ? [{ ...zap, zapisana: true }] : [], wybrana: 0 };
+    $('trasa-tytul').textContent = `Trasa i pogoda · ${DZIEN[x.dzien]} ${krotko(dataDnia)} · ${NAZWA[x.typ]} ${hm(x.min)}`;
+    $('tr-km').value = (Math.round(d.km * 10) / 10).toFixed(1);
+    try { $('tr-godz').value = localStorage.getItem('ipb.godzina') || '17:00'; } catch (e) { /* opcjonalne */ }
+    $('tr-start').hidden = !dane.start;
+    komunikat('tr-info', d.szacunek ? 'Długość policzona z czasu treningu i przybliżonego tempa (brak wyniku do wyliczenia stref tempa). Popraw ją, jeśli znasz swoje tempo.' : '', 'info'); komunikat('tr-pogoda', '');
+    w.after($('trasa')); $('trasa').hidden = false; stanSieci();
+    if (zap) dopasujMape(zap.pts); else { if (dane.start && mapa.z < 10) Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: 14 }); rysujMape(); }
+    pokazPropozycje();
+    $('trasa').scrollIntoView({ block: 'nearest' });
+  }
+  function pokazPropozycje() {
+    $('tr-lista').replaceChildren(...tr.trasy.map((p, i) => {
+      const k = el('div', 'propozycja' + (i === tr.wybrana ? ' wybrana' : '')), rz = el('div', 'rzad'), nazwa = `${NAZWA[tr.x.typ]} ${tr.dataDnia}`;
+      const przycisk = (tekst, co, f) => { const b = el('button', '', tekst); b.type = 'button'; b.dataset[co] = i; b.onclick = f; rz.append(b); };
+      k.append(el('strong', '', p.zapisana ? 'Trasa zapisana do tego dnia' : `Propozycja ${i + 1}`), el('span', '', p.dlaczego));
+      if (tr.glowna) k.append(el('span', 'cichy', `Na mapie: zielone kółko – start, czerwone – szybkie odcinki (od ${przec(tr.glowna.od / 1000)} km). Rozgrzewka trwa tyle, ile w planie.`));
+      przycisk('Pokaż na mapie', 'pokaz', () => { tr.wybrana = i; dopasujMape(p.pts); pokazPropozycje(); });
+      przycisk('Plik GPX', 'gpx', () => pobierz(`${nazwa.replace(/ /g, '_')}.gpx`, 'application/gpx+xml', Trasy.gpx(nazwa, p.pts, tr.glowna)));
+      przycisk('Karta trasy (PDF)', 'kartaTrasy', () => { tr.wybrana = i; dopasujMape(p.pts); pokazPropozycje(); drukTrasy(p); });
+      if (p.zapisana) przycisk('Usuń zapisaną trasę', 'usunTrase', async () => { delete dane.trasy[tr.dataDnia]; await zapiszDane(`usunięta trasa na ${tr.dataDnia}`); tr.trasy = []; rysujMape(); pokazPropozycje(); });
+      else przycisk('Zapisz do tego dnia', 'zapiszTrase', async () => {
+        (dane.trasy = dane.trasy || {})[tr.dataDnia] = { pts: p.pts.map((q) => [+q[0].toFixed(5), +q[1].toFixed(5), Math.round(q[2] || 0)]), dlaczego: p.dlaczego, glowna: tr.glowna };
+        await zapiszDane(`zapisana trasa na ${tr.dataDnia}`); tr.trasy = [{ ...dane.trasy[tr.dataDnia], zapisana: true }]; tr.wybrana = 0; rysujMape(); pokazPropozycje();
+        komunikat('tr-info', 'Trasa zapisana w sejfie (zaszyfrowana, jak reszta danych).', 'ok'); });
+      k.append(rz); return k;
+    }));
+  }
+  async function szukajTras() {
+    const km = Number($('tr-km').value);
+    if (!(km >= 1 && km <= 60)) return komunikat('tr-info', 'Podaj długość trasy od 1 do 60 km.');
+    if (mapa.z < 12) return komunikat('tr-info', 'Przybliż mapę do miejsca, z którego chcesz zacząć bieg (albo naciśnij „Moje położenie”), i dopiero wtedy szukaj.');
+    const b = $('tr-szukaj'), start = [mapa.lon, mapa.lat], dzien = tr; b.disabled = true;
+    const skala = km / trasaDnia(tr.x).km, g = tr.glowna && Math.abs(skala - 1) < 0.15 ? tr.glowna : null;   // po ręcznej zmianie długości położenie odcinków przestaje być wiarygodne
+    try {
+      const w = await Trasy.szukaj({ start, km, glowna: g, pobierz: pobierzSiec, postep: (i, n) => komunikat('tr-info', `Szukam tras: kierunek ${i} z ${n}… (serwer społecznościowy, pytamy po kolei)`, 'info') });
+      if (tr !== dzien) return;
+      tr.glowna = g; tr.trasy = w.trasy; tr.wybrana = 0;
+      if (w.trasy.length) { komunikat('tr-info', `Znalezione trasy: ${w.trasy.length}. Każda mieści się w ±8% długości treningu. To podpowiedzi – plan działa też bez trasy.`, 'ok'); dopasujMape(w.trasy[0].pts); }
+      else { komunikat('tr-info', `Nie znalazłem trasy ${przec(km)} km ±8% z tego miejsca${w.blad ? ' (' + w.blad + ')' : ''}. Przesuń start o kilkaset metrów albo zmień długość.`); rysujMape(); }
+      pokazPropozycje();
+    } catch (e) { komunikat('tr-info', 'Nie udało się wyznaczyć tras: ' + e.message + '.'); }
+    finally { b.disabled = false; }
+  }
+  async function pokazPogode() {
+    if (mapa.z < 8) return komunikat('tr-pogoda', 'Przybliż mapę do okolicy biegu, żeby sprawdzić pogodę.', '');
+    const godz = $('tr-godz').value || '17:00', od = +godz.slice(0, 2) + +godz.slice(3) / 60, doG = od + tr.x.min / 60, url = Trasy.urlPogody(mapa.lat, mapa.lon, tr.dataDnia), dzien = tr;
+    try { localStorage.setItem('ipb.godzina', godz); } catch (e) { /* opcjonalne */ }
+    try {
+      let z = pogodaPamiec.get(url);
+      if (!z || Date.now() - z.kiedy > 3 * 3600e3) { z = { tekst: await pobierzSiec(url, 'pogoda'), kiedy: Date.now(), o: teraz() }; pogodaPamiec.set(url, z); }
+      if (tr !== dzien) return;
+      const p = z.tekst.trim().startsWith('{') ? Trasy.pogoda(JSON.parse(z.tekst), od, doG) : null;
+      if (!p) return komunikat('tr-pogoda', 'Prognoza dla tego dnia i godzin nie jest dostępna (Open-Meteo podaje ją do ok. 15 dni naprzód).', 'info');
+      const s = Trasy.slonce(mapa.lat, mapa.lon, tr.dataDnia), lok = (h) => new Date(Date.parse(tr.dataDnia + 'T00:00:00Z') + h * 3600e3), hhmm = (d) => d.toTimeString().slice(0, 5);
+      const koniec = new Date(new Date(`${tr.dataDnia}T${godz}:00`).getTime() + tr.x.min * 60e3), ciemno = s.zmierzch !== null && (koniec > lok(s.zmierzch) || new Date(`${tr.dataDnia}T${godz}:00`) < lok(s.swit));
+      tr.pogoda = `Pogoda ${krotko(tr.dataDnia)}, ${godz}–${hhmm(koniec)}: ${p.opis}, ${p.temp}°C (odczuwalna ${p.odczuwalna}°C), opad ${przec(p.opad_mm)} mm (szansa ${p.szansa_opadu}%), wiatr ${p.wiatr} km/h z kierunku ${p.wiatr_z}, porywy do ${p.porywy} km/h.`
+        + (s.zachod !== null ? ` Zachód słońca ${hhmm(lok(s.zachod))}, ciemno od ${hhmm(lok(s.zmierzch))}.` : '') + (ciemno ? ' Część biegu wypada po ciemku – weź światło albo wybierz oświetloną trasę.' : '')
+        + ` Źródło: Open-Meteo, pobrano ${z.o}. To informacja, plan się przez nią nie zmienia (reguła R25).`;
+      komunikat('tr-pogoda', tr.pogoda, 'info');
+    } catch (e) { komunikat('tr-pogoda', 'Nie udało się pobrać pogody: ' + e.message + '.', ''); }
+  }
+  function drukTrasy(p) {
+    const s = el('div', 'strona'), m = $('mapa').cloneNode(true), dl = Trasy.narastajaco(p.pts), wys = p.pts.map((q) => q[2] || 0), mn = Math.min(...wys), mx = Math.max(...wys);
+    m.removeAttribute('id'); for (const e of m.querySelectorAll('[id]')) e.removeAttribute('id');
+    { const W = $('mapa').clientWidth, H = $('mapa').clientHeight; m.style.width = W + 'px'; m.style.height = H + 'px'; m.style.zoom = Math.min(1000 / W, 370 / H).toFixed(2); }   // na kartce mapa rośnie do ok. 100 mm wysokości
+    const NS = 'http://www.w3.org/2000/svg', prof = document.createElementNS(NS, 'svg'), l = document.createElementNS(NS, 'polyline');
+    prof.setAttribute('class', 'profil'); prof.setAttribute('viewBox', '0 0 1000 100'); prof.setAttribute('preserveAspectRatio', 'none');
+    l.setAttribute('points', p.pts.map((q, i) => `${(dl[i] / dl[dl.length - 1] * 1000).toFixed(0)},${(95 - ((q[2] || 0) - mn) / Math.max(1, mx - mn) * 90).toFixed(1)}`).join(' ')); l.setAttribute('fill', 'none'); l.setAttribute('stroke', '#000'); l.setAttribute('stroke-width', 1.5); l.setAttribute('vector-effect', 'non-scaling-stroke'); prof.append(l);
+    s.append(el('h2', '', `Trasa · ${NAZWA[tr.x.typ]} · ${tr.dataDnia} · ${hm(tr.x.min)} · ${przec(dl[dl.length - 1] / 1000)} km`), el('p', '', p.dlaczego), el('p', '', tr.x.opis || ''), ...(tr.pogoda ? [el('p', '', tr.pogoda)] : []),
+      m, el('p', '', `Profil wysokości: od ${Math.round(mn)} do ${Math.round(mx)} m n.p.m.`), prof, el('p', '', 'Mapa: © OpenStreetMap contributors. Trasa: BRouter. Trasa jest podpowiedzią; długość treningu z planu ma pierwszeństwo (reguła R23).'));
+    drukuj([s], 'Karta trasy');
+  }
+
   function pokazPlan() {
     const plan = dane.plan;
+    zamknijTrase();
     $('plan-brak').hidden = !!plan; $('plan-jest').hidden = !plan;
     if (!plan) return;
     const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
@@ -1678,7 +2125,8 @@ const Eksport = (() => {
           const z = el('button', '', 'Na zegarek (FIT)'); z.type = 'button'; z.dataset.fit = `${t.nr}-${x.dzien}`;
           z.onclick = () => pobierz(`${Eksport.nazwaTreningu(x, dataDnia).replace(/ /g, '_')}.fit`, 'application/octet-stream', Eksport.fit(Eksport.nazwaTreningu(x, dataDnia), Eksport.kroki(x), Math.floor(Date.now() / 1000)));
           const kt = el('button', '', 'Karta treningu (PDF)'); kt.type = 'button'; kt.dataset.karta = `${t.nr}-${x.dzien}`; kt.onclick = () => drukKarty(t, x, dataDnia);
-          const zz = el('span', 'zmiana'); zz.append(z, kt); w.append(zz);
+          const mp = el('button', '', (dane.trasy || {})[dataDnia] ? 'Trasa i pogoda (zapisana)' : 'Trasa i pogoda'); mp.type = 'button'; mp.dataset.trasa = `${t.nr}-${x.dzien}`; mp.onclick = () => otworzTrase(w, t, x, dataDnia);
+          const zz = el('span', 'zmiana'); zz.append(z, kt, mp); w.append(zz);
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', (x.po_co || PO_CO[x.typ]) + (dod ? ' Do tego: ' + dod + '.' : '')));
         wykonane(); sterowanie();
@@ -1715,6 +2163,7 @@ const Eksport = (() => {
     $('siec-ile').textContent = siec.length ? `${siec.length} – lista poniżej` : '0 – strona niczego nie pobrała ani nie wysłała';
     $('siec-lista').textContent = siec.join('\n'); $('siec-lista').hidden = !siec.length;
     $('kopia-tekst').value = surowe;
+    stanSieci();
   }
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
@@ -1722,7 +2171,7 @@ const Eksport = (() => {
     if (n === 'plan') pokazPlan(); else if (n === 'dziennik') pokazDziennik(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
-  function zablokuj() { dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
+  function zablokuj() { zamknijTrase(); polaczenia.length = 0; pogodaPamiec.clear(); Object.assign(mapa, { lon: 19.4, lat: 52.0, z: 6 }); dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
     if (!$('pole-kod').hidden) $('przelacz-kod').click();   // zawsze wracaj do pola hasła
     widok(koperta ? 'zamkniety' : 'start'); }
   function czuwaj() { clearTimeout(zegar); if (dek) zegar = setTimeout(zablokuj, BEZCZYNNOSC_MS); }
@@ -1795,6 +2244,26 @@ const Eksport = (() => {
     akcja('form-test', 't-zapisz', zapiszTest);
     $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
     $('druk-plan').onclick = drukPlanu;
+    $('siec-wlacz').onclick = () => ustawSiec(true);
+    $('siec-przelacz').onclick = () => ustawSiec(!dane.siec);
+    $('tr-zamknij').onclick = $('tr-zamknij0').onclick = zamknijTrase;
+    $('tr-szukaj').onclick = szukajTras;
+    $('tr-pogoda-btn').onclick = pokazPogode;
+    $('tr-start').onclick = () => { Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: Math.max(mapa.z, 14) }); rysujMape(); };
+    $('tr-zapamietaj').onclick = async () => { if (mapa.z < 12) return komunikat('tr-info', 'Przybliż mapę, żeby dokładnie wskazać Start.');
+      dane.start = { lon: +mapa.lon.toFixed(5), lat: +mapa.lat.toFixed(5) }; await zapiszDane('zapisany punkt Start'); $('tr-start').hidden = false; komunikat('tr-info', 'Start zapisany w sejfie. To punkt orientacyjny – możesz go zmienić w każdej chwili.', 'ok'); };
+    $('tr-gps').onclick = () => {
+      if (!navigator.geolocation) return komunikat('tr-info', 'Ta przeglądarka nie udostępnia położenia. Ustaw start, przesuwając mapę.');
+      komunikat('tr-info', 'Pytam urządzenie o położenie…', 'info');
+      navigator.geolocation.getCurrentPosition((p) => { Object.assign(mapa, { lon: p.coords.longitude, lat: p.coords.latitude, z: 15 }); rysujMape(); komunikat('tr-info', 'Mapa ustawiona na Twoim położeniu. Nie zapisuję go.', 'ok'); },
+        () => komunikat('tr-info', 'Nie dostałem położenia (brak zgody albo sygnału). Ustaw start, przesuwając mapę.'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    };
+    for (const [id, o] of [['mapa-plus', 1], ['mapa-minus', -1]]) $(id).onclick = () => { mapa.z = Math.min(18, Math.max(3, mapa.z + o)); rysujMape(); };
+    { const m = $('mapa'); let od = null;                     // przesuwanie mapy: w trakcie ruchu przesuwamy warstwy, kafelki dociągamy po puszczeniu
+      m.addEventListener('pointerdown', (e) => { if (e.target.closest('button')) return; od = [e.clientX, e.clientY]; m.setPointerCapture(e.pointerId); });
+      m.addEventListener('pointermove', (e) => { if (od) $('mapa-warstwy').style.transform = `translate(${e.clientX - od[0]}px, ${e.clientY - od[1]}px)`; });
+      const koniec = (e) => { if (!od) return; const [cx, cy] = Trasy.naPiksele(mapa.lon, mapa.lat, mapa.z), [lon, lat] = Trasy.zPikseli(cx - (e.clientX - od[0]), cy - (e.clientY - od[1]), mapa.z); od = null; mapa.lon = lon; mapa.lat = Math.max(-85, Math.min(85, lat)); rysujMape(); };
+      m.addEventListener('pointerup', koniec); m.addEventListener('pointercancel', koniec); }
     $('eksport-ics').onclick = () => pobierz('plan-biegowy.ics', 'text/calendar', Eksport.ics(dane.plan, new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z'));
     akcja('form-bieg', 'dz-dodaj', dodajRecznie);
     $('dz-plik').onchange = () => $('dz-plik').files.length && dodajPliki([...$('dz-plik').files]);

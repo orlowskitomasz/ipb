@@ -82,6 +82,17 @@ table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight
 .slupek .tor { background: var(--tlo); border: 1px solid var(--linia); border-radius: 99px; height: 14px; overflow: hidden }
 .slupek .tor i { display: block; height: 100%; background: var(--akcent); border-radius: 99px }
 input[type="file"] { padding: 8px }
+/* Mapa: kafelki jako obrazki, trasa jako SVG */
+.trasa { display: flex; flex-direction: column; gap: 12px }
+.mapa { position: relative; height: min(60vh, 380px); overflow: hidden; border: 1px solid var(--linia); border-radius: 8px; background: var(--kod); touch-action: none; cursor: grab; user-select: none }
+.mapa #mapa-warstwy, .mapa #mapa-kafle, .mapa svg { position: absolute; inset: 0 } .mapa svg { width: 100%; height: 100%; pointer-events: none }
+.mapa img { position: absolute; width: 256px; height: 256px; max-width: none; pointer-events: none }
+.mapa .celownik { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 28px; line-height: 1; color: #b3261e; font-weight: 700; pointer-events: none; text-shadow: 0 0 3px #fff }
+.mapa .zoom { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px } .mapa .zoom button { width: 44px; min-height: 44px; padding: 0; font-size: 1.3rem; background: var(--karta) }
+.mapa .podpis { position: absolute; right: 0; bottom: 0; font-size: .7rem; padding: 1px 6px; background: rgba(255, 255, 255, .8); color: #222 }
+.propozycja { border: 1px solid var(--linia); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px } .propozycja.wybrana { border-color: var(--akcent); border-width: 2px }
+#druk .mapa { border: 1px solid #777; border-radius: 0; margin: 0 auto 3mm } #druk .mapa .zoom, #druk .mapa .celownik { display: none } #druk svg.profil { width: 100%; height: 30mm; border: 0.3mm solid #777 }
+
 /* Druk: na ekranie niewidoczny; w druku zostaje tylko #druk, tydzień na stronę A4 w poziomie */
 #druk { display: none }
 @page { size: A4 landscape; margin: 12mm }

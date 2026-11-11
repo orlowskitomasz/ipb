@@ -163,6 +163,37 @@
         </div>
         <p id="eksport-info" class="komunikat" hidden></p>
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
+        <div id="trasa" class="karta trasa" hidden>
+          <h3 id="trasa-tytul"></h3>
+          <div id="trasa-zgoda" style="display:flex; flex-direction:column; gap:8px">
+            <p>Trasy i pogoda potrzebują internetu. Po włączeniu aplikacja łączy się tylko z trzema serwerami i wysyła im wyłącznie współrzędne – nic o Tobie, bez ciasteczek i bez adresu tej strony w zapytaniach o trasę i pogodę:</p>
+            <ul class="lista">
+              <li><strong>brouter.de</strong> – punkty, przez które ma biec trasa (dokładne, bo od nich zależy przebieg);</li>
+              <li><strong>api.open-meteo.com</strong> – obszar zaokrąglony do ok. 10 km i data biegu;</li>
+              <li><strong>tile.openstreetmap.org</strong> – numery fragmentów mapy, które oglądasz; ten serwer widzi też adres strony, z której korzystasz (bez niego nie wydaje map).</li>
+            </ul>
+            <p class="cichy">Każdy serwer widzi adres IP Twojego urządzenia, jak przy każdej stronie w internecie. Mapy i pogodę wyłączysz w zakładce „Co jest zapisane”.</p>
+            <div class="rzad"><button id="siec-wlacz" class="glowny" type="button">Włącz mapy i pogodę</button><button id="tr-zamknij0" type="button">Zamknij</button></div>
+          </div>
+          <div id="trasa-srodek" hidden style="display:flex; flex-direction:column; gap:12px">
+            <div class="rzad"><button id="tr-gps" type="button">Moje położenie</button><button id="tr-start" type="button" hidden>Zapisany Start</button><button id="tr-zapamietaj" type="button">Zapamiętaj to miejsce jako Start</button></div>
+            <div id="mapa" class="mapa">
+              <div id="mapa-warstwy"><div id="mapa-kafle"></div><svg id="mapa-rys" xmlns="http://www.w3.org/2000/svg"></svg></div>
+              <span class="celownik" aria-hidden="true">+</span>
+              <span class="zoom"><button id="mapa-plus" type="button" aria-label="Przybliż mapę">+</button><button id="mapa-minus" type="button" aria-label="Oddal mapę">−</button></span>
+              <span class="podpis">© OpenStreetMap contributors</span>
+            </div>
+            <p class="cichy">Trasy zaczynają się w środku mapy (krzyżyk). Przesuń mapę palcem i przybliż ją przyciskami. Położenie telefonu jest używane tylko po naciśnięciu „Moje położenie” i nie jest zapisywane.</p>
+            <div class="siatka">
+              <label for="tr-km">Długość trasy (km)<input id="tr-km" type="number" inputmode="decimal" step="0.1" min="1" max="60"></label>
+              <label for="tr-godz">Godzina startu<input id="tr-godz" type="time" value="17:00"></label>
+            </div>
+            <div class="rzad"><button id="tr-szukaj" class="glowny" type="button">Szukaj tras</button><button id="tr-pogoda-btn" type="button">Pogoda na ten bieg</button><button id="tr-zamknij" type="button">Zamknij</button></div>
+            <p id="tr-pogoda" class="komunikat info" hidden></p>
+            <p id="tr-info" class="komunikat" hidden></p>
+            <div id="tr-lista" style="display:flex; flex-direction:column; gap:8px"></div>
+          </div>
+        </div>
         <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
         <p class="cichy">Plan powstaje z jawnych reguł R1–R20. Każda uwaga podaje regułę, jej pochodzenie i pewność: część to wyniki badań, część praktyka trenerska, część umowne ustalenia tego projektu (np. limit 170 min długiego biegu albo wzrost tygodnia do 10%). Twarde są tylko Twoje dni wolne i limity minut.</p>
       </div>
@@ -271,8 +302,10 @@
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Co i dokąd wysyłamy</h3>
-        <p><strong>Teraz: nic.</strong> Aplikacja nie łączy się z żadnym serwerem. Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce.</p>
-        <p class="cichy">Gdy dojdą mapy i pogoda, aplikacja będzie pytać wyłącznie o kafelki mapy, trasę i prognozę (OpenStreetMap, BRouter, Overpass, Open-Meteo) i wyśle tam tylko współrzędne, bez żadnych danych o Tobie. Każde takie połączenie będzie można wyłączyć, a ich lista pojawi się tutaj.</p>
+        <p id="siec-stan"></p>
+        <p class="cichy">Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce i nigdzie nie są wysyłane. Mapy, trasy i pogoda – tylko po włączeniu – pytają trzy serwery: brouter.de (punkty trasy), api.open-meteo.com (obszar zaokrąglony do ok. 10 km i data), tile.openstreetmap.org (fragmenty mapy; widzi też adres tej strony). Wysyłane są wyłącznie współrzędne, bez ciasteczek i bez danych o Tobie. Innych połączeń blokuje sama przeglądarka (polityka CSP strony).</p>
+        <div class="rzad"><button id="siec-przelacz" type="button"></button></div>
+        <pre id="siec-dziennik" hidden></pre>
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Kopia zapasowa</h3>

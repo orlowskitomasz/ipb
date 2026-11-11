@@ -258,8 +258,147 @@
     komunikat('t-info', 'Zapisano. Strefy, prognoza i plan są przeliczone.', 'ok');
     pokazStrefy();
   }
+  // --- trasy, mapa i pogoda (krok 7). Sieć tylko po zgodzie zapisanej w sejfie; każde połączenie trafia do dziennika na ekranie. ---
+  const polaczenia = [], pogodaPamiec = new Map(), mapa = { lon: 19.4, lat: 52.0, z: 6 };
+  let tr = null;                                            // otwarty dzień: { x, t, dataDnia, glowna, trasy, wybrana }
+  const teraz = () => new Date().toTimeString().slice(0, 5), przec = (n, m = 1) => n.toFixed(m).replace('.', ',');
+  async function pobierzSiec(url, co) {
+    const host = new URL(url).host, blad = (t) => { const e = new Error(t); e.przerwij = true; return e; };
+    if (!dane || !dane.siec) throw blad('mapy i pogoda są wyłączone');
+    polaczenia.push(`${teraz()}  ${host}  ${co}`);
+    const ster = new AbortController(), czas = setTimeout(() => ster.abort(), 15000);
+    let r;
+    try { r = await fetch(url, { credentials: 'omit', referrerPolicy: 'no-referrer', signal: ster.signal }); }
+    catch (e) { throw blad(`brak połączenia z ${host}. Sprawdź internet; w podglądzie w oknie Claude połączenia są zablokowane – otwórz aplikację z pliku albo ze swojego serwera`); }
+    finally { clearTimeout(czas); }
+    if ([429, 502, 503, 504].includes(r.status)) throw blad(`serwer ${host} jest przeciążony albo niedostępny (${r.status}). Spróbuj za kilka minut`);
+    return r.text();
+  }
+  function rysujMape() {
+    const m = $('mapa'), W = m.clientWidth, H = m.clientHeight, n = 2 ** mapa.z, [cx, cy] = Trasy.naPiksele(mapa.lon, mapa.lat, mapa.z), x0 = cx - W / 2, y0 = cy - H / 2, kafle = [];
+    if (!W) return;
+    if (dane && dane.siec) for (let kx = Math.floor(x0 / 256); kx * 256 < x0 + W; kx++) for (let ky = Math.max(0, Math.floor(y0 / 256)); ky * 256 < y0 + H && ky < n; ky++) {
+      const i = new Image(); i.alt = ''; i.draggable = false; i.referrerPolicy = 'origin';    // serwer map OSM odrzuca zapytania bez adresu strony; wysyłamy sam adres serwisu, bez ścieżki
+      i.style.left = Math.round(kx * 256 - x0) + 'px'; i.style.top = Math.round(ky * 256 - y0) + 'px';
+      i.onerror = () => { i.remove(); komunikat('tr-info', 'Nie udało się pobrać podkładu mapy z tile.openstreetmap.org. Serwer map wymaga otwarcia aplikacji ze strony https (nie z pliku i nie w podglądzie). Trasy i pogoda działają bez podkładu.'); };
+      i.src = Trasy.urlKafla(mapa.z, ((kx % n) + n) % n, ky); kafle.push(i);
+    }
+    $('mapa-kafle').replaceChildren(...kafle);
+    const NS = 'http://www.w3.org/2000/svg', svg = $('mapa-rys'), rys = [];
+    const linia = (pts, kolor, grubosc) => { const l = document.createElementNS(NS, 'polyline'); l.setAttribute('points', pts.map((p) => { const [x, y] = Trasy.naPiksele(p[0], p[1], mapa.z); return `${(x - x0).toFixed(1)},${(y - y0).toFixed(1)}`; }).join(' '));
+      l.setAttribute('fill', 'none'); l.setAttribute('stroke', kolor); l.setAttribute('stroke-width', grubosc); l.setAttribute('stroke-linejoin', 'round'); l.setAttribute('stroke-linecap', 'round'); rys.push(l); };
+    const kolko = (p, kolor) => { const [x, y] = Trasy.naPiksele(p[0], p[1], mapa.z), c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x - x0); c.setAttribute('cy', y - y0); c.setAttribute('r', 6); c.setAttribute('fill', kolor); c.setAttribute('stroke', '#fff'); c.setAttribute('stroke-width', 2); rys.push(c); };
+    if (tr && tr.trasy.length) {
+      tr.trasy.forEach((t, i) => { if (i !== tr.wybrana) linia(t.pts, '#5b6b7a', 3); });
+      const w = tr.trasy[tr.wybrana]; linia(w.pts, '#ffffff', 8); linia(w.pts, '#0b57d0', 5);
+      if (tr.glowna) { const s = Trasy.narastajaco(w.pts); for (const o of tr.glowna.odcinki) linia(w.pts.filter((_, i) => s[i] >= o.od && s[i] <= o.do), '#b3261e', 5); }   // szybkie odcinki na czerwono
+      kolko(w.pts[0], '#1f7a3a');
+    }
+    svg.replaceChildren(...rys);
+    $('mapa-warstwy').style.transform = '';
+  }
+  function dopasujMape(pts) {
+    const m = $('mapa'), W = m.clientWidth - 40, H = m.clientHeight - 40, lon = pts.map((p) => p[0]), lat = pts.map((p) => p[1]);
+    const a = [Math.min(...lon), Math.max(...lat)], b = [Math.max(...lon), Math.min(...lat)];
+    mapa.lon = (a[0] + b[0]) / 2; mapa.lat = (a[1] + b[1]) / 2;
+    for (mapa.z = 17; mapa.z > 3; mapa.z--) { const p = Trasy.naPiksele(a[0], a[1], mapa.z), q = Trasy.naPiksele(b[0], b[1], mapa.z); if (q[0] - p[0] <= W && q[1] - p[1] <= H) break; }
+    rysujMape();
+  }
+  function stanSieci() {
+    const wl = !!(dane && dane.siec);
+    $('siec-stan').replaceChildren(el('strong', '', wl ? 'Mapy i pogoda: włączone. ' : 'Teraz: nic. '), wl ? 'Aplikacja łączy się z trzema serwerami wymienionymi niżej, tylko gdy otwierasz trasę dnia.' : 'Aplikacja nie łączy się z żadnym serwerem.');
+    $('siec-przelacz').textContent = wl ? 'Wyłącz mapy i pogodę' : 'Włącz mapy i pogodę';
+    $('siec-dziennik').textContent = 'Połączenia od otwarcia sejfu (godzina, serwer, po co):\n' + polaczenia.join('\n'); $('siec-dziennik').hidden = !polaczenia.length;
+    $('trasa-zgoda').hidden = wl; $('trasa-srodek').hidden = !wl;
+  }
+  async function ustawSiec(wl) { dane.siec = wl; await zapiszDane(wl ? 'włączone mapy i pogoda' : 'wyłączone mapy i pogoda'); stanSieci(); if (wl) rysujMape(); else zamknijTrase(); }
+  function zamknijTrase() { tr = null; $('plan-jest').append($('trasa')); $('trasa').hidden = true; $('tr-lista').replaceChildren(); $('mapa-kafle').replaceChildren(); $('mapa-rys').replaceChildren(); komunikat('tr-info', ''); komunikat('tr-pogoda', ''); }
+  // Długość trasy = długość treningu (R23): czas dnia × tempo ze stref; dla akcentu także położenie części głównej (R24).
+  function trasaDnia(x) {
+    const t = Strefy.licz(dane.profil).tempa, lekko = t && t.E ? (t.E[0] + t.E[1]) / 2 : 390, cel = x.cel_tempo ? (x.cel_tempo.od + x.cel_tempo.do) / 2 : null;
+    if (!(x.typ === 'akcent' || x.typ === 'test')) return { km: x.min * 60 / (cel || lekko), glowna: null, szacunek: !cel };
+    const g = Trasy.glownaCzesc(Eksport.kroki(x), lekko, cel || lekko * 0.85);
+    return g ? { km: (g.do + Math.max(0, x.min * 60 - g.czas_s) / lekko * 1000) / 1000, glowna: g, szacunek: !t } : { km: x.min * 60 / lekko, glowna: null, szacunek: true };
+  }
+  function otworzTrase(w, t, x, dataDnia) {
+    const d = trasaDnia(x), zap = (dane.trasy || {})[dataDnia];
+    tr = { x, t, dataDnia, glowna: zap ? zap.glowna : d.glowna, trasy: zap ? [{ ...zap, zapisana: true }] : [], wybrana: 0 };
+    $('trasa-tytul').textContent = `Trasa i pogoda · ${DZIEN[x.dzien]} ${krotko(dataDnia)} · ${NAZWA[x.typ]} ${hm(x.min)}`;
+    $('tr-km').value = (Math.round(d.km * 10) / 10).toFixed(1);
+    try { $('tr-godz').value = localStorage.getItem('ipb.godzina') || '17:00'; } catch (e) { /* opcjonalne */ }
+    $('tr-start').hidden = !dane.start;
+    komunikat('tr-info', d.szacunek ? 'Długość policzona z czasu treningu i przybliżonego tempa (brak wyniku do wyliczenia stref tempa). Popraw ją, jeśli znasz swoje tempo.' : '', 'info'); komunikat('tr-pogoda', '');
+    w.after($('trasa')); $('trasa').hidden = false; stanSieci();
+    if (zap) dopasujMape(zap.pts); else { if (dane.start && mapa.z < 10) Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: 14 }); rysujMape(); }
+    pokazPropozycje();
+    $('trasa').scrollIntoView({ block: 'nearest' });
+  }
+  function pokazPropozycje() {
+    $('tr-lista').replaceChildren(...tr.trasy.map((p, i) => {
+      const k = el('div', 'propozycja' + (i === tr.wybrana ? ' wybrana' : '')), rz = el('div', 'rzad'), nazwa = `${NAZWA[tr.x.typ]} ${tr.dataDnia}`;
+      const przycisk = (tekst, co, f) => { const b = el('button', '', tekst); b.type = 'button'; b.dataset[co] = i; b.onclick = f; rz.append(b); };
+      k.append(el('strong', '', p.zapisana ? 'Trasa zapisana do tego dnia' : `Propozycja ${i + 1}`), el('span', '', p.dlaczego));
+      if (tr.glowna) k.append(el('span', 'cichy', `Na mapie: zielone kółko – start, czerwone – szybkie odcinki (od ${przec(tr.glowna.od / 1000)} km). Rozgrzewka trwa tyle, ile w planie.`));
+      przycisk('Pokaż na mapie', 'pokaz', () => { tr.wybrana = i; dopasujMape(p.pts); pokazPropozycje(); });
+      przycisk('Plik GPX', 'gpx', () => pobierz(`${nazwa.replace(/ /g, '_')}.gpx`, 'application/gpx+xml', Trasy.gpx(nazwa, p.pts, tr.glowna)));
+      przycisk('Karta trasy (PDF)', 'kartaTrasy', () => { tr.wybrana = i; dopasujMape(p.pts); pokazPropozycje(); drukTrasy(p); });
+      if (p.zapisana) przycisk('Usuń zapisaną trasę', 'usunTrase', async () => { delete dane.trasy[tr.dataDnia]; await zapiszDane(`usunięta trasa na ${tr.dataDnia}`); tr.trasy = []; rysujMape(); pokazPropozycje(); });
+      else przycisk('Zapisz do tego dnia', 'zapiszTrase', async () => {
+        (dane.trasy = dane.trasy || {})[tr.dataDnia] = { pts: p.pts.map((q) => [+q[0].toFixed(5), +q[1].toFixed(5), Math.round(q[2] || 0)]), dlaczego: p.dlaczego, glowna: tr.glowna };
+        await zapiszDane(`zapisana trasa na ${tr.dataDnia}`); tr.trasy = [{ ...dane.trasy[tr.dataDnia], zapisana: true }]; tr.wybrana = 0; rysujMape(); pokazPropozycje();
+        komunikat('tr-info', 'Trasa zapisana w sejfie (zaszyfrowana, jak reszta danych).', 'ok'); });
+      k.append(rz); return k;
+    }));
+  }
+  async function szukajTras() {
+    const km = Number($('tr-km').value);
+    if (!(km >= 1 && km <= 60)) return komunikat('tr-info', 'Podaj długość trasy od 1 do 60 km.');
+    if (mapa.z < 12) return komunikat('tr-info', 'Przybliż mapę do miejsca, z którego chcesz zacząć bieg (albo naciśnij „Moje położenie”), i dopiero wtedy szukaj.');
+    const b = $('tr-szukaj'), start = [mapa.lon, mapa.lat], dzien = tr; b.disabled = true;
+    const skala = km / trasaDnia(tr.x).km, g = tr.glowna && Math.abs(skala - 1) < 0.15 ? tr.glowna : null;   // po ręcznej zmianie długości położenie odcinków przestaje być wiarygodne
+    try {
+      const w = await Trasy.szukaj({ start, km, glowna: g, pobierz: pobierzSiec, postep: (i, n) => komunikat('tr-info', `Szukam tras: kierunek ${i} z ${n}… (serwer społecznościowy, pytamy po kolei)`, 'info') });
+      if (tr !== dzien) return;
+      tr.glowna = g; tr.trasy = w.trasy; tr.wybrana = 0;
+      if (w.trasy.length) { komunikat('tr-info', `Znalezione trasy: ${w.trasy.length}. Każda mieści się w ±8% długości treningu. To podpowiedzi – plan działa też bez trasy.`, 'ok'); dopasujMape(w.trasy[0].pts); }
+      else { komunikat('tr-info', `Nie znalazłem trasy ${przec(km)} km ±8% z tego miejsca${w.blad ? ' (' + w.blad + ')' : ''}. Przesuń start o kilkaset metrów albo zmień długość.`); rysujMape(); }
+      pokazPropozycje();
+    } catch (e) { komunikat('tr-info', 'Nie udało się wyznaczyć tras: ' + e.message + '.'); }
+    finally { b.disabled = false; }
+  }
+  async function pokazPogode() {
+    if (mapa.z < 8) return komunikat('tr-pogoda', 'Przybliż mapę do okolicy biegu, żeby sprawdzić pogodę.', '');
+    const godz = $('tr-godz').value || '17:00', od = +godz.slice(0, 2) + +godz.slice(3) / 60, doG = od + tr.x.min / 60, url = Trasy.urlPogody(mapa.lat, mapa.lon, tr.dataDnia), dzien = tr;
+    try { localStorage.setItem('ipb.godzina', godz); } catch (e) { /* opcjonalne */ }
+    try {
+      let z = pogodaPamiec.get(url);
+      if (!z || Date.now() - z.kiedy > 3 * 3600e3) { z = { tekst: await pobierzSiec(url, 'pogoda'), kiedy: Date.now(), o: teraz() }; pogodaPamiec.set(url, z); }
+      if (tr !== dzien) return;
+      const p = z.tekst.trim().startsWith('{') ? Trasy.pogoda(JSON.parse(z.tekst), od, doG) : null;
+      if (!p) return komunikat('tr-pogoda', 'Prognoza dla tego dnia i godzin nie jest dostępna (Open-Meteo podaje ją do ok. 15 dni naprzód).', 'info');
+      const s = Trasy.slonce(mapa.lat, mapa.lon, tr.dataDnia), lok = (h) => new Date(Date.parse(tr.dataDnia + 'T00:00:00Z') + h * 3600e3), hhmm = (d) => d.toTimeString().slice(0, 5);
+      const koniec = new Date(new Date(`${tr.dataDnia}T${godz}:00`).getTime() + tr.x.min * 60e3), ciemno = s.zmierzch !== null && (koniec > lok(s.zmierzch) || new Date(`${tr.dataDnia}T${godz}:00`) < lok(s.swit));
+      tr.pogoda = `Pogoda ${krotko(tr.dataDnia)}, ${godz}–${hhmm(koniec)}: ${p.opis}, ${p.temp}°C (odczuwalna ${p.odczuwalna}°C), opad ${przec(p.opad_mm)} mm (szansa ${p.szansa_opadu}%), wiatr ${p.wiatr} km/h z kierunku ${p.wiatr_z}, porywy do ${p.porywy} km/h.`
+        + (s.zachod !== null ? ` Zachód słońca ${hhmm(lok(s.zachod))}, ciemno od ${hhmm(lok(s.zmierzch))}.` : '') + (ciemno ? ' Część biegu wypada po ciemku – weź światło albo wybierz oświetloną trasę.' : '')
+        + ` Źródło: Open-Meteo, pobrano ${z.o}. To informacja, plan się przez nią nie zmienia (reguła R25).`;
+      komunikat('tr-pogoda', tr.pogoda, 'info');
+    } catch (e) { komunikat('tr-pogoda', 'Nie udało się pobrać pogody: ' + e.message + '.', ''); }
+  }
+  function drukTrasy(p) {
+    const s = el('div', 'strona'), m = $('mapa').cloneNode(true), dl = Trasy.narastajaco(p.pts), wys = p.pts.map((q) => q[2] || 0), mn = Math.min(...wys), mx = Math.max(...wys);
+    m.removeAttribute('id'); for (const e of m.querySelectorAll('[id]')) e.removeAttribute('id');
+    { const W = $('mapa').clientWidth, H = $('mapa').clientHeight; m.style.width = W + 'px'; m.style.height = H + 'px'; m.style.zoom = Math.min(1000 / W, 370 / H).toFixed(2); }   // na kartce mapa rośnie do ok. 100 mm wysokości
+    const NS = 'http://www.w3.org/2000/svg', prof = document.createElementNS(NS, 'svg'), l = document.createElementNS(NS, 'polyline');
+    prof.setAttribute('class', 'profil'); prof.setAttribute('viewBox', '0 0 1000 100'); prof.setAttribute('preserveAspectRatio', 'none');
+    l.setAttribute('points', p.pts.map((q, i) => `${(dl[i] / dl[dl.length - 1] * 1000).toFixed(0)},${(95 - ((q[2] || 0) - mn) / Math.max(1, mx - mn) * 90).toFixed(1)}`).join(' ')); l.setAttribute('fill', 'none'); l.setAttribute('stroke', '#000'); l.setAttribute('stroke-width', 1.5); l.setAttribute('vector-effect', 'non-scaling-stroke'); prof.append(l);
+    s.append(el('h2', '', `Trasa · ${NAZWA[tr.x.typ]} · ${tr.dataDnia} · ${hm(tr.x.min)} · ${przec(dl[dl.length - 1] / 1000)} km`), el('p', '', p.dlaczego), el('p', '', tr.x.opis || ''), ...(tr.pogoda ? [el('p', '', tr.pogoda)] : []),
+      m, el('p', '', `Profil wysokości: od ${Math.round(mn)} do ${Math.round(mx)} m n.p.m.`), prof, el('p', '', 'Mapa: © OpenStreetMap contributors. Trasa: BRouter. Trasa jest podpowiedzią; długość treningu z planu ma pierwszeństwo (reguła R23).'));
+    drukuj([s], 'Karta trasy');
+  }
+
   function pokazPlan() {
     const plan = dane.plan;
+    zamknijTrase();
     $('plan-brak').hidden = !!plan; $('plan-jest').hidden = !plan;
     if (!plan) return;
     const o = plan.ocena_celu, c = o.cel_posredni || dane.profil.cel;
@@ -316,7 +455,8 @@
           const z = el('button', '', 'Na zegarek (FIT)'); z.type = 'button'; z.dataset.fit = `${t.nr}-${x.dzien}`;
           z.onclick = () => pobierz(`${Eksport.nazwaTreningu(x, dataDnia).replace(/ /g, '_')}.fit`, 'application/octet-stream', Eksport.fit(Eksport.nazwaTreningu(x, dataDnia), Eksport.kroki(x), Math.floor(Date.now() / 1000)));
           const kt = el('button', '', 'Karta treningu (PDF)'); kt.type = 'button'; kt.dataset.karta = `${t.nr}-${x.dzien}`; kt.onclick = () => drukKarty(t, x, dataDnia);
-          const zz = el('span', 'zmiana'); zz.append(z, kt); w.append(zz);
+          const mp = el('button', '', (dane.trasy || {})[dataDnia] ? 'Trasa i pogoda (zapisana)' : 'Trasa i pogoda'); mp.type = 'button'; mp.dataset.trasa = `${t.nr}-${x.dzien}`; mp.onclick = () => otworzTrase(w, t, x, dataDnia);
+          const zz = el('span', 'zmiana'); zz.append(z, kt, mp); w.append(zz);
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', (x.po_co || PO_CO[x.typ]) + (dod ? ' Do tego: ' + dod + '.' : '')));
         wykonane(); sterowanie();
@@ -353,6 +493,7 @@
     $('siec-ile').textContent = siec.length ? `${siec.length} – lista poniżej` : '0 – strona niczego nie pobrała ani nie wysłała';
     $('siec-lista').textContent = siec.join('\n'); $('siec-lista').hidden = !siec.length;
     $('kopia-tekst').value = surowe;
+    stanSieci();
   }
   function zakladka(n) {
     for (const b of document.querySelectorAll('nav.zakladki button')) b.setAttribute('aria-selected', b.dataset.z === n);
@@ -360,7 +501,7 @@
     if (n === 'plan') pokazPlan(); else if (n === 'dziennik') pokazDziennik(); else if (n === 'strefy') pokazStrefy(); else if (n === 'profil') pokazProfil(); else pokazZapis();
   }
   function otwarty() { widok('otwarty'); zakladka('plan'); czuwaj(); }
-  function zablokuj() { dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
+  function zablokuj() { zamknijTrase(); polaczenia.length = 0; pogodaPamiec.clear(); Object.assign(mapa, { lon: 19.4, lat: 52.0, z: 6 }); dek = null; dane = null; edycja = false; clearTimeout(zegar); $('haslo-otworz').value = ''; komunikat('blad-otworz', '');
     if (!$('pole-kod').hidden) $('przelacz-kod').click();   // zawsze wracaj do pola hasła
     widok(koperta ? 'zamkniety' : 'start'); }
   function czuwaj() { clearTimeout(zegar); if (dek) zegar = setTimeout(zablokuj, BEZCZYNNOSC_MS); }
@@ -433,6 +574,26 @@
     akcja('form-test', 't-zapisz', zapiszTest);
     $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
     $('druk-plan').onclick = drukPlanu;
+    $('siec-wlacz').onclick = () => ustawSiec(true);
+    $('siec-przelacz').onclick = () => ustawSiec(!dane.siec);
+    $('tr-zamknij').onclick = $('tr-zamknij0').onclick = zamknijTrase;
+    $('tr-szukaj').onclick = szukajTras;
+    $('tr-pogoda-btn').onclick = pokazPogode;
+    $('tr-start').onclick = () => { Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: Math.max(mapa.z, 14) }); rysujMape(); };
+    $('tr-zapamietaj').onclick = async () => { if (mapa.z < 12) return komunikat('tr-info', 'Przybliż mapę, żeby dokładnie wskazać Start.');
+      dane.start = { lon: +mapa.lon.toFixed(5), lat: +mapa.lat.toFixed(5) }; await zapiszDane('zapisany punkt Start'); $('tr-start').hidden = false; komunikat('tr-info', 'Start zapisany w sejfie. To punkt orientacyjny – możesz go zmienić w każdej chwili.', 'ok'); };
+    $('tr-gps').onclick = () => {
+      if (!navigator.geolocation) return komunikat('tr-info', 'Ta przeglądarka nie udostępnia położenia. Ustaw start, przesuwając mapę.');
+      komunikat('tr-info', 'Pytam urządzenie o położenie…', 'info');
+      navigator.geolocation.getCurrentPosition((p) => { Object.assign(mapa, { lon: p.coords.longitude, lat: p.coords.latitude, z: 15 }); rysujMape(); komunikat('tr-info', 'Mapa ustawiona na Twoim położeniu. Nie zapisuję go.', 'ok'); },
+        () => komunikat('tr-info', 'Nie dostałem położenia (brak zgody albo sygnału). Ustaw start, przesuwając mapę.'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    };
+    for (const [id, o] of [['mapa-plus', 1], ['mapa-minus', -1]]) $(id).onclick = () => { mapa.z = Math.min(18, Math.max(3, mapa.z + o)); rysujMape(); };
+    { const m = $('mapa'); let od = null;                     // przesuwanie mapy: w trakcie ruchu przesuwamy warstwy, kafelki dociągamy po puszczeniu
+      m.addEventListener('pointerdown', (e) => { if (e.target.closest('button')) return; od = [e.clientX, e.clientY]; m.setPointerCapture(e.pointerId); });
+      m.addEventListener('pointermove', (e) => { if (od) $('mapa-warstwy').style.transform = `translate(${e.clientX - od[0]}px, ${e.clientY - od[1]}px)`; });
+      const koniec = (e) => { if (!od) return; const [cx, cy] = Trasy.naPiksele(mapa.lon, mapa.lat, mapa.z), [lon, lat] = Trasy.zPikseli(cx - (e.clientX - od[0]), cy - (e.clientY - od[1]), mapa.z); od = null; mapa.lon = lon; mapa.lat = Math.max(-85, Math.min(85, lat)); rysujMape(); };
+      m.addEventListener('pointerup', koniec); m.addEventListener('pointercancel', koniec); }
     $('eksport-ics').onclick = () => pobierz('plan-biegowy.ics', 'text/calendar', Eksport.ics(dane.plan, new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z'));
     akcja('form-bieg', 'dz-dodaj', dodajRecznie);
     $('dz-plik').onchange = () => $('dz-plik').files.length && dodajPliki([...$('dz-plik').files]);

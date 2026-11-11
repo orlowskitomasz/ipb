@@ -13,11 +13,13 @@ LIB = "lib/hash-wasm-argon2-4.12.0.umd.min.js"   # MIT, wbudowane – żadnego p
 fragment = (czytaj("src/index.html")
             .replace("/*CSS*/", czytaj("src/style.css"))
             .replace("/*LIB*/", czytaj(LIB))
-            .replace("/*JS*/", "\n".join(czytaj(f"src/{m}.js") for m in ("sejf", "reguly", "prognoza", "strefy", "plan", "podpowiedzi", "walidator", "dziennik", "eksport", "app"))))
+            .replace("/*JS*/", "\n".join(czytaj(f"src/{m}.js") for m in ("sejf", "reguly", "prognoza", "strefy", "plan", "podpowiedzi", "walidator", "dziennik", "eksport", "trasy", "app"))))
 
-# Krok 1 nie łączy się z niczym: connect-src 'none'. Lista z docs/SPEC.md sekcja 11 dojdzie z mapami i pogodą.
+# Zamknięta lista połączeń (docs/SPEC.md sekcja 11) – te same trzy serwery co HOSTY w src/trasy.js; używane dopiero po zgodzie użytkownika.
 CSP = ("default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; "
-       "img-src data: 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; worker-src 'self'; manifest-src 'self'")
+       "img-src data: 'self' https://tile.openstreetmap.org; connect-src https://brouter.de https://api.open-meteo.com; "
+       "form-action 'none'; base-uri 'none'; worker-src 'self'; manifest-src 'self'")
+assert all(h in CSP for h in ("https://brouter.de", "https://api.open-meteo.com", "https://tile.openstreetmap.org")) and all(h in czytaj("src/trasy.js") for h in ("https://brouter.de'", "https://api.open-meteo.com'", "https://tile.openstreetmap.org'"))
 glowa = ('<!doctype html>\n<html lang="pl">\n<head>\n<meta charset="utf-8">\n'
          '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
          f'<meta http-equiv="Content-Security-Policy" content="{CSP}">\n'

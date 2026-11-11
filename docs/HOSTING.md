@@ -22,7 +22,7 @@ przeglądarka nie włączy szyfrowania ani pracy bez internetu).
             X-Content-Type-Options "nosniff"
             Referrer-Policy "no-referrer"
             X-Frame-Options "DENY"
-            Permissions-Policy "geolocation=(), camera=(), microphone=()"
+            Permissions-Policy "geolocation=(self), camera=(), microphone=()"
         }
         header /sw.js Cache-Control "no-cache"
         header /index.html Cache-Control "no-cache"
@@ -60,7 +60,11 @@ nie widzi, bo nigdy nie opuszczają przeglądarki.
    internetu: gotowe”.
 2. Wyłącz sieć i odśwież – strona nadal działa.
 3. W narzędziach przeglądarki, zakładka „Sieć”: poza własną domeną nie ma
-   żadnych połączeń (polityka CSP w `index.html` i tak by je zablokowała).
+   żadnych połączeń, dopóki użytkownik nie włączy map i pogody. Potem tylko
+   brouter.de, api.open-meteo.com i tile.openstreetmap.org (polityka CSP w
+   `index.html` blokuje wszystko inne).
+4. „Moje położenie” wymaga https i nagłówka `Permissions-Policy` z
+   `geolocation=(self)` (jak w przykładach wyżej).
 
 ## 4. Aktualizacja
 

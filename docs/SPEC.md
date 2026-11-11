@@ -201,7 +201,7 @@ Pełne reguły i algorytmy: skill **planowanie-tras-biegowych** (jeśli dostępn
 - [ ] dane lokalnie; eksport/import zaszyfrowanej kopii przez użytkownika
 - [ ] sync: ten sam sejf (AES-GCM 256, klucz z Argon2id; zapasowo PBKDF2-SHA256 ≥ 600 000 iteracji), sól i IV w kopercie; serwer przyjmuje tylko kopertę `{v, ct, iv, salt}`; wersjonowanie i 412 przy konflikcie; konto = losowy identyfikator
 - [ ] logowanie formularzem, ciasteczko `__Host-…` HttpOnly Secure SameSite=Strict, HMAC, porównanie w stałym czasie; hasła tylko jako sekrety serwera
-- [ ] CSP z zamkniętą listą: `connect-src 'self' https://brouter.de https://api.open-meteo.com https://overpass-api.de https://overpass.kumi.systems https://overpass.private.coffee`, `img-src 'self' data: blob: https://tile.openstreetmap.org` (lista w jednym miejscu kodu i na ekranie prywatności)
+- [ ] CSP z zamkniętą listą: `connect-src https://brouter.de https://api.open-meteo.com`, `img-src 'self' data: https://tile.openstreetmap.org` (Overpass wypadł z listy – nie jest potrzebny) (lista w jednym miejscu kodu i na ekranie prywatności)
 - [ ] do usług trafiają tylko współrzędne (obszar zaokrąglony tam, gdzie wystarcza); `credentials: 'omit'`, `referrerPolicy: 'no-referrer'`
 - [ ] geolokalizacja tylko na żądanie, nie zapisywana
 - [ ] brak analityki, trackerów, ciasteczek poza logowaniem; brak CDN w czasie działania
@@ -288,6 +288,7 @@ Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, pl
 - plan z aplikacji dla 5 profili testowych i kilku tysięcy losowych przechodzi `tests/sprawdz_plan.py` – **działa**: `python3 tests/test_plan.py`;
 - eksport FIT: poprawna struktura i CRC; PDF: tydzień planu na stronie, liczba stron = liczba tygodni – **działa** (w `test_sejf.py`);
 - tryb offline: aplikacja startuje i pokazuje plan bez sieci – **działa**: `python3 tests/test_offline.py`;
+- trasy i pogoda: **działa** – `python3 tests/test_trasy.py` (logika na atrapie serwera tras) i `python3 tests/test_mapa.py` (przeglądarka: zgoda, ±8%, co i dokąd idzie, CSP blokuje obce serwery);
 - dwa języki: brak brakujących kluczy w `i18n/pl.json` i `i18n/en.json`.
 
 ---
@@ -296,7 +297,7 @@ Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, pl
 
 Wynik audytu z 10.11.2026 (raport fazy 1). Stan po wdrożeniu P0 i części P1:
 
-- **Rejestr reguł i źródeł:** `src/reguly.js`. Każda reguła R1–R22 ma nazwę, poziom, klasę źródła (A dowody naukowe, B metodologia trenerska, C otwarty kod, D heurystyka projektu), źródło, pewność, uzasadnienie i korektę. Pole `potwierdzone: false` oznacza źródło podane z pamięci, jeszcze nie otwarte. Rejestr nie zawiera numerów DOI.
+- **Rejestr reguł i źródeł:** `src/reguly.js`. Każda reguła R1–R25 ma nazwę, poziom, klasę źródła (A dowody naukowe, B metodologia trenerska, C otwarty kod, D heurystyka projektu), źródło, pewność, uzasadnienie i korektę. Pole `potwierdzone: false` oznacza źródło podane z pamięci, jeszcze nie otwarte. Rejestr nie zawiera numerów DOI.
 - **Jeden walidator:** `src/walidator.js`. Używają go aplikacja, skill i testy. Tabela w sekcji 16.1 opisuje reguły R1–R17; R18–R22 i poziomy są w rejestrze. `tests/sprawdz_plan.py` jest nakładką.
 - **Poziomy ustaleń:** krytyczne (tylko format i twarde ograniczenia zawodnika), istotne zastrzeżenie, uwaga, informacja. Brak jednej liczby „jakości planu”.
 - **Prognoza:** dwie metody z ostatniego wyniku – Riegel i VDOT (równania Danielsa i Gilberta) – jako przedział, z pewnością i zastrzeżeniami (wynik nieaktualny, brak daty, maraton z krótkiego dystansu). Tempa stref z ułamków VDOT.
