@@ -11,8 +11,8 @@ Krok jest gotowy dopiero wtedy, gdy: działa w `dist/index.html`, ma test w `tes
 | 2 | Strefy i tempa: tętno i tempo dla każdego treningu, kilka modeli stref obok siebie, wynik testu zmienia strefy i prognozę | **zrobione** (0.4) | – |
 | 3 | Własny układ tygodnia: przestawianie i blokowanie dni, podpowiedzi „czegoś brakuje” | **zrobione** (0.5) | – |
 | 4 | Dziennik: wpisanie biegu ręcznie, import FIT/TCX/GPX, ocena biegu 0–10, wskaźniki przeciążenia, plan a wykonanie | **zrobione** (0.6) | – |
-| 5 | Na zegarek i do druku: FIT treningu, skrypt do Garmin Connect, kalendarz ICS, PDF dziennika i treningu | **częściowo** (0.8): plik FIT treningu i kalendarz ICS zrobione; skrypt do Garmin Connect i PDF czekają | trening z planu otwiera się na zegarku Garmin; PDF tygodnia mieści się na stronie |
-| 6 | Do wystawienia w internecie: praca offline (PWA), ekran „Co i dokąd wysyłamy”, wersja angielska, instrukcja hostingu z Let's Encrypt | czeka | strona działa bez sieci po pierwszym otwarciu; wszystkie napisy w dwóch językach |
+| 5 | Na zegarek i do druku: FIT treningu, skrypt do Garmin Connect, kalendarz ICS, PDF dziennika i treningu | **częściowo** (0.9): plik FIT treningu, kalendarz ICS, druk planu (tydzień na stronie A4) i karta treningu do PDF zrobione; skrypt do Garmin Connect czeka (nie da się go sprawdzić bez konta) | trening z planu otwiera się na zegarku Garmin; PDF tygodnia mieści się na stronie |
+| 6 | Do wystawienia w internecie: praca offline (PWA), ekran „Co i dokąd wysyłamy”, wersja angielska, instrukcja hostingu z Let's Encrypt | **częściowo** (0.9): praca offline, ekran „Co i dokąd wysyłamy”, `docs/HOSTING.md` zrobione; wersja angielska czeka | strona działa bez sieci po pierwszym otwarciu; wszystkie napisy w dwóch językach |
 | 7 | Mapy, trasy, pogoda, PDF trasy | czeka | 2–3 trasy o długości treningu od położenia telefonu; połączenia tylko z listy w SPEC 11 |
 | 8 | Synchronizacja między urządzeniami dla wielu użytkowników | czeka | serwer trzyma tylko zaszyfrowane bloki; konflikt wersji nie gubi danych |
 | 9 | Suunto, Coros, Apple Watch; animacje ćwiczeń | czeka | po sprawdzeniu, co każda marka faktycznie przyjmuje |

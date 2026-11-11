@@ -98,6 +98,40 @@
     document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
     komunikat('eksport-info', `Plik ${nazwa} zapisany przez przeglądarkę. Jeśli się nie pobrał: podgląd w oknie Claude blokuje pobieranie – otwórz aplikację z pliku albo ze swojego serwera. Plik FIT wgraj na zegarek Garmin do folderu GARMIN/NewFiles albo zaimportuj w Garmin Connect.`, 'ok');
   }
+  // --- druk (PDF przez okno drukowania przeglądarki): plan z miejscem na wykonanie albo karta jednego treningu ---
+  function drukuj(strony, nazwa) {
+    $('druk').replaceChildren(...strony);
+    komunikat('eksport-info', `${nazwa} gotowe do druku. W oknie drukowania wybierz „Zapisz jako PDF”. Jeśli okno się nie otworzyło: podgląd w oknie Claude blokuje drukowanie – otwórz aplikację z pliku albo ze swojego serwera.`, 'ok');
+    try { window.print(); } catch (e) { /* podgląd bez prawa drukowania */ }
+  }
+  const czasKroku = (k) => (k.dystans_m ? `${k.dystans_m >= 1000 ? k.dystans_m / 1000 + ' km' : k.dystans_m + ' m'}` : k.czas_s ? (k.czas_s % 60 ? `${Math.floor(k.czas_s / 60)}:${String(k.czas_s % 60).padStart(2, '0')} min` : `${k.czas_s / 60} min`) : 'do końca');
+  function tabela(naglowki, klasy, wiersze) {
+    const t = el('table'), cg = el('colgroup'), th = el('thead'), tr = el('tr'), tb = el('tbody');
+    for (const k of klasy) { const c = el('col'); if (k) c.className = k; cg.append(c); }
+    for (const n of naglowki) tr.append(el('th', '', n));
+    th.append(tr);
+    for (const w of wiersze) { const r = el('tr'); for (const x of w) r.append(el('td', '', x)); tb.append(r); }
+    t.append(cg, th, tb); return t;
+  }
+  function drukPlanu() {
+    drukuj(dane.plan.tygodnie.map((t) => {
+      const s = el('div', 'strona'), koniec = new Date(Date.parse(t.start + 'T00:00:00Z') + 6 * 864e5).toISOString().slice(0, 10);
+      s.append(el('h2', '', `Tydzień ${t.nr} · ${krotko(t.start)}–${krotko(koniec)} · ${hm(t.dni.reduce((a, x) => a + x.min, 0))} · ${FAZA[t.faza]}`),
+        tabela(['Dzień', 'Trening', 'Czas', 'Cel', 'Rozpiska i po co', 'Wykonanie'], ['dz', 'tr', 'cz', 'ce', '', 'wy'], t.dni.map((x) => [DZIEN[x.dzien], NAZWA[x.typ], x.min ? hm(x.min) : '',
+          celTekst(x), [x.opis, x.po_co, x.dodatki.length ? 'Do tego: ' + x.dodatki.map((k) => DODATEK[k]).join(', ') + '.' : ''].filter(Boolean).join(' '), ''])));
+      return s;
+    }), 'Plan');
+  }
+  function drukKarty(t, x, dataDnia) {
+    const s = el('div', 'strona'), kr = Eksport.kroki(x);
+    const opisCelu = (c) => (c ? Eksport.celTekst({ cel_tetno: c.tetno, cel_tempo: c.tempo }) : '');
+    s.append(el('h2', '', `${NAZWA[x.typ]} · ${dataDnia} · ${hm(x.min)}`), el('p', '', x.opis || ''),
+      tabela(['Krok', 'Ile', 'Cel'], ['', 'cz', ''], kr.map((k, i) => (k.razy ? [`Powtórz od kroku ${k.powtorz_od + 1}`, `${k.razy} razy łącznie`, ''] : [`${i + 1}. ${k.nazwa}`, czasKroku(k), opisCelu(k.cel)]))),
+      el('p', '', ''), el('p', '', `Cel dnia: ${celTekst(x) || 'wysiłek maksymalny'}.`), el('p', '', `Po co: ${x.po_co || ''} ${x.dlaczego_teraz || ''}`),
+      ...(x.latwiej ? [el('p', '', `Łatwiejszy wariant: ${x.latwiej}`)] : []), el('p', '', `Tydzień ${t.nr} planu, ${FAZA[t.faza]}. Notatki po biegu (czas, dystans, średnie tętno, odczucie 1–10):`), el('div', 'pole'));
+    drukuj([s], 'Karta treningu');
+  }
+
   async function ulozPlan(co, odNowa) {
     const start = odNowa ? null : dane.profil.start_planu || (dane.plan && dane.plan.tygodnie[0].start);
     if (start) dane.profil.start_planu = start; else delete dane.profil.start_planu;
@@ -281,7 +315,8 @@
           if (x.po_co) w.append(el('span', 'wiecej', `Po co: ${x.po_co} ${x.dlaczego_teraz || ''}${x.latwiej ? ' Łatwiejszy wariant: ' + x.latwiej : ''}`));
           const z = el('button', '', 'Na zegarek (FIT)'); z.type = 'button'; z.dataset.fit = `${t.nr}-${x.dzien}`;
           z.onclick = () => pobierz(`${Eksport.nazwaTreningu(x, dataDnia).replace(/ /g, '_')}.fit`, 'application/octet-stream', Eksport.fit(Eksport.nazwaTreningu(x, dataDnia), Eksport.kroki(x), Math.floor(Date.now() / 1000)));
-          const zz = el('span', 'zmiana'); zz.append(z); w.append(zz);
+          const kt = el('button', '', 'Karta treningu (PDF)'); kt.type = 'button'; kt.dataset.karta = `${t.nr}-${x.dzien}`; kt.onclick = () => drukKarty(t, x, dataDnia);
+          const zz = el('span', 'zmiana'); zz.append(z, kt); w.append(zz);
           w.append(el('span', 'wiecej', [x.mocne_min && x.typ !== 'start' ? `mocnych minut: ${x.mocne_min}` : '', dod ? 'do tego: ' + dod : ''].filter(Boolean).join(' · ')));
         } else w.append(el('span', 'wiecej', (x.po_co || PO_CO[x.typ]) + (dod ? ' Do tego: ' + dod + '.' : '')));
         wykonane(); sterowanie();
@@ -397,6 +432,7 @@
     for (const id of ['uloz', 'uloz2']) $(id).onclick = async () => { await ulozPlan('ułożenie planu od najbliższego poniedziałku', true); pokazPlan(); };
     akcja('form-test', 't-zapisz', zapiszTest);
     $('edycja').onclick = () => { edycja = !edycja; pokazPlan(); };
+    $('druk-plan').onclick = drukPlanu;
     $('eksport-ics').onclick = () => pobierz('plan-biegowy.ics', 'text/calendar', Eksport.ics(dane.plan, new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z'));
     akcja('form-bieg', 'dz-dodaj', dodajRecznie);
     $('dz-plik').onchange = () => $('dz-plik').files.length && dodajPliki([...$('dz-plik').files]);
@@ -412,6 +448,11 @@
         magazyn.pisz(k); $('przywroc-tekst').value = ''; komunikat('blad-przywroc', ''); zablokuj(); }
       catch (e) { komunikat('blad-przywroc', 'To nie wygląda na kopię sejfu IPB. Wklej cały tekst kopii, od { do }.'); }
     };
+    // Praca offline z serwera: service worker jest tylko w pełnej wersji strony (ma manifest), nie w pliku z dysku ani w podglądzie.
+    if (document.querySelector('link[rel="manifest"]') && 'serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+      navigator.serviceWorker.register('sw.js').then(() => { $('offline-stan').textContent = 'tak – po pierwszym otwarciu strona działa bez sieci'; })
+        .catch(() => { $('offline-stan').textContent = 'niedostępna na tym serwerze (wymaga https)'; });
+    }
     celTyp();
     widok(koperta ? 'zamkniety' : 'start');
   }

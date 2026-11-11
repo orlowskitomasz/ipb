@@ -158,6 +158,7 @@
           <button id="widok-pelny" type="button" aria-pressed="false">Szczegółowy</button>
           <button id="edycja" type="button" aria-pressed="false">Zmień układ dni</button>
           <button id="eksport-ics" type="button">Do kalendarza (ICS)</button>
+          <button id="druk-plan" type="button">Do druku (PDF)</button>
           <button id="uloz2" type="button">Ułóż plan od nowa</button>
         </div>
         <p id="eksport-info" class="komunikat" hidden></p>
@@ -264,8 +265,14 @@
           <dt>Szyfrowanie</dt><dd id="alg"></dd>
           <dt>Połączenia z internetem od otwarcia strony</dt><dd id="siec-ile"></dd>
           <dt>Automatyczna blokada</dt><dd>po 15 minutach bez dotyku</dd>
+          <dt>Praca bez internetu</dt><dd id="offline-stan">z pliku na dysku: zawsze</dd>
         </dl>
         <pre id="siec-lista" hidden style="margin-top:8px"></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Co i dokąd wysyłamy</h3>
+        <p><strong>Teraz: nic.</strong> Aplikacja nie łączy się z żadnym serwerem. Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce.</p>
+        <p class="cichy">Gdy dojdą mapy i pogoda, aplikacja będzie pytać wyłącznie o kafelki mapy, trasę i prognozę (OpenStreetMap, BRouter, Overpass, Open-Meteo) i wyśle tam tylko współrzędne, bez żadnych danych o Tobie. Każde takie połączenie będzie można wyłączyć, a ich lista pojawi się tutaj.</p>
       </div>
       <div class="karta" style="display:flex; flex-direction:column; gap:8px">
         <h3>Kopia zapasowa</h3>
@@ -276,6 +283,8 @@
       </div>
     </div>
   </section>
+
+  <div id="druk"></div>
 
   <div id="usun-potw" class="karta" hidden style="display:flex; flex-direction:column; gap:12px; border-color:var(--zle)">
     <h3>Usunąć sejf z tej przeglądarki?</h3>

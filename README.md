@@ -32,6 +32,7 @@ python3 tests/test_dziennik.py                   # pliki z zegarka, ocena biegu,
 python3 tests/test_silnik.py                     # rejestr reguł, VDOT, prognoza, status danych (wymaga node)
 python3 tests/test_eksport.py                    # kalendarz ICS i trening FIT (wymaga node)
 python3 build.py && python3 tests/test_sejf.py   # aplikacja w przeglądarce (wymaga playwright)
+python3 tests/test_offline.py                    # praca bez internetu po pierwszym otwarciu (wymaga playwright)
 python3 tests/sprawdz_plan.py tests/profile/maraton-320.json tests/przyklady/maraton-320.plan.json
 ```
 

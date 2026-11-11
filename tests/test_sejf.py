@@ -84,6 +84,22 @@ with sync_playwright() as pw:
     with page.expect_download() as dl: page.locator("[data-fit]").first.click()
     fitb = pathlib.Path(dl.value.path()).read_bytes()
     sprawdz("trening na zegarek: plik FIT z poprawnym nagłówkiem", dl.value.suggested_filename.endswith(".fit") and fitb[8:12] == b".FIT" and len(fitb) == 14 + int.from_bytes(fitb[4:8], "little") + 2)
+    # --- druk: plan (tydzień na stronę) i karta treningu ---
+    import re as _re
+    tygodni = page.locator("details.tydzien").count()
+    page.click("#druk-plan")
+    sprawdz("druk planu: strona na każdy tydzień, siedem dni w tabeli", page.locator("#druk .strona").count() == tygodni and page.locator("#druk .strona").first.locator("tbody tr").count() == 7)
+    sprawdz("na ekranie widok druku jest ukryty", page.locator("#druk").is_hidden())
+    page.emulate_media(media="print")
+    pdf = page.pdf(prefer_css_page_size=True)
+    stron = len(_re.findall(rb"/Type\s*/Page[^s]", pdf))
+    sprawdz("PDF planu: tyle stron, ile tygodni (nic się nie rozlewa na drugą stronę)", stron == tygodni)
+    if stron != tygodni: print(f"     {stron} stron, {tygodni} tygodni")
+    page.emulate_media(media="screen")
+    page.locator("[data-karta]").first.click()
+    karta = page.locator("#druk .strona").first
+    sprawdz("karta treningu: kroki z rozgrzewką i powtórzeniem, cel i uzasadnienie", page.locator("#druk .strona").count() == 1 and "Rozgrzewka" in karta.inner_html()
+            and "Powtórz od kroku 2" in karta.inner_html() and "Po co:" in karta.inner_html())
     plan1 = page.inner_text("#plan-tygodnie")
     sprawdz("każdy bieg ma cel; bez pomiaru tętno jest oznaczone jako szacunek", "tętno do 145 · tempo" in plan1 and "(tętno to szacunek)" in plan1)
     page.click("nav.zakladki button[data-z=strefy]")

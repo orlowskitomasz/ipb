@@ -286,8 +286,8 @@ Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, pl
 - sieć: żadnego połączenia poza listą z sekcji 11 (Playwright z atrapami, test pada przy obcej domenie);
 - sejf: brak danych otwartym tekstem w IndexedDB/localStorage, złe hasło nie otwiera, kod odzyskiwania działa, blokada po bezczynności;
 - plan z aplikacji dla 5 profili testowych i kilku tysięcy losowych przechodzi `tests/sprawdz_plan.py` – **działa**: `python3 tests/test_plan.py`;
-- eksport FIT: poprawna struktura i CRC; PDF: wiele stron bez uciętych bloków;
-- tryb offline: aplikacja startuje i pokazuje plan bez sieci;
+- eksport FIT: poprawna struktura i CRC; PDF: tydzień planu na stronie, liczba stron = liczba tygodni – **działa** (w `test_sejf.py`);
+- tryb offline: aplikacja startuje i pokazuje plan bez sieci – **działa**: `python3 tests/test_offline.py`;
 - dwa języki: brak brakujących kluczy w `i18n/pl.json` i `i18n/en.json`.
 
 ---

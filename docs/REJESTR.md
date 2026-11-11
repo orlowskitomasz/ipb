@@ -26,6 +26,8 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - 2026-11-10 · autor · prognozy · Druga metoda prognozy: VDOT z równań Danielsa i Gilberta; prognoza jako przedział; tempa stref z ułamków VDOT zamiast ekstrapolacji Riegla · przyjęte
 - 2026-11-10 · autor · zasady · Baza metodyki w `docs/METODYKA.md` (biblioteka metod, model zawodnika, ograniczenia twarde i miękkie, obciążenie, adaptacja, porównywanie planów); skill dostał sekcję „Metodyka”; kolejne kroki budowy mają się na niej opierać · przyjęte
 - 2026-11-10 · autor · zegarki · Krok 5, część pierwsza: trening strukturalny jako plik FIT (rozgrzewka, odcinki z powtórzeniami, cel tętna lub tempa, schłodzenie otwarte) i kalendarz ICS z celem dnia i uzasadnieniem; pliki sprawdzone oficjalnym dekoderem Garmin FIT SDK · przyjęte
+- 2026-11-11 · autor · druk · Krok 5, część druga: plan do druku (tydzień na stronie A4 poziomo, kolumna „Wykonanie”) i karta pojedynczego treningu z krokami; PDF robi przeglądarka („Zapisz jako PDF”), bez dodatkowej biblioteki · przyjęte
+- 2026-11-11 · autor · hosting · Krok 6, część pierwsza: praca bez internetu (service worker tylko dla własnej domeny, najpierw sieć, potem kopia), ekran „Co i dokąd wysyłamy”, instrukcja `docs/HOSTING.md` (Caddy, nginx + certbot, hosting statyczny) · przyjęte
 
 ## Otwarte pytania
 - zegarki: plik FIT nie był jeszcze wgrany na prawdziwy zegarek – do sprawdzenia przez autora (Garmin).
@@ -35,3 +37,5 @@ Format wpisu: `RRRR-MM-DD · autor (pseudonim) · obszar · uwaga · status (now
 - podpowiedzi: przycisk „dodaj w wolnym miejscu” przy podpowiedzi nie jest zrobiony – potrzebny, czy wystarczy samo wskazanie?
 - strefy: brakujące tętno maks. szacujemy wzorem Tanaki (208 − 0,7 × wiek), a próg jako 90% maks. – czy zostawić, czy bez pomiaru podawać tylko tempo i odczucie?
 - strefy: model Danielsa (VDOT) i progi z DFA alfa 1 nie są jeszcze w aplikacji – dodać w kroku 4 razem z importem plików?
+- język: wersja angielska wymaga wyniesienia wszystkich napisów (także opisów treningów i reguł) do słownika – duża zmiana; robić przed mapami czy po?
+- zegarki: skrypt do Garmin Connect – nie da się go sprawdzić bez konta autora; czy plik FIT wystarcza?
