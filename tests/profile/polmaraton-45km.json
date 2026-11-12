@@ -1,0 +1,54 @@
+{
+ "id": "polmaraton-45km",
+ "opis": "Regularnie 40–50 km tygodniowo, cel: półmaraton 1:38.",
+ "rok_urodzenia": 1983,
+ "plec": "m",
+ "masa_kg": 73,
+ "wzrost_cm": 178,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 4.2,
+  "km_tydz": 45,
+  "najdluzszy_min": 100
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 70
+  },
+  "sr": {
+   "max_min": 50
+  },
+  "czw": {
+   "max_min": 70
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 60
+  },
+  "nd": {
+   "max_min": 140
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 10,
+   "czas": "0:44:40",
+   "data": "2026-09-27"
+  }
+ ],
+ "hrmax": 184,
+ "lthr": 167,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 21.0975,
+  "czas": "1:38:00",
+  "data": "2027-03-14"
+ }
+}

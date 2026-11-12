@@ -1,0 +1,54 @@
+{
+ "id": "10km-sredni",
+ "opis": "Średnio zaawansowany, cel: 10 km w 47:30.",
+ "rok_urodzenia": 1987,
+ "plec": "k",
+ "masa_kg": 61,
+ "wzrost_cm": 167,
+ "poziom": "regularnie",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 3.5,
+  "km_tydz": 34,
+  "najdluzszy_min": 75
+ },
+ "dni": {
+  "pn": {
+   "max_min": 0
+  },
+  "wt": {
+   "max_min": 60
+  },
+  "sr": {
+   "max_min": 0
+  },
+  "czw": {
+   "max_min": 60
+  },
+  "pt": {
+   "max_min": 0
+  },
+  "sob": {
+   "max_min": 50
+  },
+  "nd": {
+   "max_min": 100
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 5,
+   "czas": "0:23:10",
+   "data": "2026-10-18"
+  }
+ ],
+ "hrmax": 189,
+ "lthr": 171,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 10,
+  "czas": "0:47:30",
+  "data": "2027-02-14"
+ }
+}

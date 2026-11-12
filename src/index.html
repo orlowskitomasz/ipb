@@ -1,0 +1,336 @@
+<title>IPB sejf i wywiad</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/*CSS*/
+</style>
+
+<header class="pasek">
+  <h1>IPB · plan biegowy</h1>
+  <span id="stan" class="stan brak">Brak sejfu</span>
+  <button id="zablokuj" type="button" hidden>Zablokuj</button>
+</header>
+
+<main>
+  <p id="blad-ogolny" class="komunikat zle" hidden></p>
+  <p id="ostrz-pamiec" class="komunikat" hidden>Ta przeglądarka nie pozwala stronie nic zapisać. Sejf działa tylko do zamknięcia karty – zrób kopię w zakładce „Co jest zapisane”.</p>
+
+  <section id="w-start">
+    <h2>Twoje dane biegowe zostają u Ciebie, zamknięte Twoim hasłem</h2>
+    <p>Odpowiesz na kilka pytań o swoim bieganiu, ustawisz hasło i zobaczysz dokładnie, co ta strona zapisuje. Bez imienia, e-maila i konta.</p>
+    <div class="karta">
+      <dl>
+        <dt>Gdzie są dane</dt><dd>tylko w tej przeglądarce, zaszyfrowane</dd>
+        <dt>Kto je odczyta</dt><dd>tylko osoba znająca hasło albo kod odzyskiwania</dd>
+        <dt>Co wychodzi do internetu</dt><dd>nic – na tym etapie strona nie łączy się z żadnym serwerem</dd>
+      </dl>
+    </div>
+    <div class="rzad"><button id="zacznij" class="glowny" type="button">Zacznij wywiad</button></div>
+    <details>
+      <summary>Mam kopię sejfu i chcę ją przywrócić</summary>
+      <div class="karta" style="margin-top:12px; display:flex; flex-direction:column; gap:12px">
+        <label for="przywroc-tekst">Wklej tekst kopii</label>
+        <textarea id="przywroc-tekst" spellcheck="false"></textarea>
+        <p id="blad-przywroc" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="przywroc" type="button">Przywróć sejf</button></div>
+      </div>
+    </details>
+  </section>
+
+  <section id="w-wywiad" hidden>
+    <h2 id="wywiad-tytul">Wywiad</h2>
+    <p class="cichy">Pola bez odpowiedzi możesz zostawić puste – plan zaproponuje wtedy test zamiast zgadywać.</p>
+    <div class="rzad"><button id="przyklad" type="button">Wypełnij przykładem</button></div>
+    <form id="form-wywiad" novalidate>
+      <section>
+        <h3>O Tobie</h3>
+        <div class="siatka">
+          <label for="f-rok">Rok urodzenia<input id="f-rok" type="number" inputmode="numeric" placeholder="np. 1985"></label>
+          <label for="f-plec">Płeć<select id="f-plec"><option value="k">kobieta</option><option value="m">mężczyzna</option><option value="">nie podaję</option></select></label>
+          <label for="f-masa">Masa (kg)<input id="f-masa" type="number" inputmode="decimal"></label>
+          <label for="f-wzrost">Wzrost (cm)<input id="f-wzrost" type="number" inputmode="numeric"></label>
+        </div>
+        <h3>Bieganie teraz</h3>
+        <div class="siatka">
+          <label for="f-poziom">Poziom<select id="f-poziom"><option value="zaczynam">zaczynam</option><option value="regularnie" selected>biegam regularnie</option><option value="zaawansowany">zaawansowany</option></select></label>
+          <label for="f-h">Godzin biegu na tydzień<input id="f-h" type="number" inputmode="decimal" step="0.5"></label>
+          <label for="f-km">Kilometrów na tydzień<input id="f-km" type="number" inputmode="numeric"></label>
+          <label for="f-najdl">Najdłuższy bieg (min)<input id="f-najdl" type="number" inputmode="numeric"></label>
+        </div>
+        <label for="f-powrot" style="flex-direction:row; align-items:center; gap:10px"><input id="f-powrot" type="checkbox" style="width:22px; min-height:22px">Wracam po przerwie lub kontuzji</label>
+        <h3>Ile minut możesz biegać w każdy dzień (0 = dzień wolny)</h3>
+        <div class="dni">
+          <label for="f-dzien-pn">pn<input id="f-dzien-pn" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-wt">wt<input id="f-dzien-wt" type="number" inputmode="numeric" value="60"></label>
+          <label for="f-dzien-sr">śr<input id="f-dzien-sr" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-czw">czw<input id="f-dzien-czw" type="number" inputmode="numeric" value="60"></label>
+          <label for="f-dzien-pt">pt<input id="f-dzien-pt" type="number" inputmode="numeric" value="0"></label>
+          <label for="f-dzien-sob">sob<input id="f-dzien-sob" type="number" inputmode="numeric" value="45"></label>
+          <label for="f-dzien-nd">nd<input id="f-dzien-nd" type="number" inputmode="numeric" value="120"></label>
+        </div>
+        <h3>Najlepszy wynik z ostatniego roku</h3>
+        <div class="siatka">
+          <label for="f-rek-dyst">Dystans<select id="f-rek-dyst"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="f-rek-czas">Czas (g:mm:ss)<input id="f-rek-czas" type="text" inputmode="numeric" placeholder="0:47:30"></label>
+          <label for="f-rek-data">Data<input id="f-rek-data" type="date"></label>
+        </div>
+        <h3>Tętno (tylko zmierzone, nie ze wzoru)</h3>
+        <div class="siatka">
+          <label for="f-hrmax">Tętno maksymalne<input id="f-hrmax" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+          <label for="f-lthr">Tętno progowe (LTHR)<input id="f-lthr" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+          <label for="f-hrspocz">Tętno spoczynkowe<input id="f-hrspocz" type="number" inputmode="numeric" placeholder="nie wiem"></label>
+        </div>
+        <h3>Cel</h3>
+        <div class="siatka">
+          <label for="f-cel-typ">Rodzaj celu<select id="f-cel-typ"><option value="dystans">dystans na czas</option><option value="czas_biegu">czas biegu bez przerwy</option></select></label>
+          <label for="f-cel-data">Data<input id="f-cel-data" type="date"></label>
+        </div>
+        <div id="cel-dystans" class="siatka">
+          <label for="f-cel-dyst">Dystans<select id="f-cel-dyst"><option value="5">5 km</option><option value="10" selected>10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="f-cel-czas">Czas docelowy (g:mm:ss)<input id="f-cel-czas" type="text" inputmode="numeric" placeholder="np. 0:45:00"></label>
+        </div>
+        <div id="cel-czas-biegu" class="siatka" hidden>
+          <label for="f-cel-min">Ile minut bez przerwy<input id="f-cel-min" type="number" inputmode="numeric" value="30"></label>
+        </div>
+        <p id="blad-wywiad" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="wywiad-dalej" class="glowny" type="button">Dalej</button></div>
+      </section>
+    </form>
+  </section>
+
+  <section id="w-haslo" hidden>
+    <h2 id="haslo-tytul">Ustaw hasło do sejfu</h2>
+    <p>Tym hasłem zaszyfruję Twoje odpowiedzi. Hasła nie da się przypomnieć ani zresetować, bo nikt poza Tobą go nie zna.</p>
+    <form id="form-haslo" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+      <label for="haslo-nowe">Hasło (co najmniej 12 znaków)<input id="haslo-nowe" type="password" autocomplete="new-password"></label>
+      <label for="haslo-powt">Powtórz hasło<input id="haslo-powt" type="password" autocomplete="new-password"></label>
+      <p id="blad-haslo" class="komunikat zle" hidden></p>
+      <div class="rzad"><button id="haslo-zapisz" class="glowny" type="button">Zaszyfruj i zapisz</button></div>
+    </form>
+  </section>
+
+  <section id="w-kod" hidden>
+    <h2>Zapisz kod odzyskiwania</h2>
+    <p>To jedyny sposób na otwarcie sejfu, gdy zapomnisz hasła. Pokazuję go tylko teraz. Przepisz go na kartkę albo do menedżera haseł.</p>
+    <div class="karta"><p id="kod-odz" class="kod-odz"></p></div>
+    <label for="kod-potw" style="flex-direction:row; align-items:center; gap:10px; color:var(--tekst); font-size:1rem"><input id="kod-potw" type="checkbox" style="width:22px; min-height:22px">Zapisałem kod w bezpiecznym miejscu</label>
+    <div class="rzad"><button id="kod-dalej" class="glowny" type="button" disabled>Dalej</button></div>
+  </section>
+
+  <section id="w-zamkniety" hidden>
+    <h2>Sejf jest zamknięty</h2>
+    <p>W tej przeglądarce są zapisane zaszyfrowane dane biegowe. Podaj hasło, żeby je otworzyć.</p>
+    <form id="form-otworz" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+      <label id="pole-haslo" for="haslo-otworz">Hasło<input id="haslo-otworz" type="password" autocomplete="current-password"></label>
+      <label id="pole-kod" for="kod-wpisz" hidden>Kod odzyskiwania<input id="kod-wpisz" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+      <p id="blad-otworz" class="komunikat zle" hidden></p>
+      <div class="rzad"><button id="otworz" class="glowny" type="button">Otwórz sejf</button>
+        <button id="przelacz-kod" type="button">Nie pamiętam hasła – użyj kodu odzyskiwania</button></div>
+    </form>
+    <div class="rzad"><button id="usun" class="grozny" type="button">Usuń wszystko</button></div>
+  </section>
+
+  <section id="w-otwarty" hidden>
+    <nav class="zakladki" aria-label="Widoki">
+      <button type="button" data-z="plan" aria-selected="true">Plan</button>
+      <button type="button" data-z="dziennik" aria-selected="false">Dziennik</button>
+      <button type="button" data-z="strefy" aria-selected="false">Strefy i testy</button>
+      <button type="button" data-z="profil" aria-selected="false">Profil i cel</button>
+      <button type="button" data-z="zapis" aria-selected="false">Co jest zapisane</button>
+    </nav>
+
+    <div data-panel="plan" style="display:flex; flex-direction:column; gap:16px">
+      <div id="plan-brak" class="karta" style="display:flex; flex-direction:column; gap:12px">
+        <h3>W sejfie nie ma jeszcze planu</h3>
+        <p>Ułożę go z Twoich odpowiedzi z wywiadu: od najbliższego poniedziałku do dnia celu.</p>
+        <div class="rzad"><button id="uloz" class="glowny" type="button">Ułóż plan</button></div>
+      </div>
+      <div id="plan-jest" style="display:flex; flex-direction:column; gap:16px">
+        <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+          <h3 id="plan-cel"></h3>
+          <p id="plan-ocena"></p>
+          <div id="plan-uwagi" style="display:flex; flex-direction:column; gap:8px"></div>
+          <h3 id="plan-bramki-tytul">Sprawdziany po drodze</h3>
+          <ul id="plan-bramki" class="lista"></ul>
+        </div>
+        <div class="rzad">
+          <span class="cichy">Widok:</span>
+          <button id="widok-prosty" type="button" aria-pressed="true">Prosty</button>
+          <button id="widok-pelny" type="button" aria-pressed="false">Szczegółowy</button>
+          <button id="edycja" type="button" aria-pressed="false">Zmień układ dni</button>
+          <button id="eksport-ics" type="button">Do kalendarza (ICS)</button>
+          <button id="druk-plan" type="button">Do druku (PDF)</button>
+          <button id="uloz2" type="button">Ułóż plan od nowa</button>
+        </div>
+        <p id="eksport-info" class="komunikat" hidden></p>
+        <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
+        <div id="trasa" class="karta trasa" hidden>
+          <h3 id="trasa-tytul"></h3>
+          <p id="tr-adres" class="komunikat" hidden></p>
+          <div id="trasa-zgoda" style="display:flex; flex-direction:column; gap:8px">
+            <p>Trasy i pogoda potrzebują internetu. Po włączeniu aplikacja łączy się tylko z trzema serwerami i wysyła im wyłącznie współrzędne – nic o Tobie, bez ciasteczek i bez adresu tej strony w zapytaniach o trasę i pogodę:</p>
+            <ul class="lista">
+              <li><strong>brouter.de</strong> – punkty, przez które ma biec trasa (dokładne, bo od nich zależy przebieg);</li>
+              <li><strong>api.open-meteo.com</strong> – obszar zaokrąglony do ok. 10 km i data biegu;</li>
+              <li><strong>tile.openstreetmap.org</strong> – numery fragmentów mapy, które oglądasz; ten serwer widzi też adres strony, z której korzystasz (bez niego nie wydaje map).</li>
+            </ul>
+            <p class="cichy">Każdy serwer widzi adres IP Twojego urządzenia, jak przy każdej stronie w internecie. Mapy i pogodę wyłączysz w zakładce „Co jest zapisane”.</p>
+            <div class="rzad"><button id="siec-wlacz" class="glowny" type="button">Włącz mapy i pogodę</button><button id="tr-zamknij0" type="button">Zamknij</button></div>
+          </div>
+          <div id="trasa-srodek" hidden style="display:flex; flex-direction:column; gap:12px">
+            <div class="rzad"><button id="tr-gps" type="button">Moje położenie</button><button id="tr-start" type="button" hidden>Zapisany Start</button><button id="tr-zapamietaj" type="button">Zapamiętaj to miejsce jako Start</button></div>
+            <div class="rzad" style="align-items:flex-end"><label for="tr-wsp" style="flex:1">Start ze współrzędnych (np. skopiowanych z Map Google)<input id="tr-wsp" type="text" inputmode="decimal" autocomplete="off" placeholder="50.0614, 19.9366"></label><button id="tr-wsp-ok" type="button">Ustaw start</button></div>
+            <div id="mapa" class="mapa">
+              <div id="mapa-warstwy"><div id="mapa-kafle"></div><svg id="mapa-rys" xmlns="http://www.w3.org/2000/svg"></svg></div>
+              <span class="celownik" aria-hidden="true">+</span>
+              <span class="zoom"><button id="mapa-plus" type="button" aria-label="Przybliż mapę">+</button><button id="mapa-minus" type="button" aria-label="Oddal mapę">−</button></span>
+              <span class="podpis">© OpenStreetMap contributors</span>
+            </div>
+            <p class="cichy">Trasy zaczynają się w środku mapy (krzyżyk). Przesuń mapę palcem i przybliż ją przyciskami. Położenie telefonu jest używane tylko po naciśnięciu „Moje położenie” i nie jest zapisywane.</p>
+            <div class="siatka">
+              <label for="tr-km">Długość trasy (km)<input id="tr-km" type="number" inputmode="decimal" step="0.1" min="1" max="60"></label>
+              <label for="tr-godz">Godzina startu<input id="tr-godz" type="time" value="17:00"></label>
+            </div>
+            <div class="rzad"><button id="tr-szukaj" class="glowny" type="button">Szukaj tras</button><button id="tr-pogoda-btn" type="button">Pogoda na ten bieg</button><button id="tr-zamknij" type="button">Zamknij</button></div>
+            <p id="tr-pogoda" class="komunikat info" hidden></p>
+            <p id="tr-info" class="komunikat" hidden></p>
+            <div id="tr-lista" style="display:flex; flex-direction:column; gap:8px"></div>
+          </div>
+        </div>
+        <p class="cichy">Dni wolne na stałe i limity minut ustawiasz w wywiadzie („Profil i cel” → „Zmień dane”). Tutaj możesz zamienić dwa dni w tygodniu albo odpuścić bieg – plan powie, jeśli układ robi się ryzykowny.</p>
+        <p class="cichy">Plan powstaje z jawnych reguł R1–R20. Każda uwaga podaje regułę, jej pochodzenie i pewność: część to wyniki badań, część praktyka trenerska, część umowne ustalenia tego projektu (np. limit 170 min długiego biegu albo wzrost tygodnia do 10%). Twarde są tylko Twoje dni wolne i limity minut.</p>
+      </div>
+    </div>
+
+    <div data-panel="dziennik" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Obciążenie</h3>
+        <div id="dz-rady" style="display:flex; flex-direction:column; gap:8px"></div>
+        <dl id="dz-wsk"></dl>
+        <p class="cichy">Obciążenie biegu to godziny × intensywność² × 100 (intensywność z tętna względem progu, a gdy go nie ma – z odczucia). Godzina dokładnie na progu to 100 punktów. Średnie liczone są ze stałymi 7 i 42 dni; to wartości umowne, nie Twoje indywidualne. Liczby opisują wykonaną pracę, nie stan organizmu.</p>
+      </div>
+      <form id="form-bieg" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+        <h3>Dodaj bieg</h3>
+        <label for="dz-plik">Plik z zegarka (FIT, TCX lub GPX)<input id="dz-plik" type="file" accept=".fit,.tcx,.gpx" multiple></label>
+        <p class="cichy">Z pliku zapisuję tylko datę, czas, dystans i tętno. Trasa (współrzędne) i numer zegarka nie są zapisywane. Plik nie opuszcza tej przeglądarki.</p>
+        <h3>albo wpisz ręcznie</h3>
+        <div class="siatka">
+          <label for="dz-data">Data<input id="dz-data" type="date"></label>
+          <label for="dz-min">Czas (min)<input id="dz-min" type="number" inputmode="numeric"></label>
+          <label for="dz-km">Dystans (km)<input id="dz-km" type="number" inputmode="decimal" step="0.1"></label>
+          <label for="dz-hr">Średnie tętno<input id="dz-hr" type="number" inputmode="numeric"></label>
+          <label for="dz-odczucie">Odczucie<select id="dz-odczucie"><option value="">nie podaję</option><option value="1">1 – bardzo lekko</option><option value="2">2</option><option value="3">3 – lekko</option><option value="4">4</option><option value="5">5 – umiarkowanie</option><option value="6">6</option><option value="7">7 – ciężko</option><option value="8">8</option><option value="9">9 – bardzo ciężko</option><option value="10">10 – maksymalnie</option></select></label>
+        </div>
+        <p id="dz-info" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="dz-dodaj" class="glowny" type="button">Dodaj bieg</button></div>
+      </form>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Plan a wykonanie</h3>
+        <div id="dz-tygodnie" style="display:flex; flex-direction:column; gap:10px"></div>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Ostatnie biegi</h3>
+        <div id="dz-lista" style="display:flex; flex-direction:column"></div>
+      </div>
+    </div>
+
+    <div data-panel="strefy" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Twoje progi</h3>
+        <dl id="progi-dl"></dl>
+        <p id="progi-szacunek" class="komunikat" hidden>Część wartości to szacunek z wieku. Zastąpi je wynik testu 30 minut – wpisz go niżej, a strefy i plan przeliczą się same.</p>
+      </div>
+      <div id="strefy-modele" style="display:flex; flex-direction:column; gap:16px"></div>
+      <form id="form-test" class="karta" style="display:flex; flex-direction:column; gap:12px" novalidate>
+        <h3>Wpisz wynik sprawdzianu</h3>
+        <div class="siatka">
+          <label for="t-rodzaj">Rodzaj<select id="t-rodzaj"><option value="tetno">test 30 minut (tętno progowe)</option><option value="kontrolny">bieg kontrolny lub zawody</option></select></label>
+          <label for="t-data">Data<input id="t-data" type="date"></label>
+        </div>
+        <div id="t-pola-tetno" class="siatka">
+          <label for="t-lthr">Średnie tętno z ostatnich 20 minut<input id="t-lthr" type="number" inputmode="numeric"></label>
+          <label for="t-hrmax">Najwyższe tętno w teście (jeśli znasz)<input id="t-hrmax" type="number" inputmode="numeric"></label>
+        </div>
+        <div id="t-pola-kontrolny" class="siatka" hidden>
+          <label for="t-dyst">Dystans<select id="t-dyst"><option value="5">5 km</option><option value="10">10 km</option><option value="21.0975">półmaraton</option><option value="42.195">maraton</option></select></label>
+          <label for="t-czas">Czas (g:mm:ss)<input id="t-czas" type="text" inputmode="numeric" placeholder="0:24:30"></label>
+        </div>
+        <p id="t-info" class="komunikat zle" hidden></p>
+        <div class="rzad"><button id="t-zapisz" class="glowny" type="button">Zapisz wynik</button></div>
+      </form>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Zapisane wyniki</h3>
+        <ul id="testy-lista" class="lista"></ul>
+      </div>
+    </div>
+
+    <div data-panel="profil" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:12px">
+        <h3>Twoje dane z wywiadu</h3>
+        <dl id="profil-dl"></dl>
+        <div class="rzad"><button id="edytuj" type="button">Zmień dane</button></div>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Ocena celu: <span id="ocena-status" class="status"></span></h3>
+        <p id="ocena-prognoza"></p>
+        <p id="ocena-opis"></p>
+        <p id="brak-tetna" class="komunikat" hidden>Nie znasz tętna maksymalnego lub progowego. Plan zacznie od testu 30 minut, żeby strefy były zmierzone, a nie zgadnięte.</p>
+        <p class="cichy">Prognoza to przedział z dwóch metod: wzoru Riegla i równań VDOT. Obie bywają zbyt optymistyczne dla maratonu.</p>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Historia zmian (też w sejfie)</h3>
+        <pre id="historia"></pre>
+      </div>
+    </div>
+
+    <div data-panel="zapis" hidden style="display:flex; flex-direction:column; gap:16px">
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Tak wyglądają Twoje dane w pamięci przeglądarki</h3>
+        <p class="cichy">To wszystko, co strona zapisała. Bez hasła jest to nieczytelny ciąg znaków.</p>
+        <pre id="surowe"></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Te same dane po otwarciu hasłem</h3>
+        <p class="cichy">Istnieją w tej postaci tylko w pamięci otwartej karty i znikają po zablokowaniu.</p>
+        <pre id="jawne"></pre>
+      </div>
+      <div class="karta">
+        <dl>
+          <dt>Szyfrowanie</dt><dd id="alg"></dd>
+          <dt>Połączenia z internetem od otwarcia strony</dt><dd id="siec-ile"></dd>
+          <dt>Automatyczna blokada</dt><dd>po 15 minutach bez dotyku</dd>
+          <dt>Praca bez internetu</dt><dd id="offline-stan">z pliku na dysku: zawsze</dd>
+        </dl>
+        <pre id="siec-lista" hidden style="margin-top:8px"></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Co i dokąd wysyłamy</h3>
+        <p id="siec-stan"></p>
+        <p class="cichy">Plan, dziennik, pliki z zegarka, kalendarz i trening na zegarek powstają w tej przeglądarce i nigdzie nie są wysyłane. Mapy, trasy i pogoda – tylko po włączeniu – pytają trzy serwery: brouter.de (punkty trasy), api.open-meteo.com (obszar zaokrąglony do ok. 10 km i data), tile.openstreetmap.org (fragmenty mapy; widzi też adres tej strony). Wysyłane są wyłącznie współrzędne, bez ciasteczek i bez danych o Tobie. Innych połączeń blokuje sama przeglądarka (polityka CSP strony).</p>
+        <div class="rzad"><button id="siec-przelacz" type="button"></button></div>
+        <pre id="siec-dziennik" hidden></pre>
+      </div>
+      <div class="karta" style="display:flex; flex-direction:column; gap:8px">
+        <h3>Kopia zapasowa</h3>
+        <p class="cichy">Zaszyfrowana kopia sejfu jako tekst. Możesz ją trzymać gdziekolwiek – bez hasła jest bezużyteczna.</p>
+        <textarea id="kopia-tekst" readonly spellcheck="false"></textarea>
+        <p id="kopia-info" class="komunikat ok" hidden></p>
+        <div class="rzad"><button id="kopiuj" type="button">Kopiuj kopię</button><button id="usun2" class="grozny" type="button">Usuń wszystko</button></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="druk"></div>
+
+  <div id="usun-potw" class="karta" hidden style="display:flex; flex-direction:column; gap:12px; border-color:var(--zle)">
+    <h3>Usunąć sejf z tej przeglądarki?</h3>
+    <p>Dane znikną bezpowrotnie. Jeśli nie masz kopii, nie da się ich odzyskać.</p>
+    <div class="rzad"><button id="usun-tak" class="grozny" type="button">Tak, usuń wszystko</button><button id="usun-nie" type="button">Nie, zostaw</button></div>
+  </div>
+</main>
+
+<script>
+/*LIB*/
+</script>
+<script>
+/*JS*/
+</script>

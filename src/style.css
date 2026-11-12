@@ -1,0 +1,113 @@
+/* Układ: jedna kolumna na telefon, górny pasek ze stanem sejfu, treść w sekcjach bez ozdobników. */
+:root {
+  --tlo: #f3f5f4; --karta: #ffffff; --tekst: #17201d; --cichy: #5c6965; --linia: #d5dcd9;
+  --akcent: #0b6b5d; --akcent-tekst: #ffffff; --ok: #1f7a3a; --uwaga: #9a5b00; --zle: #b3261e; --kod: #e8eeeb;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --tlo: #101614; --karta: #18211e; --tekst: #e6ecea; --cichy: #9aa8a3; --linia: #2c3935;
+  --akcent: #4fc3ae; --akcent-tekst: #06221d; --ok: #6fcf8a; --uwaga: #e2a94a; --zle: #f08a82; --kod: #0c1210; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --tlo: #101614; --karta: #18211e; --tekst: #e6ecea; --cichy: #9aa8a3; --linia: #2c3935;
+  --akcent: #4fc3ae; --akcent-tekst: #06221d; --ok: #6fcf8a; --uwaga: #e2a94a; --zle: #f08a82; --kod: #0c1210; color-scheme: dark }
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+body { background: var(--tlo); color: var(--tekst); font: 16px/1.5 var(--font); margin: 0;
+  padding-block: 0 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)) }
+main, header.pasek { max-width: 680px; margin-inline: auto }
+header.pasek { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding-block: 16px 12px; border-bottom: 1px solid var(--linia) }
+header.pasek h1 { font-size: 1.15rem; margin: 0; flex: 1; min-width: 0 }
+.stan { font-size: .85rem; font-weight: 600; padding: 2px 10px; border-radius: 99px; border: 1px solid currentColor }
+.stan.otwarty { color: var(--ok) } .stan.zamkniety { color: var(--uwaga) } .stan.brak { color: var(--cichy) }
+main { display: flex; flex-direction: column; gap: 20px; padding-top: 20px }
+h2 { font-size: 1.25rem; margin: 0; text-wrap: balance } h3 { font-size: 1rem; margin: 0 }
+p { margin: 0; max-width: 65ch } .cichy { color: var(--cichy); font-size: .9rem }
+section { display: flex; flex-direction: column; gap: 12px }
+.karta { background: var(--karta); border: 1px solid var(--linia); border-radius: 10px; padding: 16px }
+.siatka { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px }
+.dni { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px }
+.dni label { text-align: center } .dni input { text-align: center; padding-inline: 2px }
+label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--cichy); min-width: 0 }
+input, select, textarea { font: inherit; color: var(--tekst); background: var(--tlo); border: 1px solid var(--linia);
+  border-radius: 8px; padding: 10px; min-height: 44px; width: 100% }
+textarea { font: .8rem/1.4 var(--mono); min-height: 110px }
+button { font: inherit; font-weight: 600; min-height: 44px; padding: 8px 16px; border-radius: 8px; border: 1px solid var(--linia);
+  background: var(--karta); color: var(--tekst); cursor: pointer }
+button.glowny { background: var(--akcent); color: var(--akcent-tekst); border-color: var(--akcent) }
+button.grozny { color: var(--zle); border-color: var(--zle) }
+button:disabled { opacity: .55; cursor: wait }
+:focus-visible { outline: 3px solid var(--akcent); outline-offset: 2px }
+.rzad { display: flex; gap: 8px; flex-wrap: wrap; align-items: center }
+nav.zakladki { display: flex; gap: 4px; flex-wrap: wrap }
+nav.zakladki button[aria-selected="true"] { background: var(--akcent); color: var(--akcent-tekst); border-color: var(--akcent) }
+pre { margin: 0; background: var(--kod); border: 1px solid var(--linia); border-radius: 8px; padding: 12px;
+  font: .78rem/1.45 var(--mono); overflow-x: auto; white-space: pre-wrap; word-break: break-all; max-height: 320px; overflow-y: auto }
+.kod-odz { font: 600 1.05rem/1.6 var(--mono); letter-spacing: .04em; word-break: break-word }
+.komunikat { border-left: 4px solid var(--uwaga); padding: 8px 12px; background: var(--karta) }
+.komunikat.zle { border-color: var(--zle); color: var(--zle) } .komunikat.info { border-color: var(--linia) }
+.uwagi-tyg .komunikat .zrodlo { display: block; font-size: .78rem; margin-top: 4px } .komunikat.ok { border-color: var(--ok) }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; margin: 0 } dt { color: var(--cichy) } dd { margin: 0; font-variant-numeric: tabular-nums }
+.status { font-weight: 700 } .status.realny { color: var(--ok) } .status.ambitny { color: var(--uwaga) } .status.nierealny { color: var(--zle) }
+button[aria-pressed="true"] { background: var(--akcent); color: var(--akcent-tekst); border-color: var(--akcent) }
+ul.lista { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px }
+details.tydzien { background: var(--karta); border: 1px solid var(--linia); border-radius: 10px }
+details.tydzien summary { cursor: pointer; padding: 12px 16px; min-height: 44px; display: flex; gap: 4px 12px; flex-wrap: wrap; align-items: baseline; font-weight: 600 }
+details.tydzien summary .cichy { font-weight: 400; font-variant-numeric: tabular-nums }
+details.tydzien[open] summary { border-bottom: 1px solid var(--linia) }
+.dzien { display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; gap: 2px 12px; padding: 10px 16px; border-bottom: 1px solid var(--linia); align-items: baseline }
+.dzien:last-child { border-bottom: 0 }
+.dzien .kto { color: var(--cichy); font-size: .85rem; text-transform: uppercase; letter-spacing: .04em }
+.dzien .ile { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap }
+.dzien .nazwa { font-weight: 600 } .dzien.wolne .nazwa { font-weight: 400; color: var(--cichy) }
+.dzien .wiecej { grid-column: 2 / -1; font-size: .9rem; color: var(--cichy) }
+.dzien .szczegoly { grid-column: 2 / -1; font-size: .9rem }
+.moc { font-size: .78rem; font-weight: 600; padding: 1px 8px; border-radius: 99px; border: 1px solid currentColor; margin-left: 8px; white-space: nowrap }
+.moc.lekko { color: var(--ok) } .moc.mocno { color: var(--uwaga) } .moc.bardzo { color: var(--zle) }
+table.strefy { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums }
+table.strefy td { padding: 6px 0; border-bottom: 1px solid var(--linia) } table.strefy tr:last-child td { border-bottom: 0 }
+table.strefy td:last-child { text-align: right; white-space: nowrap; font-weight: 600 }
+.dzien .cel { grid-column: 2 / -1; font-size: .9rem; font-weight: 600; font-variant-numeric: tabular-nums }
+.uwagi-tyg { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--linia) }
+.uwagi-tyg .komunikat { background: var(--tlo) } .uwagi-tyg .komunikat.zle { color: var(--tekst) }
+.uwagi-tyg .komunikat strong { display: block } .uwagi-tyg .komunikat span { font-size: .9rem; color: var(--cichy) }
+.znak { font-size: .78rem; font-weight: 700; padding: 1px 8px; border-radius: 99px; color: var(--uwaga); border: 1px solid currentColor }
+.dzien .zmiana { grid-column: 2 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 4px }
+.dzien .zmiana select { width: auto; min-width: 150px }
+.dzien .wykonano { grid-column: 2 / -1; font-size: .9rem; font-variant-numeric: tabular-nums; border-left: 3px solid var(--akcent); padding-left: 8px; margin-top: 4px }
+.bieg { display: flex; flex-direction: column; gap: 6px; padding: 12px 0; border-bottom: 1px solid var(--linia) } .bieg:last-child { border-bottom: 0 }
+.bieg .glowa { font-weight: 600; font-variant-numeric: tabular-nums }
+.bieg .rzad select { width: auto }
+.slupek { display: grid; grid-template-columns: 5.5em minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: .9rem; font-variant-numeric: tabular-nums }
+.slupek .tor { background: var(--tlo); border: 1px solid var(--linia); border-radius: 99px; height: 14px; overflow: hidden }
+.slupek .tor i { display: block; height: 100%; background: var(--akcent); border-radius: 99px }
+input[type="file"] { padding: 8px }
+/* Mapa: kafelki jako obrazki, trasa jako SVG */
+.trasa { display: flex; flex-direction: column; gap: 12px }
+.mapa { position: relative; height: min(60vh, 380px); overflow: hidden; border: 1px solid var(--linia); border-radius: 8px; background: var(--kod); touch-action: none; cursor: grab; user-select: none }
+.mapa #mapa-warstwy, .mapa #mapa-kafle, .mapa svg { position: absolute; inset: 0 } .mapa svg { width: 100%; height: 100%; pointer-events: none }
+.mapa img { position: absolute; width: 256px; height: 256px; max-width: none; pointer-events: none }
+.mapa .celownik { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 28px; line-height: 1; color: #b3261e; font-weight: 700; pointer-events: none; text-shadow: 0 0 3px #fff }
+.mapa .zoom { position: absolute; right: 8px; top: 8px; display: flex; flex-direction: column; gap: 6px } .mapa .zoom button { width: 44px; min-height: 44px; padding: 0; font-size: 1.3rem; background: var(--karta) }
+.mapa .podpis { position: absolute; right: 0; bottom: 0; font-size: .7rem; padding: 1px 6px; background: rgba(255, 255, 255, .8); color: #222 }
+.propozycja { border: 1px solid var(--linia); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px } .propozycja.wybrana { border-color: var(--akcent); border-width: 2px }
+#druk .mapa { border: 1px solid #777; border-radius: 0; margin: 0 auto 3mm } #druk .mapa .zoom, #druk .mapa .celownik { display: none } #druk svg.profil { width: 100%; height: 30mm; border: 0.3mm solid #777 }
+
+/* Druk: na ekranie niewidoczny; w druku zostaje tylko #druk, tydzień na stronę A4 w poziomie */
+#druk { display: none }
+@page { size: A4 landscape; margin: 12mm }
+@media print {
+  body { background: #fff; color: #000; padding: 0; font-size: 9.5pt; line-height: 1.35 }
+  header.pasek, main > *:not(#druk) { display: none !important }
+  main { max-width: none; padding: 0; display: block }
+  #druk { display: block }
+  #druk .strona { break-after: page } #druk .strona:last-child { break-after: auto }
+  #druk h2 { font-size: 14pt; margin: 0 0 2mm } #druk p { max-width: none; margin: 0 0 3mm; color: #333 }
+  #druk table { width: 100%; border-collapse: collapse; table-layout: fixed }
+  #druk th, #druk td { border: 0.3mm solid #777; padding: 1.6mm 2mm; text-align: left; vertical-align: top; overflow-wrap: anywhere }
+  #druk th { background: #eee; font-weight: 700 } #druk tr { break-inside: avoid }
+  #druk col.dz { width: 5% } #druk col.tr { width: 12% } #druk col.cz { width: 8% } #druk col.ce { width: 16% } #druk col.wy { width: 17% }
+  #druk .pole { height: 14mm; border: 0.3mm solid #777; margin-top: 2mm }
+}
+@media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0 } dd { margin-bottom: 8px } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }

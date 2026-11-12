@@ -1,0 +1,54 @@
+{
+ "id": "maraton-zaawansowany",
+ "opis": "Zaawansowany maratończyk, ok. 90 km tygodniowo, cel: 2:55.",
+ "rok_urodzenia": 1990,
+ "plec": "m",
+ "masa_kg": 68,
+ "wzrost_cm": 179,
+ "poziom": "zaawansowany",
+ "powrot_po_przerwie": false,
+ "obciazenie": {
+  "h_tydz": 7.5,
+  "km_tydz": 90,
+  "najdluzszy_min": 150
+ },
+ "dni": {
+  "pn": {
+   "max_min": 60
+  },
+  "wt": {
+   "max_min": 90
+  },
+  "sr": {
+   "max_min": 75
+  },
+  "czw": {
+   "max_min": 90
+  },
+  "pt": {
+   "max_min": 60
+  },
+  "sob": {
+   "max_min": 75
+  },
+  "nd": {
+   "max_min": 180
+  }
+ },
+ "rekordy": [
+  {
+   "dystans_km": 21.0975,
+   "czas": "1:23:30",
+   "data": "2026-10-11"
+  }
+ ],
+ "hrmax": 187,
+ "lthr": 172,
+ "start_planu": "2026-11-16",
+ "cel": {
+  "typ": "dystans",
+  "dystans_km": 42.195,
+  "czas": "2:55:00",
+  "data": "2027-04-11"
+ }
+}

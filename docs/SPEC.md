@@ -201,7 +201,7 @@ Pełne reguły i algorytmy: skill **planowanie-tras-biegowych** (jeśli dostępn
 - [ ] dane lokalnie; eksport/import zaszyfrowanej kopii przez użytkownika
 - [ ] sync: ten sam sejf (AES-GCM 256, klucz z Argon2id; zapasowo PBKDF2-SHA256 ≥ 600 000 iteracji), sól i IV w kopercie; serwer przyjmuje tylko kopertę `{v, ct, iv, salt}`; wersjonowanie i 412 przy konflikcie; konto = losowy identyfikator
 - [ ] logowanie formularzem, ciasteczko `__Host-…` HttpOnly Secure SameSite=Strict, HMAC, porównanie w stałym czasie; hasła tylko jako sekrety serwera
-- [ ] CSP z zamkniętą listą: `connect-src 'self' https://brouter.de https://api.open-meteo.com https://overpass-api.de https://overpass.kumi.systems https://overpass.private.coffee`, `img-src 'self' data: blob: https://tile.openstreetmap.org` (lista w jednym miejscu kodu i na ekranie prywatności)
+- [ ] CSP z zamkniętą listą: `connect-src https://brouter.de https://api.open-meteo.com`, `img-src 'self' data: https://tile.openstreetmap.org` (Overpass wypadł z listy – nie jest potrzebny) (lista w jednym miejscu kodu i na ekranie prywatności)
 - [ ] do usług trafiają tylko współrzędne (obszar zaokrąglony tam, gdzie wystarcza); `credentials: 'omit'`, `referrerPolicy: 'no-referrer'`
 - [ ] geolokalizacja tylko na żądanie, nie zapisywana
 - [ ] brak analityki, trackerów, ciasteczek poza logowaniem; brak CDN w czasie działania
@@ -255,7 +255,7 @@ python3 tests/sprawdz_plan.py PROFIL.json PLAN.json
 python3 tests/sprawdz_plan.py --self-test
 ```
 
-`--self-test` sprawdza 5 biegaczy testowych (`tests/profile/`) z przykładowymi planami (`tests/przyklady/`) oraz 17 celowo zepsutych planów – każdy błąd musi zostać wykryty.
+`--self-test` sprawdza 5 biegaczy testowych (`tests/profile/`) z planami z generatora aplikacji (`tests/przyklady/`, odświeżane przez `python3 tests/test_plan.py --zapisz`) oraz 18 celowo zepsutych planów – każdy błąd musi zostać wykryty.
 
 | Reguła | Co sprawdza |
 |---|---|
@@ -263,27 +263,49 @@ python3 tests/sprawdz_plan.py --self-test
 | R2 | dni zablokowane przez użytkownika i limit czasu dnia (zawody bez limitu) |
 | R3 | dwa mocne dni (akcent, test, start) nie pod rząd; długi nie dzień po mocnym; mocny nie dzień po długim |
 | R4 | długi ≤ 170 min; symulacja startu ≤ 180 min, najwyżej 2 w planie |
-| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); pierwsze tygodnie względem obecnego obciążenia |
+| R5 | tydzień ≤ 110% najwyższego z 3 poprzednich (albo +15 min); pierwsze tygodnie względem obecnego obciążenia; minuty startu docelowego nie liczą się |
 | R6 | w każdych 5 kolejnych tygodniach jeden lżejszy (≤ 88% poprzedniego) |
 | R7 | mocne minuty ≤ 25% czasu tygodnia (zawody nie liczą się) |
 | R8 | początkujący: ≥ 2 dni wolne w tygodniu |
 | R9 | początkujący: bez akcentów przez 8 tygodni; marszobieg w 1. tygodniu przy obciążeniu < 1,5 h/tydz. |
 | R10 | powrót po przerwie: 2 tygodnie bez mocnych dni, 1. tydzień ≤ obecne obciążenie |
 | R11 | brak HRmax/LTHR → test w tygodniach 1–4 (nie dotyczy początkujących i powrotu) |
-| R12 | uczciwa ocena celu: cel > 7% szybszy od prognozy Riegla → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
+| R12 | uczciwa ocena celu: cel > 7% szybszy od prognozy Riegla z **ostatniego** wyniku → „nierealny” + cel pośredni; 2–7% → co najmniej „ambitny” |
 | R13 | ostatni tydzień zawiera start; od półmaratonu taper: ostatni tydzień (bez startu) ≤ 70% szczytu |
 | R14 | od półmaratonu: bramki decyzyjne i test/start kontrolny wcześniej niż 3 tyg. przed celem |
 | R15 | od półmaratonu: długi bieg (lub start/test ≥ 90 min) w każdym tygodniu poza ostatnim |
 | R16 | siła w ≥ 75% tygodni; plyometria nie dzień przed mocnym dniem, nie w tygodniu startu, u początkujących nie w tyg. 1–4 |
+| R17 | każdy bieg (poza testem) ma cel: zakres tętna lub tempa; start z czasem docelowym ma tempo |
 
 Progi (110%, 88%, 25%, 7%, 70%) są wartościami wyjściowymi – zmiana wymaga wpisu w `docs/REJESTR.md` i poprawki w `tests/sprawdz_plan.py`.
 
 Biegacze testowi: `poczatkujacy-30min`, `maraton-320`, `nierealny-cel`, `powrot-po-kontuzji`, `brak-hrmax`. Nowa reguła = nowy profil lub nowa mutacja w self-teście.
 
-### 16.2 Testy aplikacji (do napisania razem z aplikacją)
+### 16.2 Testy aplikacji
+Działa już: `python3 build.py && python3 tests/test_sejf.py` (sejf, wywiad, plan, strefy, układ dni, dziennik, brak połączeń, ramka osadzona) oraz `python3 tests/test_dziennik.py` (pliki FIT/TCX/GPX, ocena biegu, obciążenie). Reszta powstaje razem z kolejnymi krokami.
 - sieć: żadnego połączenia poza listą z sekcji 11 (Playwright z atrapami, test pada przy obcej domenie);
 - sejf: brak danych otwartym tekstem w IndexedDB/localStorage, złe hasło nie otwiera, kod odzyskiwania działa, blokada po bezczynności;
-- plan z aplikacji dla 5 profili testowych przechodzi `tests/sprawdz_plan.py`;
-- eksport FIT: poprawna struktura i CRC; PDF: wiele stron bez uciętych bloków;
-- tryb offline: aplikacja startuje i pokazuje plan bez sieci;
+- plan z aplikacji dla 5 profili testowych i kilku tysięcy losowych przechodzi `tests/sprawdz_plan.py` – **działa**: `python3 tests/test_plan.py`;
+- eksport FIT: poprawna struktura i CRC; PDF: tydzień planu na stronie, liczba stron = liczba tygodni – **działa** (w `test_sejf.py`);
+- tryb offline: aplikacja startuje i pokazuje plan bez sieci – **działa**: `python3 tests/test_offline.py`;
+- trasy i pogoda: **działa** – `python3 tests/test_trasy.py` (logika na atrapie serwera tras) i `python3 tests/test_mapa.py` (przeglądarka: zgoda, ±8%, co i dokąd idzie, CSP blokuje obce serwery);
 - dwa języki: brak brakujących kluczy w `i18n/pl.json` i `i18n/en.json`.
+
+---
+
+## 17. Silnik treningowy: rejestr reguł, walidator, prognozy
+
+Wynik audytu z 10.11.2026 (raport fazy 1). Stan po wdrożeniu P0 i części P1:
+
+- **Rejestr reguł i źródeł:** `src/reguly.js`. Każda reguła R1–R25 ma nazwę, poziom, klasę źródła (A dowody naukowe, B metodologia trenerska, C otwarty kod, D heurystyka projektu), źródło, pewność, uzasadnienie i korektę. Pole `potwierdzone: false` oznacza źródło podane z pamięci, jeszcze nie otwarte. Rejestr nie zawiera numerów DOI.
+- **Jeden walidator:** `src/walidator.js`. Używają go aplikacja, skill i testy. Tabela w sekcji 16.1 opisuje reguły R1–R17; R18–R22 i poziomy są w rejestrze. `tests/sprawdz_plan.py` jest nakładką.
+- **Poziomy ustaleń:** krytyczne (tylko format i twarde ograniczenia zawodnika), istotne zastrzeżenie, uwaga, informacja. Brak jednej liczby „jakości planu”.
+- **Prognoza:** dwie metody z ostatniego wyniku – Riegel i VDOT (równania Danielsa i Gilberta) – jako przedział, z pewnością i zastrzeżeniami (wynik nieaktualny, brak daty, maraton z krótkiego dystansu). Tempa stref z ułamków VDOT.
+- **Status danych:** potwierdzone, oszacowane, nieaktualne, brak. Brakujących danych nie zastępujemy zmyślonymi.
+- **Uzasadnienia:** każdy bieg w planie ma `po_co` (cel fizjologiczny), `dlaczego_teraz` (miejsce w cyklu) i `latwiej` (wariant prostszy).
+- **Taper według dystansu:** maraton 3 tygodnie (75% i 55% szczytu), półmaraton 2 (85% i 60%), krócej 1 (70%); intensywność i liczba treningów zostają.
+- **Obciążenie:** opis wykonanej pracy (punkty, średnie wykładnicze 7 i 42 dni, stosunek 7 do 28 dni) bez progów i bez języka ryzyka. Propozycja zmiany dopiero przy dwóch zgodnych sygnałach.
+- **Ocena biegu:** trzy poziomy (zgodnie z planem, odbiega, wyraźnie odbiega) zamiast punktów.
+- **Testy:** `tests/test_silnik.py` (rejestr, VDOT, prognoza, status danych), 11 profili syntetycznych.
+
+Nie zrobione (P1 i P2): profile metodologiczne do wyboru, adaptacja A–F w kodzie (jest jako procedura w skillu), starty pośrednie, blok po starcie, ocena planów z zewnątrz w aplikacji, porównywanie planów, prędkość krytyczna, indywidualny model Banistera, potwierdzenie źródeł oznaczonych `potwierdzone: false`.

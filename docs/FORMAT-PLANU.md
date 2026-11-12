@@ -51,3 +51,11 @@ Dwa pliki JSON. Wspólny format dla aplikacji, dla planów pisanych przez asyste
 - `dodatki`: `rozgrzewka`, `plyometria`, `sila`, `mobilnosc` – nie liczą się do `min`.
 - `symulacja: true` na długim biegu = symulacja startu (limit 180 zamiast 170 min).
 - `opis`: dowolny tekst dla biegacza (kroki, tempa, tętna).
+- `po_co`, `dlaczego_teraz`, `latwiej`: cel fizjologiczny, miejsce w cyklu, wariant prostszy (R21).
+- `rodzaj`: `lekki`, `regeneracja`, `subprog`, `prog`, `vo2`, `cel`, `doprogu`; `mocne_strefa`: 2 (okolice progu) albo 3 (powyżej progu).
+- `interwaly`: `{n, praca_s | praca_m, przerwa_s | przerwa_m}` – struktura odcinków dla zegarka i kalendarza.
+- `cel_tetno`: `{od, do}` w uderzeniach na minutę (jedno z pól może nie wystąpić: samo `do` = „do X”, samo `od` = „powyżej X”).
+- `cel_tempo`: `{od, do}` w sekundach na kilometr, `od` to szybszy koniec.
+- `szacunek: true`: tętno wyliczone z szacunku (brak pomiaru), nie z testu.
+- `plan.strefy`: `{hrmax: {v, szacunek}, lthr: {v, szacunek}}` – progi użyte przy układaniu planu.
+- W profilu opcjonalnie `hr_spocz` (tętno spoczynkowe) i `start_planu` (pierwszy poniedziałek planu).
