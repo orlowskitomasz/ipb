@@ -18,6 +18,8 @@ const atrapa = require(path.join(katalog, 'tests', 'brouter_atrapa.js')), T = c.
   const w = await T.szukaj({ start, km: 10, glowna: null, pobierz });
   wy.trasy = w.trasy.map((t) => ({ dl: t.miary.dl, odStartu: T.odl(start, t.pts[0]), dlaczego: t.dlaczego, powt: t.miary.powt, skrz: t.miary.skrzyzowania, zielen: t.miary.zielen, punkty: t.punkty, n: t.pts.length, tiz: !!t.tam_i_z_powrotem }));
   wy.adresy = adresy.length; wy.obce = adresy.filter((a) => !a.startsWith(T.HOSTY.trasa + '/')).length;
+  wy.wsp = ['50.0614, 19.9366', '50,0614, 19,9366', '50.0614 19.9366', ' -33.9;18.4 ', '19.9366', 'Kraków', '95, 10', '50.1, 200'].map((t) => T.czytajWsp(t));
+  wy.https = [['https:', 'orlowskitomasz.github.io'], ['file:', ''], ['http:', 'localhost'], ['http:', 'example.org']].map(([protocol, hostname]) => T.stronaHttps({ protocol, hostname }));
   // ślepa odnoga i łączenie oznaczeń
   const surowa = T.czytajBrouter(JSON.parse(atrapa(T.urlTrasy(T.ksztalt('kolo', start, 0, 1500))))), czysta = T.wytnijOdnogi(surowa);
   wy.odnoga = T.narastajaco(surowa.pts).pop() - T.narastajaco(czysta.pts).pop();
@@ -53,6 +55,10 @@ r = subprocess.run(["node", "-e", JS, str(TU / "x")], capture_output=True, text=
 if r.returncode: print(r.stderr); sys.exit(1)
 w = json.loads(r.stdout)
 t = w["trasy"]
+ws = w["wsp"]
+sprawdz("start ze współrzędnych: kropka, przecinek dziesiętny, spacja, średnik", ws[0] == ws[1] == ws[2] == {"lat": 50.0614, "lon": 19.9366} and ws[3] == {"lat": -33.9, "lon": 18.4}, ws[:4])
+sprawdz("start ze współrzędnych: jedna liczba, tekst i wartości spoza zakresu odrzucone", ws[4:] == [None] * 4, ws[4:])
+sprawdz("mapa: https i localhost działają, plik z dysku i zwykłe http dostają ostrzeżenie", w["https"] == [True, False, True, False], w["https"])
 sprawdz("szukanie: od 1 do 3 propozycji", 1 <= len(t) <= 3, len(t))
 sprawdz("R23: każda propozycja mieści się w ±8% dystansu treningu", all(abs(x["dl"] - 10000) <= 800 for x in t), [x["dl"] for x in t])
 sprawdz("początek trasy nie dalej niż 1,5 km od Startu", all(x["odStartu"] <= 1500 for x in t))

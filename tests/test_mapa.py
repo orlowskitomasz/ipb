@@ -44,10 +44,16 @@ with sync_playwright() as pw:
 
     page.locator(".dzien:has-text('Spokojny bieg') [data-trasa]").first.click()
     sprawdz("przed zgodą: wyjaśnienie, co i dokąd pójdzie; mapa ukryta; zero połączeń", page.is_visible("#trasa-zgoda") and not page.is_visible("#mapa") and "brouter.de" in page.inner_text("#trasa-zgoda") and not obce(), obce()[:3])
+    adres = page.inner_text("#tr-adres") if page.is_visible("#tr-adres") else ""
+    sprawdz("z pliku na dysku: ostrzeżenie, że mapa wymaga strony https, z adresem i przeniesieniem sejfu", "https://orlowskitomasz.github.io/ipb/" in adres and "Kopia zapasowa" in adres, adres[:120])
     page.click("#siec-wlacz"); page.locator("#trasa-srodek:not([hidden])").wait_for(timeout=60000)
     sprawdz("po zgodzie: mapa widoczna, długość trasy policzona z treningu", page.is_visible("#mapa") and 3 <= float(page.input_value("#tr-km")) <= 15, page.input_value("#tr-km"))
     page.click("#tr-szukaj")
     sprawdz("przy mapie całej Polski szukanie prosi o przybliżenie, nic nie wysyła do serwera tras", "Przybliż mapę" in page.inner_text("#tr-info") and not any(host(r) == "brouter.de" for r in zadania))
+    page.fill("#tr-wsp", "Kraków"); page.click("#tr-wsp-ok")
+    sprawdz("błędne współrzędne: komunikat zamiast przesunięcia mapy", "Nie rozpoznałem" in page.inner_text("#tr-info"))
+    page.fill("#tr-wsp", "50,0614, 19,9366"); page.click("#tr-wsp-ok"); page.locator("#mapa-kafle img").first.wait_for(state="attached")
+    sprawdz("start ze współrzędnych ustawia mapę (bez sieci poza kafelkami)", "wpisanym punkcie" in page.inner_text("#tr-info") and any(host(r) == "tile.openstreetmap.org" and "/15/" in r.url for r in zadania) and not any(host(r) == "brouter.de" for r in zadania))
     page.click("#tr-gps"); page.locator("#tr-info:has-text('Twoim położeniu')").wait_for(timeout=15000)
     page.locator("#mapa-kafle img").first.wait_for(state="attached")
     sprawdz("„Moje położenie” ustawia mapę i pobiera kafelki", page.locator("#mapa-kafle img").count() >= 2 and any(host(r) == "tile.openstreetmap.org" and "/15/" in r.url for r in zadania))

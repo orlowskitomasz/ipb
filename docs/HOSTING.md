@@ -5,7 +5,13 @@ IPB to trzy pliki statyczne z katalogu `dist/`: `index.html`, `sw.js`,
 kont. Dane biegacza zostają w jego przeglądarce, zaszyfrowane hasłem.
 
 Wymagania: dowolny serwer plików statycznych i **HTTPS** (bez HTTPS
-przeglądarka nie włączy szyfrowania ani pracy bez internetu).
+przeglądarka nie włączy szyfrowania ani pracy bez internetu). Mapa też
+wymaga HTTPS: serwer map OpenStreetMap wydaje kafelki tylko stronom, które
+podają swój adres, a strona otwarta z pliku na dysku go nie podaje. Podgląd
+w oknie Claude blokuje wszystkie połączenia, więc tam mapa nie zadziała nigdy.
+
+Adres publiczny: **https://orlowskitomasz.github.io/ipb/** – wystawiany
+automatycznie z gałęzi `main` (`.github/workflows/strona.yml`).
 
 ## 1. Zbuduj
 
@@ -48,6 +54,10 @@ Caddy sam pobiera i odnawia certyfikat Let's Encrypt.
 Certyfikat: `certbot --nginx -d bieganie.example.org` (odnawia się sam).
 
 ## 2c. Gotowy hosting plików statycznych
+
+**GitHub Pages w tym repozytorium:** jednorazowo Settings → Pages → Source:
+„GitHub Actions”. Potem każda zmiana w `main` sama trafia na
+https://orlowskitomasz.github.io/ipb/ (zakładka Actions → „Strona”).
 
 Codeberg Pages, GitHub Pages, Cloudflare Pages i podobne: wskaż katalog
 `dist/` jako katalog strony. HTTPS jest w cenie. Uwaga: operator takiego

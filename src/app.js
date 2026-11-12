@@ -329,6 +329,12 @@
     $('tr-start').hidden = !dane.start;
     komunikat('tr-info', d.szacunek ? 'Długość policzona z czasu treningu i przybliżonego tempa (brak wyniku do wyliczenia stref tempa). Popraw ją, jeśli znasz swoje tempo.' : '', 'info'); komunikat('tr-pogoda', '');
     w.after($('trasa')); $('trasa').hidden = false; stanSieci();
+    if (Trasy.stronaHttps(location)) komunikat('tr-adres', '');
+    else { const a = el('a', '', Trasy.ADRES_STRONY); a.href = Trasy.ADRES_STRONY; a.target = '_blank'; a.rel = 'noopener';
+      $('tr-adres').replaceChildren(el('strong', '', 'Mapa nie wczyta się z pliku na dysku ani w podglądzie w oknie Claude. '),
+        'Serwer map OpenStreetMap wydaje mapę tylko stronom otwartym z adresu https, a podgląd w Claude blokuje każde połączenie. Otwórz aplikację pod adresem ', a,
+        '. Sejf jest zapisany osobno dla każdego adresu: przenieś go kopią zapasową (zakładka „Co jest zapisane” → Kopia zapasowa, potem na nowej stronie „Mam kopię sejfu”). Z pliku możesz wpisać start ze współrzędnych, ale bez podkładu nie zobaczysz okolicy.');
+      $('tr-adres').hidden = false; }
     if (zap) dopasujMape(zap.pts); else { if (dane.start && mapa.z < 10) Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: 14 }); rysujMape(); }
     pokazPropozycje();
     $('trasa').scrollIntoView({ block: 'nearest' });
@@ -587,6 +593,12 @@
       komunikat('tr-info', 'Pytam urządzenie o położenie…', 'info');
       navigator.geolocation.getCurrentPosition((p) => { Object.assign(mapa, { lon: p.coords.longitude, lat: p.coords.latitude, z: 15 }); rysujMape(); komunikat('tr-info', 'Mapa ustawiona na Twoim położeniu. Nie zapisuję go.', 'ok'); },
         () => komunikat('tr-info', 'Nie dostałem położenia (brak zgody albo sygnału). Ustaw start, przesuwając mapę.'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    };
+    $('tr-wsp-ok').onclick = () => {
+      const p = Trasy.czytajWsp($('tr-wsp').value);
+      if (!p) return komunikat('tr-info', 'Nie rozpoznałem współrzędnych. Wpisz szerokość i długość geograficzną, np. 50.0614, 19.9366.');
+      Object.assign(mapa, { lon: p.lon, lat: p.lat, z: Math.max(mapa.z, 15) }); rysujMape();
+      komunikat('tr-info', 'Mapa ustawiona na wpisanym punkcie – krzyżyk to start trasy. Nic nie zapisuję, dopóki nie naciśniesz „Zapamiętaj to miejsce jako Start”.', 'ok');
     };
     for (const [id, o] of [['mapa-plus', 1], ['mapa-minus', -1]]) $(id).onclick = () => { mapa.z = Math.min(18, Math.max(3, mapa.z + o)); rysujMape(); };
     { const m = $('mapa'); let od = null;                     // przesuwanie mapy: w trakcie ruchu przesuwamy warstwy, kafelki dociągamy po puszczeniu

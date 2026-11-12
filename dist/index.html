@@ -289,6 +289,7 @@ input[type="file"] { padding: 8px }
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <div id="trasa" class="karta trasa" hidden>
           <h3 id="trasa-tytul"></h3>
+          <p id="tr-adres" class="komunikat" hidden></p>
           <div id="trasa-zgoda" style="display:flex; flex-direction:column; gap:8px">
             <p>Trasy i pogoda potrzebują internetu. Po włączeniu aplikacja łączy się tylko z trzema serwerami i wysyła im wyłącznie współrzędne – nic o Tobie, bez ciasteczek i bez adresu tej strony w zapytaniach o trasę i pogodę:</p>
             <ul class="lista">
@@ -301,6 +302,7 @@ input[type="file"] { padding: 8px }
           </div>
           <div id="trasa-srodek" hidden style="display:flex; flex-direction:column; gap:12px">
             <div class="rzad"><button id="tr-gps" type="button">Moje położenie</button><button id="tr-start" type="button" hidden>Zapisany Start</button><button id="tr-zapamietaj" type="button">Zapamiętaj to miejsce jako Start</button></div>
+            <div class="rzad" style="align-items:flex-end"><label for="tr-wsp" style="flex:1">Start ze współrzędnych (np. skopiowanych z Map Google)<input id="tr-wsp" type="text" inputmode="decimal" autocomplete="off" placeholder="50.0614, 19.9366"></label><button id="tr-wsp-ok" type="button">Ustaw start</button></div>
             <div id="mapa" class="mapa">
               <div id="mapa-warstwy"><div id="mapa-kafle"></div><svg id="mapa-rys" xmlns="http://www.w3.org/2000/svg"></svg></div>
               <span class="celownik" aria-hidden="true">+</span>
@@ -1427,6 +1429,17 @@ const Eksport = (() => {
 // Wysyłane są wyłącznie współrzędne: punkty trasy (BRouter), obszar zaokrąglony do 0,1° i data (Open-Meteo), numery kafelków (OpenStreetMap).
 const Trasy = (() => {
   const HOSTY = { trasa: 'https://brouter.de', pogoda: 'https://api.open-meteo.com', mapa: 'https://tile.openstreetmap.org' };
+  // Adres, pod którym aplikacja jest wystawiona (GitHub Pages z gałęzi main, .github/workflows/strona.yml).
+  const ADRES_STRONY = 'https://orlowskitomasz.github.io/ipb/';
+  // Mapa działa tylko ze strony https albo z localhost: z pliku na dysku przeglądarka nie podaje adresu strony, a serwer map OSM bez niego odmawia.
+  const stronaHttps = (loc) => loc.protocol === 'https:' || ['localhost', '127.0.0.1', '[::1]'].includes(loc.hostname);
+  // Współrzędne wpisane ręcznie: „szerokość, długość” jak w Mapach Google; przecinek dziesiętny też działa ("50,06, 19,94").
+  function czytajWsp(tekst) {
+    const m = String(tekst || '').trim().match(/^(-?\d{1,2}(?:[.,]\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:[.,]\d+)?)$/);
+    if (!m) return null;
+    const lat = +m[1].replace(',', '.'), lon = +m[2].replace(',', '.');
+    return Math.abs(lat) <= 85 && Math.abs(lon) <= 180 ? { lat, lon } : null;
+  }
   const RAD = Math.PI / 180, R_ZIEMI = 6371000, TOLERANCJA = 0.08;
 
   // --- geometria; punkt = [lon, lat, wysokość] ---
@@ -1676,7 +1689,7 @@ const Trasy = (() => {
   const zPikseli = (x, y, z) => { const n = 256 * 2 ** z; return [x / n * 360 - 180, Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) / RAD]; };
   const urlKafla = (z, x, y) => `${HOSTY.mapa}/${z}/${x}/${y}.png`;
 
-  return { HOSTY, TOLERANCJA, odl, przesun, narastajaco, czytajBrouter, wytnijOdnogi, powtorzenia, miary, ocena, szukaj, glownaCzesc, punktNa, gpx, urlTrasy, urlPogody, pogoda, slonce, naPiksele, zPikseli, urlKafla, ksztalt };
+  return { HOSTY, ADRES_STRONY, stronaHttps, czytajWsp, TOLERANCJA, odl, przesun, narastajaco, czytajBrouter, wytnijOdnogi, powtorzenia, miary, ocena, szukaj, glownaCzesc, punktNa, gpx, urlTrasy, urlPogody, pogoda, slonce, naPiksele, zPikseli, urlKafla, ksztalt };
 })();
 
 // Interfejs kroku 1: wywiad → sejf na hasło → profil, ocena celu, podgląd tego, co jest zapisane.
@@ -2010,6 +2023,12 @@ const Trasy = (() => {
     $('tr-start').hidden = !dane.start;
     komunikat('tr-info', d.szacunek ? 'Długość policzona z czasu treningu i przybliżonego tempa (brak wyniku do wyliczenia stref tempa). Popraw ją, jeśli znasz swoje tempo.' : '', 'info'); komunikat('tr-pogoda', '');
     w.after($('trasa')); $('trasa').hidden = false; stanSieci();
+    if (Trasy.stronaHttps(location)) komunikat('tr-adres', '');
+    else { const a = el('a', '', Trasy.ADRES_STRONY); a.href = Trasy.ADRES_STRONY; a.target = '_blank'; a.rel = 'noopener';
+      $('tr-adres').replaceChildren(el('strong', '', 'Mapa nie wczyta się z pliku na dysku ani w podglądzie w oknie Claude. '),
+        'Serwer map OpenStreetMap wydaje mapę tylko stronom otwartym z adresu https, a podgląd w Claude blokuje każde połączenie. Otwórz aplikację pod adresem ', a,
+        '. Sejf jest zapisany osobno dla każdego adresu: przenieś go kopią zapasową (zakładka „Co jest zapisane” → Kopia zapasowa, potem na nowej stronie „Mam kopię sejfu”). Z pliku możesz wpisać start ze współrzędnych, ale bez podkładu nie zobaczysz okolicy.');
+      $('tr-adres').hidden = false; }
     if (zap) dopasujMape(zap.pts); else { if (dane.start && mapa.z < 10) Object.assign(mapa, { lon: dane.start.lon, lat: dane.start.lat, z: 14 }); rysujMape(); }
     pokazPropozycje();
     $('trasa').scrollIntoView({ block: 'nearest' });
@@ -2268,6 +2287,12 @@ const Trasy = (() => {
       komunikat('tr-info', 'Pytam urządzenie o położenie…', 'info');
       navigator.geolocation.getCurrentPosition((p) => { Object.assign(mapa, { lon: p.coords.longitude, lat: p.coords.latitude, z: 15 }); rysujMape(); komunikat('tr-info', 'Mapa ustawiona na Twoim położeniu. Nie zapisuję go.', 'ok'); },
         () => komunikat('tr-info', 'Nie dostałem położenia (brak zgody albo sygnału). Ustaw start, przesuwając mapę.'), { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    };
+    $('tr-wsp-ok').onclick = () => {
+      const p = Trasy.czytajWsp($('tr-wsp').value);
+      if (!p) return komunikat('tr-info', 'Nie rozpoznałem współrzędnych. Wpisz szerokość i długość geograficzną, np. 50.0614, 19.9366.');
+      Object.assign(mapa, { lon: p.lon, lat: p.lat, z: Math.max(mapa.z, 15) }); rysujMape();
+      komunikat('tr-info', 'Mapa ustawiona na wpisanym punkcie – krzyżyk to start trasy. Nic nie zapisuję, dopóki nie naciśniesz „Zapamiętaj to miejsce jako Start”.', 'ok');
     };
     for (const [id, o] of [['mapa-plus', 1], ['mapa-minus', -1]]) $(id).onclick = () => { mapa.z = Math.min(18, Math.max(3, mapa.z + o)); rysujMape(); };
     { const m = $('mapa'); let od = null;                     // przesuwanie mapy: w trakcie ruchu przesuwamy warstwy, kafelki dociągamy po puszczeniu

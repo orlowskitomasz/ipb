@@ -1,7 +1,7 @@
 // Service worker IPB: aplikacja działa bez sieci po pierwszym otwarciu z serwera.
 // Najpierw sieć (żeby nowa wersja docierała od razu), a gdy sieci nie ma – kopia z pamięci podręcznej.
 // Ścieżki /__* (logowanie i synchronizacja) nigdy nie są przechwytywane ani zapamiętywane.
-const PAMIEC = 'ipb-302f0b4a8116';
+const PAMIEC = 'ipb-447202582c9d';
 const PLIKI = ['./', 'index.html', 'manifest.webmanifest', 'icon.svg'];
 self.addEventListener('install', (e) => e.waitUntil(caches.open(PAMIEC).then((c) => c.addAll(PLIKI)).then(() => self.skipWaiting())));
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys().then((k) => Promise.all(k.filter((n) => n !== PAMIEC).map((n) => caches.delete(n)))).then(() => self.clients.claim())));

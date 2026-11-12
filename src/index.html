@@ -165,6 +165,7 @@
         <div id="plan-tygodnie" style="display:flex; flex-direction:column; gap:8px"></div>
         <div id="trasa" class="karta trasa" hidden>
           <h3 id="trasa-tytul"></h3>
+          <p id="tr-adres" class="komunikat" hidden></p>
           <div id="trasa-zgoda" style="display:flex; flex-direction:column; gap:8px">
             <p>Trasy i pogoda potrzebują internetu. Po włączeniu aplikacja łączy się tylko z trzema serwerami i wysyła im wyłącznie współrzędne – nic o Tobie, bez ciasteczek i bez adresu tej strony w zapytaniach o trasę i pogodę:</p>
             <ul class="lista">
@@ -177,6 +178,7 @@
           </div>
           <div id="trasa-srodek" hidden style="display:flex; flex-direction:column; gap:12px">
             <div class="rzad"><button id="tr-gps" type="button">Moje położenie</button><button id="tr-start" type="button" hidden>Zapisany Start</button><button id="tr-zapamietaj" type="button">Zapamiętaj to miejsce jako Start</button></div>
+            <div class="rzad" style="align-items:flex-end"><label for="tr-wsp" style="flex:1">Start ze współrzędnych (np. skopiowanych z Map Google)<input id="tr-wsp" type="text" inputmode="decimal" autocomplete="off" placeholder="50.0614, 19.9366"></label><button id="tr-wsp-ok" type="button">Ustaw start</button></div>
             <div id="mapa" class="mapa">
               <div id="mapa-warstwy"><div id="mapa-kafle"></div><svg id="mapa-rys" xmlns="http://www.w3.org/2000/svg"></svg></div>
               <span class="celownik" aria-hidden="true">+</span>

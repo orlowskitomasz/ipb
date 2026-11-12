@@ -3,6 +3,17 @@
 // Wysyłane są wyłącznie współrzędne: punkty trasy (BRouter), obszar zaokrąglony do 0,1° i data (Open-Meteo), numery kafelków (OpenStreetMap).
 const Trasy = (() => {
   const HOSTY = { trasa: 'https://brouter.de', pogoda: 'https://api.open-meteo.com', mapa: 'https://tile.openstreetmap.org' };
+  // Adres, pod którym aplikacja jest wystawiona (GitHub Pages z gałęzi main, .github/workflows/strona.yml).
+  const ADRES_STRONY = 'https://orlowskitomasz.github.io/ipb/';
+  // Mapa działa tylko ze strony https albo z localhost: z pliku na dysku przeglądarka nie podaje adresu strony, a serwer map OSM bez niego odmawia.
+  const stronaHttps = (loc) => loc.protocol === 'https:' || ['localhost', '127.0.0.1', '[::1]'].includes(loc.hostname);
+  // Współrzędne wpisane ręcznie: „szerokość, długość” jak w Mapach Google; przecinek dziesiętny też działa ("50,06, 19,94").
+  function czytajWsp(tekst) {
+    const m = String(tekst || '').trim().match(/^(-?\d{1,2}(?:[.,]\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:[.,]\d+)?)$/);
+    if (!m) return null;
+    const lat = +m[1].replace(',', '.'), lon = +m[2].replace(',', '.');
+    return Math.abs(lat) <= 85 && Math.abs(lon) <= 180 ? { lat, lon } : null;
+  }
   const RAD = Math.PI / 180, R_ZIEMI = 6371000, TOLERANCJA = 0.08;
 
   // --- geometria; punkt = [lon, lat, wysokość] ---
@@ -252,5 +263,5 @@ const Trasy = (() => {
   const zPikseli = (x, y, z) => { const n = 256 * 2 ** z; return [x / n * 360 - 180, Math.atan(Math.sinh(Math.PI * (1 - 2 * y / n))) / RAD]; };
   const urlKafla = (z, x, y) => `${HOSTY.mapa}/${z}/${x}/${y}.png`;
 
-  return { HOSTY, TOLERANCJA, odl, przesun, narastajaco, czytajBrouter, wytnijOdnogi, powtorzenia, miary, ocena, szukaj, glownaCzesc, punktNa, gpx, urlTrasy, urlPogody, pogoda, slonce, naPiksele, zPikseli, urlKafla, ksztalt };
+  return { HOSTY, ADRES_STRONY, stronaHttps, czytajWsp, TOLERANCJA, odl, przesun, narastajaco, czytajBrouter, wytnijOdnogi, powtorzenia, miary, ocena, szukaj, glownaCzesc, punktNa, gpx, urlTrasy, urlPogody, pogoda, slonce, naPiksele, zPikseli, urlKafla, ksztalt };
 })();
