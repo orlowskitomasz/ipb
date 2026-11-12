@@ -84,6 +84,15 @@ Reguły:
 - **Bramki decyzyjne**: progi wyników testów/startów pośrednich, po których cel zostaje, spada albo rośnie (np. 10 km ≤ X, test 30 min ≤ Y/km, półmaraton ≤ Z).
 - Prognoza aktualizowana po każdym teście i co 4 tygodnie z danych treningowych.
 
+### Panel celu (prognoza na żywo)
+- Na ekranie głównym: cel, **przedział prognozy** i status `realny` / `ambitny` / `nierealny` (progi z R12).
+- Dwa źródła pokazywane **osobno**, nigdy łączone w jedną liczbę:
+  - **z wyniku** – Riegel + VDOT z ostatniego testu/startu; pewność maleje z wiekiem wyniku (> 6 mies. = nieaktualny, R20);
+  - **z treningów** – orientacyjnie: tempo przy stałym tętnie w biegach E (trend 4 tyg.), dryf tętna w długich, odcinki SP/T względem planu (tempo i tętno). Etykieta „heurystyka (D), niska pewność”.
+- Wykres trendu tydzień po tygodniu na tle celu, z zaznaczonymi bramkami i ich progami.
+- Suwak „co jeśli”: inny cel → tempo, VDOT potrzebny, status, równoważniki na dystansach bramek.
+- Zmiana celu lub temp tylko jako **propozycja** i tylko przy dwóch zgodnych sygnałach; jeden udany trening nie wystarcza.
+
 ---
 
 ## 6. Plan
@@ -99,6 +108,12 @@ Reguły:
 - Użytkownik sam przypisuje dni: **dzień wolny**, akcent, długi, spokojny, siła, „dowolny”. Może przeciągać jednostki między dniami i zablokować dzień („nie biegam w środy”).
 - Generator wypełnia tylko to, czego użytkownik nie ustawił, i nie przesuwa zablokowanych dni. Gdy układ łamie zasadę bezpieczeństwa (np. dwa akcenty dzień po dniu, długi dzień po akcencie), plan go **zostawia**, ale pokazuje ostrzeżenie z powodem i propozycją zamiany jednym kliknięciem.
 - Cel jako czas biegu (np. 30 min bez przerwy): progresja w minutach, dla początkujących marsz-bieg (np. 1 min bieg / 2 min marsz → ciągły bieg).
+
+### Szybka zmiana dnia („Zmień dzień”)
+- Dotknięcie dnia otwiera panel: **Krócej / Dłużej** (±5, ±10 min), **Lżej** (akcent → spokojny tej samej długości), **Przesuń** (zamiana z innym dniem tygodnia), **Zamień typ** (lista z biblioteki jednostek).
+- Trening jako trzy klocki: rozgrzewka (czas) | część główna (powtórzenia × odcinek / przerwa) | schłodzenie; każdy klocek zmieniany przyciskami +/−. Przy skracaniu rozgrzewka się nie zmienia (zasada 7) – najpierw schłodzenie, potem liczba powtórzeń.
+- Po każdej zmianie walidator działa na żywo; przy dniu plakietka z regułą (np. R3, R5, R7). Zmiana nigdy nie jest blokowana, tylko opisana.
+- Przed zapisem porównanie przed → po (minuty tygodnia, udział mocnych minut); przycisk Cofnij. Zmiana trafia do dziennika zmian planu i oznacza dzień jako „do ponownego wysłania na zegarek”.
 
 ### Uzupełnienia biegu (rozgrzewka, plyometria, rozciąganie)
 - **Rozgrzewka dynamiczna** (5–10 min) przed akcentami i testami: skipy A/B/C, wieloskoki lekkie, wymachy, przebieżki. Rozciągania statycznego **nie** dawać przed szybkim biegiem.
@@ -170,6 +185,7 @@ Pełne reguły i algorytmy: skill **planowanie-tras-biegowych** (jeśli dostępn
 
 - **Import:** FIT (aktywności: tętno, R-R, moc, dynamika), TCX, GPX, CSV, ZIP z Garmin Connect; rozpoznanie bieżni (`sub_sport = treadmill`).
 - **Eksport:** FIT treningów strukturalnych (kroki czas/dystans, cele tętna/tempa, rozgrzewka kończona automatycznie, krótkie nazwy), GPX tras, ICS kalendarza, XLSX danych.
+- **Eksport jednym przyciskiem:** „Wyślij tydzień” – ZIP z plikami FIT na 7 dni (albo tylko dni zmienione od ostatniego wysłania), na telefonie przez okno udostępniania; rozgrzewka zawsze krok czasowy, opis kroku zawiera cel dnia. Wersja natywna: Apple WorkoutKit, Garmin Training API (program partnerski – do weryfikacji).
 - **Zegarki w pierwszym wydaniu: Garmin, Suunto, Coros, Apple Watch** (możliwości importu do weryfikacji przy każdej wersji):
   - Garmin – FIT + skrypt do Garmin Connect uruchamiany przez użytkownika w jego zalogowanej przeglądarce (bez przekazywania hasła), z podpisem treningu (`#plan <hash>`) do aktualizacji tylko zmienionych dni;
   - Coros, Suunto – treningi strukturalne przez ich aplikacje/serwisy lub pośredników; jeśli brak importu – czytelna rozpiska do ręcznego wpisania;
